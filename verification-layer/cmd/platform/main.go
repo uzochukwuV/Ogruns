@@ -23,6 +23,7 @@ import (
 	"github.com/0xprotocol/verification-layer/internal/broadcaster"
 	"github.com/0xprotocol/verification-layer/internal/config"
 	"github.com/0xprotocol/verification-layer/internal/crypto"
+	"github.com/0xprotocol/verification-layer/internal/dispatcher"
 	"github.com/0xprotocol/verification-layer/internal/engine"
 	"github.com/0xprotocol/verification-layer/internal/ingester"
 	"github.com/0xprotocol/verification-layer/internal/scorer"
@@ -55,7 +56,8 @@ func main() {
 	log.Println("[3/6] Scorer started")
 
 	// ── 4. API Server ────────────────────────────────────────────────────────
-	srv := api.NewServer(sc, eng.EventStream())
+	dispatch := dispatcher.NewWebhookDispatcher()
+	srv := api.NewServer(sc, eng.EventStream(), dispatch)
 	go func() {
 		if err := srv.Start(cfg.APIAddr); err != nil {
 			log.Fatalf("API server error: %v", err)
