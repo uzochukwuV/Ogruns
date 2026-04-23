@@ -30,7 +30,7 @@ cd /workspace/verification-layer
 go run ./cmd/test_e2e
 
 # Wait for 30 seconds to let the CEX Engine process the signal and fire the Webhook
-sleep 15
+sleep 30
 
 echo ""
 echo "=================================================="
