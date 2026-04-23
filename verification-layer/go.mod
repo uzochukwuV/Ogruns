@@ -1,10 +1,13 @@
 module github.com/0xprotocol/verification-layer
 
-go 1.25.1
+go 1.24
+
+toolchain go1.24.7
 
 require (
 	github.com/0gfoundation/0g-storage-client v1.2.2
 	github.com/ethereum/go-ethereum v1.15.11
+	github.com/gorilla/websocket v1.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/openweb3/go-rpc-provider v0.3.6
 	github.com/openweb3/web3go v0.3.4
@@ -52,7 +55,7 @@ require (
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.0
 	github.com/hashicorp/go-bexpr v0.1.10 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/holiman/bloomfilter/v2 v2.0.3 // indirect

@@ -1,0 +1,19 @@
+{
+  "name": "ogruns-contracts",
+  "version": "1.0.0",
+  "description": "Ogruns smart contracts — NodeRegistry, ReputationOracle, SubscriptionManager, FeeRouter",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run deploy/deploy.ts --network zg_testnet",
+    "deploy:mainnet": "hardhat run deploy/deploy.ts --network zg_mainnet",
+    "verify": "hardhat verify --network zg_testnet"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "hardhat": "^2.22.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.4.0"
+  }
+}

@@ -21,9 +21,9 @@ func main() {
 	fmt.Println("==================================================")
 
 	// Load configuration from .env
-	cfg := config.LoadConfig()
-	if cfg.PrivateKey == "" {
-		log.Fatal("VERIFIER_PRIVATE_KEY not found in .env")
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Config error: %v", err)
 	}
 
 	fmt.Printf("Using RPC: %s\n", cfg.RPCURL)
