@@ -36,7 +36,7 @@ type Config struct {
 
 func LoadConfig() (*Config, error) {
 	// Load .env if present — env vars already set in the process take precedence.
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("/workspace/verification-layer/.env"); err != nil {
 		log.Println("config: no .env file found, reading from environment")
 	}
 
