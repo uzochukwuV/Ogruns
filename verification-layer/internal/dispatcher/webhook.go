@@ -13,6 +13,12 @@ import (
 	"github.com/0xprotocol/verification-layer/pkg/types"
 )
 
+// WebhookJob represents a single webhook delivery task
+type WebhookJob struct {
+	URL     string
+	Payload []byte
+}
+
 // WebhookDispatcher manages AI Agent subscriptions and pushes signals
 // to their registered URLs the millisecond a signal is validated.
 type WebhookDispatcher struct {
@@ -20,14 +26,39 @@ type WebhookDispatcher struct {
 	// Map of NodeID -> Slice of Target URLs subscribed to that Node
 	subscribers map[string][]string
 	httpClient  *http.Client
+	jobQueue    chan WebhookJob
 }
 
 func NewWebhookDispatcher() *WebhookDispatcher {
-	return &WebhookDispatcher{
+	// Configure an enterprise-grade HTTP transport for massive concurrency
+	transport := &http.Transport{
+		MaxIdleConns:        1000,
+		MaxIdleConnsPerHost: 100,
+		MaxConnsPerHost:     100,
+		IdleConnTimeout:     90 * time.Second,
+	}
+
+	d := &WebhookDispatcher{
 		subscribers: make(map[string][]string),
 		httpClient: &http.Client{
-			Timeout: 5 * time.Second, // AI Agents must respond quickly
+			Timeout:   5 * time.Second, // AI Agents must respond quickly
+			Transport: transport,
 		},
+		jobQueue: make(chan WebhookJob, 10000), // Buffer up to 10,000 outgoing webhooks
+	}
+
+	// Start 100 concurrent workers to process the job queue
+	for i := 0; i < 100; i++ {
+		go d.worker()
+	}
+
+	return d
+}
+
+// worker continuously processes webhook delivery jobs from the queue
+func (d *WebhookDispatcher) worker() {
+	for job := range d.jobQueue {
+		d.sendWebhook(job.URL, job.Payload)
 	}
 }
 
@@ -71,9 +102,14 @@ func (d *WebhookDispatcher) Broadcast(sig types.SignalEnvelope) {
 		return
 	}
 
-	// Fire and forget: Do not block the Verification Engine waiting for AI agents to respond
+	// Fire and forget: Submit jobs to the Worker Pool Queue
 	for _, url := range urls {
-		go d.sendWebhook(url, payloadBytes)
+		select {
+		case d.jobQueue <- WebhookJob{URL: url, Payload: payloadBytes}:
+			// Successfully queued
+		default:
+			log.Printf("Dispatcher: ⚠️ Warning: Webhook job queue is full! Dropping webhook for %s", url)
+		}
 	}
 }
 
