@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	providers "github.com/openweb3/go-rpc-provider/provider_wrapper"
 	"github.com/0gfoundation/0g-storage-client/common/blockchain"
 	"github.com/0gfoundation/0g-storage-client/core"
 	"github.com/0gfoundation/0g-storage-client/indexer"
 	"github.com/0gfoundation/0g-storage-client/transfer"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	providers "github.com/openweb3/go-rpc-provider/provider_wrapper"
 	"github.com/openweb3/web3go"
 )
 
@@ -21,7 +21,7 @@ type StorageClient struct {
 func NewStorageClient(rpcURL, privateKey, indexerURL string) (*StorageClient, error) {
 	// 1. Init Web3 Client
 	w3client := blockchain.MustNewWeb3(rpcURL, privateKey, providers.Option{})
-	
+
 	// 2. Init Indexer Client
 	indexerClient, err := indexer.NewClient(indexerURL, indexer.IndexerClientOption{})
 	if err != nil {

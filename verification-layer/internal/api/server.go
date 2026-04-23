@@ -116,7 +116,7 @@ func (s *Server) Start(addr string) error {
 	mux.HandleFunc("/api/v1/nodes", s.handleNodes)
 	mux.HandleFunc("/api/v1/nodes/", s.handleNode) // trailing slash catches /{nodeId}
 	mux.HandleFunc("/api/v1/stream", s.handleStream)
-	mux.HandleFunc("/api/v1/signals", s.handleSubmitSignal) // New L2 Ingestion endpoint
+	mux.HandleFunc("/api/v1/signals", s.handleSubmitSignal)                // New L2 Ingestion endpoint
 	mux.HandleFunc("/api/v1/subscribers/webhook", s.handleRegisterWebhook) // AI Agent Webhook Registration
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)

@@ -22,13 +22,13 @@ const reputationOracleABI = `[{"inputs":[{"internalType":"address","name":"nodeI
 const nodeRegistryABI = `[{"inputs":[{"internalType":"bytes32","name":"rootHash","type":"bytes32"}],"name":"publishBatch","outputs":[],"stateMutability":"nonpayable","type":"function"}]`
 
 type ContractManager struct {
-	client           *ethclient.Client
-	privateKey       *ecdsa.PrivateKey
-	address          common.Address
-	oracleABI        abi.ABI
-	oracleAddress    common.Address
-	registryABI      abi.ABI
-	registryAddress  common.Address
+	client          *ethclient.Client
+	privateKey      *ecdsa.PrivateKey
+	address         common.Address
+	oracleABI       abi.ABI
+	oracleAddress   common.Address
+	registryABI     abi.ABI
+	registryAddress common.Address
 }
 
 func NewContractManager(rpcURL, privKeyHex, oracleAddr, registryAddr string) (*ContractManager, error) {
@@ -118,7 +118,7 @@ func (m *ContractManager) sendTransaction(ctx context.Context, to common.Address
 	}
 
 	// 0G Testnet typical gas limits
-	gasLimit := uint64(300000) 
+	gasLimit := uint64(300000)
 
 	tx := types.NewTransaction(nonce, to, big.NewInt(0), gasLimit, gasPrice, data)
 

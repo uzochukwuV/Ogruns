@@ -26,7 +26,7 @@ func VerifySignal(env types.SignalEnvelope) (bool, error) {
 
 	// 3. Hash the message using standard Ethereum signed message format
 	// "\x19Ethereum Signed Message:\n" + len(message) + message
-	
+
 	// If the node signed via personal_sign, the actual hash is prefixed
 	// We'll support standard EIP-191 personal sign format
 	prefixedHash := crypto.Keccak256Hash(
@@ -60,7 +60,7 @@ func VerifySignal(env types.SignalEnvelope) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("failed to unmarshal public key: %w", err)
 	}
-	
+
 	recoveredAddress := crypto.PubkeyToAddress(*recoveredPubKey).Hex()
 
 	// 8. Compare the recovered address with the claimed NodeID

@@ -131,7 +131,7 @@ func (b *Batcher) flushTo0G(ctx context.Context) {
 	}
 
 	log.Printf("Batcher: ✅ Successfully batched %d signals to 0G Storage. RootHash: %s", len(bundle), rootHash)
-	
+
 	// Write the 0G Root Hash to the NodeRegistry.sol smart contract
 	if b.contracts != nil {
 		err = b.contracts.PublishBatchHash(ctx, rootHash)

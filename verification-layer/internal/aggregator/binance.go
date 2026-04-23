@@ -97,7 +97,7 @@ func (a *CEXAggregator) readLoopBinance(conn *websocket.Conn) {
 					if err := json.Unmarshal(raw, &data); err != nil {
 						continue
 					}
-					
+
 					price, err := strconv.ParseFloat(data.LastPrice, 64)
 					if err != nil {
 						continue

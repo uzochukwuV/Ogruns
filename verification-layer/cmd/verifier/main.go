@@ -106,7 +106,7 @@ func main() {
 	// The batcher reads from the API queue, validates signals, injects them into the Engine,
 	// and periodically flushes the bundle to 0G Storage to save gas.
 	batcher := ingester.NewBatcher(storageClient, eng, cm, crypto.VerifySignal)
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

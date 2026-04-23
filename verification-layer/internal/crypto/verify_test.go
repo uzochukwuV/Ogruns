@@ -42,7 +42,7 @@ func TestVerifySignal(t *testing.T) {
 	prefixedHash := crypto.Keccak256Hash(
 		[]byte(fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)),
 	)
-	
+
 	sigBytes, err := crypto.Sign(prefixedHash.Bytes(), privateKey)
 	if err != nil {
 		t.Fatalf("Failed to sign message: %v", err)

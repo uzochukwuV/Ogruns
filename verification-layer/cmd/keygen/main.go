@@ -33,7 +33,7 @@ func main() {
 
 	// Write to .env file
 	envContent := fmt.Sprintf("VERIFIER_PRIVATE_KEY=%s\nVERIFIER_ADDRESS=%s\n", privateKeyHex, address)
-	
+
 	err = os.WriteFile("/workspace/verification-layer/.env", []byte(envContent), 0600)
 	if err != nil {
 		log.Fatalf("Failed to write .env file: %v", err)

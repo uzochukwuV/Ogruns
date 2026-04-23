@@ -13,22 +13,22 @@ import (
 // ResolutionEngine is the core matching engine that compares incoming high-frequency
 // WebSocket ticks against all active and pending trading signals.
 type ResolutionEngine struct {
-	mu           sync.RWMutex
-	signals      map[string]*types.ActiveSignal
-	eventStream  chan *types.ActiveSignal // Emits state changes
-	tickStream   <-chan types.Tick
-	ctx          context.Context
-	cancel       context.CancelFunc
+	mu          sync.RWMutex
+	signals     map[string]*types.ActiveSignal
+	eventStream chan *types.ActiveSignal // Emits state changes
+	tickStream  <-chan types.Tick
+	ctx         context.Context
+	cancel      context.CancelFunc
 }
 
 func NewResolutionEngine(tickStream <-chan types.Tick) *ResolutionEngine {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &ResolutionEngine{
-		signals:      make(map[string]*types.ActiveSignal),
-		eventStream:  make(chan *types.ActiveSignal, 1000),
-		tickStream:   tickStream,
-		ctx:          ctx,
-		cancel:       cancel,
+		signals:     make(map[string]*types.ActiveSignal),
+		eventStream: make(chan *types.ActiveSignal, 1000),
+		tickStream:  tickStream,
+		ctx:         ctx,
+		cancel:      cancel,
 	}
 }
 
@@ -42,13 +42,13 @@ func (e *ResolutionEngine) AddSignal(env types.SignalEnvelope) {
 	defer e.mu.Unlock()
 
 	id := fmt.Sprintf("%s_%d", env.NodeID, env.Timestamp)
-	
+
 	activeSig := &types.ActiveSignal{
 		ID:       id,
 		Envelope: env,
 		State:    types.StatePending,
 	}
-	
+
 	e.signals[id] = activeSig
 	log.Printf("Engine: Registered new PENDING signal for %s (%s)", env.Payload.TokenPair, env.Payload.Direction)
 }
@@ -83,7 +83,7 @@ func (e *ResolutionEngine) evaluateTick(tick types.Tick) {
 		if sig.Envelope.Payload.TokenPair != tick.TokenPair {
 			continue
 		}
-		
+
 		// If signal is already closed, ignore (cleaned up periodically)
 		if sig.State == types.StateClosedWin || sig.State == types.StateClosedLoss || sig.State == types.StateExpired || sig.State == types.StateCancelled {
 			continue
@@ -107,7 +107,7 @@ func (e *ResolutionEngine) resolveSignal(id string, sig *types.ActiveSignal, tic
 		// For LONG: if tick drops below or equals entry
 		// For SHORT: if tick spikes above or equals entry
 		hitEntry := (isLong && tick.Price <= payload.EntryPrice) || (isShort && tick.Price >= payload.EntryPrice)
-		
+
 		if hitEntry {
 			e.mu.RUnlock() // Escalate lock to write
 			e.mu.Lock()
@@ -125,17 +125,17 @@ func (e *ResolutionEngine) resolveSignal(id string, sig *types.ActiveSignal, tic
 	if sig.State == types.StateActive {
 		// Check Take Profit
 		hitTP := (isLong && tick.Price >= payload.TakeProfit) || (isShort && tick.Price <= payload.TakeProfit)
-		
+
 		// Check Stop Loss
 		hitSL := (isLong && tick.Price <= payload.StopLoss) || (isShort && tick.Price >= payload.StopLoss)
 
 		if hitTP || hitSL {
 			e.mu.RUnlock() // Escalate lock to write
 			e.mu.Lock()
-			
+
 			sig.ClosedAt = now
 			sig.ClosedPrice = tick.Price
-			
+
 			if hitTP {
 				sig.State = types.StateClosedWin
 				log.Printf("Engine: %s hit TAKE PROFIT at %.4f -> WIN", sig.ID, tick.Price)
@@ -143,7 +143,7 @@ func (e *ResolutionEngine) resolveSignal(id string, sig *types.ActiveSignal, tic
 				sig.State = types.StateClosedLoss
 				log.Printf("Engine: %s hit STOP LOSS at %.4f -> LOSS", sig.ID, tick.Price)
 			}
-			
+
 			e.eventStream <- sig
 			e.mu.Unlock()
 			e.mu.RLock() // Re-acquire read lock
@@ -163,7 +163,7 @@ func (e *ResolutionEngine) cleanupExpired() {
 		case <-ticker.C:
 			e.mu.Lock()
 			now := time.Now().Unix()
-			
+
 			for id, sig := range e.signals {
 				if sig.Envelope.Payload.ExpiryTime < now {
 					if sig.State == types.StatePending {
@@ -175,7 +175,7 @@ func (e *ResolutionEngine) cleanupExpired() {
 						// Note: ClosedPrice should ideally be fetched from the last tick
 						log.Printf("Engine: %s EXPIRED while active -> EXPIRED", id)
 					}
-					
+
 					e.eventStream <- sig
 					// Remove from memory to prevent memory leaks
 					delete(e.signals, id)

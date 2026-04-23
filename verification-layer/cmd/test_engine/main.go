@@ -28,7 +28,7 @@ func main() {
 	// 3. Inject a Mock Signal
 	// Let's create a very tight signal on BTC to guarantee it triggers immediately
 	fmt.Println("\n[3] Injecting a mock PENDING signal for BTC/USDT...")
-	
+
 	// We wait for the first tick to get the current price so we can set a realistic target
 	var currentBTCPrice float64
 	for tick := range agg.TickStream {
@@ -39,7 +39,7 @@ func main() {
 	}
 
 	fmt.Printf("    Current BTC Price: %.2f\n", currentBTCPrice)
-	
+
 	// Create a LONG signal just below current price to force an entry
 	mockEnvelope := types.SignalEnvelope{
 		NodeID:    "0xMOCK_NODE_DIAMOND",
@@ -60,9 +60,9 @@ func main() {
 
 	// 4. Wait for the engine to resolve the signal
 	fmt.Println("\n[4] Listening for State Transitions from the Engine...")
-	
+
 	timeout := time.After(30 * time.Second)
-	
+
 	for {
 		select {
 		case <-timeout:

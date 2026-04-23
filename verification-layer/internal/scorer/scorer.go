@@ -51,10 +51,10 @@ type NodeStats struct {
 	WinCount     int     `json:"win_count"`
 	LossCount    int     `json:"loss_count"`
 	ExpiredCount int     `json:"expired_count"`
-	WinRate      float64 `json:"win_rate"`      // 0.0–1.0
-	AvgEV        float64 `json:"avg_ev"`        // Time-decay-weighted expected value
-	SharpeRatio  float64 `json:"sharpe_ratio"`  // Risk-adjusted consistency score
-	TrustScore   float64 `json:"trust_score"`   // 0–100, the canonical reputation number
+	WinRate      float64 `json:"win_rate"`     // 0.0–1.0
+	AvgEV        float64 `json:"avg_ev"`       // Time-decay-weighted expected value
+	SharpeRatio  float64 `json:"sharpe_ratio"` // Risk-adjusted consistency score
+	TrustScore   float64 `json:"trust_score"`  // 0–100, the canonical reputation number
 	Tier         Tier    `json:"tier"`
 	UpdatedAt    int64   `json:"updated_at"` // Unix timestamp
 }
@@ -142,9 +142,9 @@ func (s *Scorer) compute(nodeID string, signals []*types.ActiveSignal) NodeStats
 	now := time.Now().Unix()
 
 	var (
-		totalTimeWeight float64
-		weightedEVSum   float64
-		returns         []float64
+		totalTimeWeight       float64
+		weightedEVSum         float64
+		returns               []float64
 		wins, losses, expired int
 	)
 
