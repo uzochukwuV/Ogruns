@@ -26,17 +26,14 @@ async function main() {
   );
 
   // ── 1. NodeRegistry ───────────────────────────────────────────────────────
-  console.log("\n[1/5] Deploying NodeRegistry...");
+  const verifierAddress = process.env.VERIFIER_ADDRESS || deployer.address; // fallback to deployer for testnet
+  console.log("\n[1/5] Deploying NodeRegistry (verifier:", verifierAddress, ")...");
   const NodeRegistry = await ethers.getContractFactory("NodeRegistry");
-  const registry = await NodeRegistry.deploy();
+  const registry = await NodeRegistry.deploy(verifierAddress);
   await registry.waitForDeployment();
   console.log("NodeRegistry deployed at:", await registry.getAddress());
 
   // ── 2. ReputationOracle ───────────────────────────────────────────────────
-  // The verifier address = the off-chain broadcaster's Ethereum address.
-  // Set VERIFIER_ADDRESS in your environment before running this script.
-  const verifierAddress =
-    process.env.VERIFIER_ADDRESS || deployer.address; // fallback to deployer for testnet
   console.log("\n[2/5] Deploying ReputationOracle (verifier:", verifierAddress, ")...");
   const ReputationOracle = await ethers.getContractFactory("ReputationOracle");
   const oracle = await ReputationOracle.deploy(verifierAddress);

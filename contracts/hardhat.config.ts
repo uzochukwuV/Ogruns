@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
     // 0G Galileo Testnet
     zg_testnet: {
       url: "https://evmrpc-testnet.0g.ai",
-      chainId: 16600,
+      chainId: 16602,
       accounts: [deployerKey],
       gasPrice: "auto",
     },
@@ -42,7 +42,7 @@ const config: HardhatUserConfig = {
     customChains: [
       {
         network: "zg_testnet",
-        chainId: 16600,
+        chainId: 16602,
         urls: {
           apiURL: "https://chainscan-galileo.0g.ai/api",
           browserURL: "https://chainscan-galileo.0g.ai",
@@ -52,7 +52,7 @@ const config: HardhatUserConfig = {
   },
 
   paths: {
-    sources: "./",
+    sources: "./src",
     tests: "./test",
     cache: "./cache",
     artifacts: "./artifacts",
