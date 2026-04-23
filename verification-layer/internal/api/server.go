@@ -15,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/0xprotocol/verification-layer/internal/dispatcher"
 	"github.com/0xprotocol/verification-layer/internal/scorer"
 	"github.com/0xprotocol/verification-layer/pkg/types"
 	"github.com/gorilla/websocket"
@@ -87,6 +88,7 @@ var upgrader = websocket.Upgrader{
 type Server struct {
 	scorer      *scorer.Scorer
 	hub         *streamHub
+	dispatcher  *dispatcher.WebhookDispatcher
 	ctx         context.Context
 	cancel      context.CancelFunc
 	signalQueue chan types.SubmitRawSignalRequest // L2 Ingestion Queue
@@ -94,13 +96,14 @@ type Server struct {
 
 // NewServer creates a Server but does not start listening.
 // eventStream is the *types.ActiveSignal channel emitted by the ResolutionEngine.
-func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal) *Server {
+func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal, dispatch *dispatcher.WebhookDispatcher) *Server {
 	ctx, cancel := context.WithCancel(context.Background())
 	hub := newStreamHub(eventStream)
 	go hub.run(ctx)
 	return &Server{
 		scorer:      sc,
 		hub:         hub,
+		dispatcher:  dispatch,
 		ctx:         ctx,
 		cancel:      cancel,
 		signalQueue: make(chan types.SubmitRawSignalRequest, 10000), // High capacity for MVP
@@ -114,6 +117,7 @@ func (s *Server) Start(addr string) error {
 	mux.HandleFunc("/api/v1/nodes/", s.handleNode) // trailing slash catches /{nodeId}
 	mux.HandleFunc("/api/v1/stream", s.handleStream)
 	mux.HandleFunc("/api/v1/signals", s.handleSubmitSignal) // New L2 Ingestion endpoint
+	mux.HandleFunc("/api/v1/subscribers/webhook", s.handleRegisterWebhook) // AI Agent Webhook Registration
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
@@ -268,6 +272,37 @@ func (s *Server) handleSubmitSignal(w http.ResponseWriter, r *http.Request) {
 	default:
 		writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "server queue full"})
 	}
+}
+
+// handleRegisterWebhook allows an AI Agent to register a URL to be awoken when a signal arrives.
+func (s *Server) handleRegisterWebhook(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req types.RegisterWebhookRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid json payload"})
+		return
+	}
+	defer r.Body.Close()
+
+	if req.TargetURL == "" || req.NodeID == "" {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "missing target_url or node_id"})
+		return
+	}
+
+	// In production: verify `req.Signature` and check the SubscriptionManager
+	// smart contract to ensure `req.SubscriberAddress` actually paid for `req.NodeID`.
+	// For MVP, we trust the registration.
+
+	s.dispatcher.Register(req.NodeID, req.TargetURL)
+
+	writeJSON(w, http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "Webhook registered. Your AI Agent will be awoken on new signals.",
+	})
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

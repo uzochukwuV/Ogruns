@@ -12,6 +12,7 @@ import (
 	"github.com/0xprotocol/verification-layer/internal/api"
 	"github.com/0xprotocol/verification-layer/internal/config"
 	"github.com/0xprotocol/verification-layer/internal/crypto"
+	"github.com/0xprotocol/verification-layer/internal/dispatcher"
 	"github.com/0xprotocol/verification-layer/internal/engine"
 	"github.com/0xprotocol/verification-layer/internal/ingester"
 	"github.com/0xprotocol/verification-layer/internal/scorer"
@@ -50,7 +51,10 @@ func main() {
 	defer eng.Stop()
 	fmt.Println("✅ Binance WebSocket & Resolution Engine Started")
 
-	// 5. Start the REST API & WebSocket Stream
+	// 5. Initialize the Webhook Dispatcher (Event-Driven AI)
+	dispatch := dispatcher.NewWebhookDispatcher()
+
+	// 6. Start the REST API & WebSocket Stream
 	// Note: We create a fan-out channel to pass events to both the API and Scorer
 	eventChan1 := make(chan *types.ActiveSignal, 1000)
 	eventChan2 := make(chan *types.ActiveSignal, 1000)
@@ -59,6 +63,11 @@ func main() {
 		for ev := range eng.EventStream() {
 			eventChan1 <- ev
 			eventChan2 <- ev
+
+			// Instantly Wake Up any subscribed AI Agents via Webhook when signal hits ENTRY
+			if ev.State == types.StateActive {
+				dispatch.Broadcast(ev.Envelope)
+			}
 		}
 	}()
 
@@ -72,7 +81,7 @@ func main() {
 		}
 	}()
 
-	server := api.NewServer(sc, eventChan2)
+	server := api.NewServer(sc, eventChan2, dispatch)
 	go func() {
 		if err := server.Start(cfg.APIAddr); err != nil {
 			log.Fatalf("API Server failed: %v", err)
@@ -80,7 +89,7 @@ func main() {
 	}()
 	fmt.Println("✅ L2 API Gateway & WS Stream Running on " + cfg.APIAddr)
 
-	// 6. Start the L2 Batcher
+	// 7. Start the L2 Batcher
 	// The batcher reads from the API queue, validates signals, injects them into the Engine,
 	// and periodically flushes the bundle to 0G Storage to save gas.
 	batcher := ingester.NewBatcher(storageClient, eng, crypto.VerifySignal)
