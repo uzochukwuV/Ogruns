@@ -1,20 +1,36 @@
 # 0G Verification Layer & Signal Marketplace
 
-This repository contains the full stack for the Decentralized AI Signal Marketplace built on the **0G Network**. It includes the high-frequency Go Verification Engine, the L2 Batching Architecture, and the Solidity Smart Contracts.
+> **0G APAC Hackathon Submission (Track 3: Agentic Economy & Autonomous Applications)**
 
-## 🚀 0G Galileo Testnet Deployment (April 2026)
+## 📋 HackQuest Submission Details
 
-### Testnet Wallet
-This wallet is used by the Go Backend (Verifier Identity) and was used to deploy the Smart Contracts. It contains testnet `A0GI` for gas.
+### 1. Basic Project Information
+*   **Project Name:** 0G Verification Layer & Signal Marketplace
+*   **One-Sentence Description:** A decentralized AI signal marketplace utilizing 0G Storage for zero-gas high-frequency data availability and the 0G EVM for trustless reputation scoring and revenue routing.
+*   **What it does:** It allows AI trading agents to publish encrypted market signals for free via an L2 Batcher, instantly waking up subscribed AI bots via Webhooks when target prices are hit, and algorithmically grades the creators' historical accuracy.
+*   **Problem it solves:** AI Agents waste millions of LLM tokens constantly polling data feeds (Compute Cost), and decentralized storage/EVMs are too expensive for high-frequency signal publishing (Data Cost). We solve both via event-driven Webhooks and 0G Storage L2 batching.
+*   **0G Components Used:** 0G Storage, 0G EVM (Galileo Testnet), 0G DA Indexer.
+
+### 2. 0G Integration Proof (Explorer Links)
+The core EVM smart contracts were deployed to the **0G Galileo Testnet (ChainID: 16602)**:
+*   **NodeRegistry:** [`0xc9297E1a79F28f35BfbA335671cd655C4D104125`](https://chainscan-galileo.0g.ai/address/0xc9297E1a79F28f35BfbA335671cd655C4D104125)
+*   **ReputationOracle:** [`0xB63CeDc10F0Fe0475171e50493Fde8cD015f60C2`](https://chainscan-galileo.0g.ai/address/0xB63CeDc10F0Fe0475171e50493Fde8cD015f60C2)
+*   **FeeRouter:** [`0xA90f5392BCA1E0a7A261D91f31c0acB3a69fEe96`](https://chainscan-galileo.0g.ai/address/0xA90f5392BCA1E0a7A261D91f31c0acB3a69fEe96)
+*   **SubscriptionManager:** [`0x61C10990B28990C09D895860C0Ab70A49042Ad92`](https://chainscan-galileo.0g.ai/address/0x61C10990B28990C09D895860C0Ab70A49042Ad92)
+
+### 3. Required Links (To Be Filled by User)
+*   **Demo Video (Max 3 Mins):** `[INSERT YOUTUBE/LOOM LINK HERE]`
+*   **Public X Post:** `[INSERT X POST LINK HERE]` *(Must include `#0GHackathon #BuildOn0G` and tag `@0G_labs @0g_CN @0g_Eco @HackQuest_`)*
+
+---
+
+## 🚀 Deployment & Test Accounts
+
+### Testnet Wallet (Judges / Reviewers)
+This wallet is used by the Go Backend (Verifier Identity) and was used to deploy the Smart Contracts. It contains testnet `A0GI` for gas. You can use it to verify the deployment.
 
 *   **Address:** `0x3E99444912Ff7549A1581Baf0b0C8EB1e930729D`
 *   **Private Key:** `f6c5489042890316e9e73d79c41c4c79d1441469ae30203f63b7ea3c449baa37`
-
-### Smart Contract Addresses (0G Galileo Testnet - ChainID: 16602)
-*   **NodeRegistry:** `0xc9297E1a79F28f35BfbA335671cd655C4D104125`
-*   **ReputationOracle:** `0xB63CeDc10F0Fe0475171e50493Fde8cD015f60C2`
-*   **FeeRouter:** `0xA90f5392BCA1E0a7A261D91f31c0acB3a69fEe96`
-*   **SubscriptionManager:** `0x61C10990B28990C09D895860C0Ab70A49042Ad92`
 
 ---
 
