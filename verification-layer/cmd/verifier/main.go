@@ -1,95 +1,102 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"log"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 
+	"github.com/0xprotocol/verification-layer/internal/aggregator"
+	"github.com/0xprotocol/verification-layer/internal/api"
+	"github.com/0xprotocol/verification-layer/internal/config"
 	"github.com/0xprotocol/verification-layer/internal/crypto"
+	"github.com/0xprotocol/verification-layer/internal/engine"
+	"github.com/0xprotocol/verification-layer/internal/ingester"
+	"github.com/0xprotocol/verification-layer/internal/scorer"
 	"github.com/0xprotocol/verification-layer/pkg/types"
-	ethcrypto "github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
 func main() {
 	fmt.Println("==================================================")
-	fmt.Println("🚀 0G Verification Layer - Development Test Build")
+	fmt.Println("🚀 0G Verification Layer - Main Node")
 	fmt.Println("==================================================")
 
-	// Simulate a Node Developer creating a signal
-	fmt.Println("\n[1] Simulating a Node Developer...")
-	privateKey, err := ethcrypto.GenerateKey()
+	// 1. Load Config
+	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Failed to generate private key: %v", err)
+		log.Fatalf("Fatal config error: %v", err)
 	}
 
-	nodeID := ethcrypto.PubkeyToAddress(privateKey.PublicKey).Hex()
-	fmt.Printf("    Node ID (Ethereum Address): %s\n", nodeID)
-
-	// Create a signal payload
-	timestamp := time.Now().Unix()
-	payload := types.SignalPayload{
-		TokenPair:  "WIF/USDT",
-		Exchange:   "binance",
-		Direction:  "LONG",
-		EntryPrice: 3.05,
-		TakeProfit: 3.50,
-		StopLoss:   2.80,
-		ExpiryTime: timestamp + 3600, // 1 hour from now
-		WeightPct:  85.5,
-	}
-
-	// Sign the payload deterministically
-	payloadBytes, _ := json.Marshal(payload)
-	message := fmt.Sprintf("%d:%s", timestamp, string(payloadBytes))
-
-	prefixedHash := ethcrypto.Keccak256Hash(
-		[]byte(fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)),
-	)
-
-	sigBytes, err := ethcrypto.Sign(prefixedHash.Bytes(), privateKey)
+	// 2. Initialize 0G Storage Client
+	storageClient, err := ingester.NewStorageClient(cfg.RPCURL, cfg.PrivateKey, cfg.IndexerTurboURL)
 	if err != nil {
-		log.Fatalf("Failed to sign message: %v", err)
+		log.Fatalf("Failed to init Storage Client: %v", err)
 	}
-	sigBytes[64] += 27 // Adjust V
-	signatureHex := hexutil.Encode(sigBytes)
+	fmt.Println("✅ 0G Storage Client Initialized")
 
-	// Create the final Envelope (what gets pushed to 0G Storage)
-	envelope := types.SignalEnvelope{
-		NodeID:    nodeID,
-		Timestamp: timestamp,
-		Payload:   payload,
-		Signature: signatureHex,
-	}
+	// 3. Initialize Scorer
+	sc := scorer.NewScorer()
+	fmt.Println("✅ Reputation Scorer Initialized")
 
-	envJSON, _ := json.MarshalIndent(envelope, "", "  ")
-	fmt.Println("\n[2] Signal Envelope Generated (Ready for 0G Storage):")
-	fmt.Println(string(envJSON))
+	// 4. Initialize CEX Aggregator & Resolution Engine
+	agg := aggregator.NewCEXAggregator()
+	agg.Start()
+	defer agg.Stop()
 
-	// Simulate the Verification Layer receiving the signal
-	fmt.Println("\n[3] Verifier Layer Ingesting Signal...")
-	fmt.Println("    Validating cryptographic signature...")
+	eng := engine.NewResolutionEngine(agg.TickStream)
+	eng.Start()
+	defer eng.Stop()
+	fmt.Println("✅ Binance WebSocket & Resolution Engine Started")
+
+	// 5. Start the REST API & WebSocket Stream
+	// Note: We create a fan-out channel to pass events to both the API and Scorer
+	eventChan1 := make(chan *types.ActiveSignal, 1000)
+	eventChan2 := make(chan *types.ActiveSignal, 1000)
+
+	go func() {
+		for ev := range eng.EventStream() {
+			eventChan1 <- ev
+			eventChan2 <- ev
+		}
+	}()
+
+	// Wire Scorer
+	go func() {
+		for sig := range eventChan1 {
+			if sig.State == types.StateClosedWin || sig.State == types.StateClosedLoss || sig.State == types.StateExpired {
+				stats := sc.RecordClosed(sig)
+				log.Printf("Scorer: node=%s trust=%.2f tier=%s", stats.NodeID, stats.TrustScore, stats.Tier)
+			}
+		}
+	}()
+
+	server := api.NewServer(sc, eventChan2)
+	go func() {
+		if err := server.Start(cfg.APIAddr); err != nil {
+			log.Fatalf("API Server failed: %v", err)
+		}
+	}()
+	fmt.Println("✅ L2 API Gateway & WS Stream Running on " + cfg.APIAddr)
+
+	// 6. Start the L2 Batcher
+	// The batcher reads from the API queue, validates signals, injects them into the Engine,
+	// and periodically flushes the bundle to 0G Storage to save gas.
+	batcher := ingester.NewBatcher(storageClient, eng, crypto.VerifySignal)
 	
-	isValid, err := crypto.VerifySignal(envelope)
-	if err != nil {
-		fmt.Printf("    ❌ Verification Failed: %v\n", err)
-	} else if isValid {
-		fmt.Println("    ✅ Verification Passed! The signature perfectly matches the Node ID.")
-	}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	// Simulate a malicious actor tampering with the payload
-	fmt.Println("\n[4] Simulating an attacker modifying the take_profit price...")
-	tamperedEnvelope := envelope
-	tamperedEnvelope.Payload.TakeProfit = 100.00 // Attacker wants a fake 100x return
+	go batcher.Start(ctx, server.GetSignalQueue())
+	fmt.Println("✅ L2 Batcher Started (Zero-Gas Ingestion)")
 
-	isValid, err = crypto.VerifySignal(tamperedEnvelope)
-	if err != nil {
-		fmt.Printf("    ❌ Tampered Verification correctly Failed: %v\n", err)
-	} else if isValid {
-		fmt.Println("    ⚠️ CRITICAL ERROR: Tampered signal was accepted!")
-	}
+	// Wait for termination signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
 
-	fmt.Println("\n==================================================")
-	fmt.Println("🏁 Test Build Complete. The Verification Layer is secure.")
+	fmt.Println("\nShutting down gracefully...")
+	server.Stop()
+	cancel()
 }

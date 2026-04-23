@@ -85,10 +85,11 @@ var upgrader = websocket.Upgrader{
 
 // Server wires scorer and the engine event stream into HTTP handlers.
 type Server struct {
-	scorer *scorer.Scorer
-	hub    *streamHub
-	ctx    context.Context
-	cancel context.CancelFunc
+	scorer      *scorer.Scorer
+	hub         *streamHub
+	ctx         context.Context
+	cancel      context.CancelFunc
+	signalQueue chan types.SubmitRawSignalRequest // L2 Ingestion Queue
 }
 
 // NewServer creates a Server but does not start listening.
@@ -97,7 +98,13 @@ func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal) *Serve
 	ctx, cancel := context.WithCancel(context.Background())
 	hub := newStreamHub(eventStream)
 	go hub.run(ctx)
-	return &Server{scorer: sc, hub: hub, ctx: ctx, cancel: cancel}
+	return &Server{
+		scorer:      sc,
+		hub:         hub,
+		ctx:         ctx,
+		cancel:      cancel,
+		signalQueue: make(chan types.SubmitRawSignalRequest, 10000), // High capacity for MVP
+	}
 }
 
 // Start binds to addr and serves until the context is cancelled.
@@ -106,6 +113,7 @@ func (s *Server) Start(addr string) error {
 	mux.HandleFunc("/api/v1/nodes", s.handleNodes)
 	mux.HandleFunc("/api/v1/nodes/", s.handleNode) // trailing slash catches /{nodeId}
 	mux.HandleFunc("/api/v1/stream", s.handleStream)
+	mux.HandleFunc("/api/v1/signals", s.handleSubmitSignal) // New L2 Ingestion endpoint
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
@@ -122,6 +130,11 @@ func (s *Server) Start(addr string) error {
 }
 
 func (s *Server) Stop() { s.cancel() }
+
+// GetSignalQueue exposes the channel for the Ingester/Batcher to consume
+func (s *Server) GetSignalQueue() <-chan types.SubmitRawSignalRequest {
+	return s.signalQueue
+}
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
@@ -222,6 +235,38 @@ func (s *Server) handleStream(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
+	}
+}
+
+// handleSubmitSignal is the L2 ingestion endpoint for Node Creators.
+// It accepts a raw, encrypted signal payload and injects it into the matching engine queue.
+func (s *Server) handleSubmitSignal(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req types.SubmitRawSignalRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid json payload"})
+		return
+	}
+	defer r.Body.Close()
+
+	if req.NodeID == "" || req.Envelope.Signature == "" {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "missing node_id or signature"})
+		return
+	}
+
+	// Push to internal queue for the Verification Engine and Batcher to consume
+	select {
+	case s.signalQueue <- req:
+		writeJSON(w, http.StatusAccepted, map[string]string{
+			"status":  "queued",
+			"message": "Signal accepted for verification and batching",
+		})
+	default:
+		writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "server queue full"})
 	}
 }
 
