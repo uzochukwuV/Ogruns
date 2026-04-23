@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/0xprotocol/verification-layer/internal/contracts"
 	"github.com/0xprotocol/verification-layer/internal/engine"
 	"github.com/0xprotocol/verification-layer/pkg/types"
 )
@@ -20,6 +21,7 @@ import (
 type Batcher struct {
 	storage       *StorageClient
 	engine        *engine.ResolutionEngine
+	contracts     *contracts.ContractManager
 	verifyFn      VerifyFn
 	batchInterval time.Duration
 
@@ -27,10 +29,11 @@ type Batcher struct {
 	signals []types.SignalEnvelope
 }
 
-func NewBatcher(storage *StorageClient, eng *engine.ResolutionEngine, verify VerifyFn) *Batcher {
+func NewBatcher(storage *StorageClient, eng *engine.ResolutionEngine, cm *contracts.ContractManager, verify VerifyFn) *Batcher {
 	return &Batcher{
 		storage:       storage,
 		engine:        eng,
+		contracts:     cm,
 		verifyFn:      verify,
 		batchInterval: 24 * time.Hour, // Bundle signals daily to save massive gas
 		signals:       make([]types.SignalEnvelope, 0),
@@ -129,5 +132,13 @@ func (b *Batcher) flushTo0G(ctx context.Context) {
 
 	log.Printf("Batcher: ✅ Successfully batched %d signals to 0G Storage. RootHash: %s", len(bundle), rootHash)
 	
-	// Future Step: Take this rootHash and send a transaction to the NodeRegistry contract!
+	// Write the 0G Root Hash to the NodeRegistry.sol smart contract
+	if b.contracts != nil {
+		err = b.contracts.PublishBatchHash(ctx, rootHash)
+		if err != nil {
+			log.Printf("Batcher: ⚠️ Failed to anchor batch hash on-chain: %v", err)
+		} else {
+			log.Printf("Batcher: 🔗 Batch anchored on-chain successfully.")
+		}
+	}
 }
