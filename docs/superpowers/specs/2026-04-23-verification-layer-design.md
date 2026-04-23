@@ -51,3 +51,30 @@ This layer ensures that node developers cannot falsify their performance and pro
 ## 4. Constraints & Trade-offs
 - **Centralized Price Aggregator:** While the nodes and storage are decentralized via 0G, the Verification Layer relies on a platform-run CEX aggregator for price resolution. This trade-off is accepted to allow nodes to trade long-tail tokens and memecoins immediately upon listing.
 - **Memory Intensive:** The Resolution Engine must hold thousands of PENDING and ACTIVE signals in memory while processing high-frequency websocket ticks. Efficient data structures (like Redis sorted sets) will be required.
+## 5. Signal Envelope Schema
+The platform enforces a strict JSON structure for every signal pushed to 0G Storage. This ensures deterministic verification and enforceable access control via the Verifier API.
+
+```json
+{
+  "node_id": "0xABC123...",
+  "timestamp": 1713873600,
+  
+  "payload": {
+    "token_pair": "WIF/USDT",
+    "exchange": "binance",
+    "direction": "LONG",
+    "entry_price": 3.05,
+    "take_profit": 3.50,
+    "stop_loss": 2.80,
+    "expiry_time": 1713880000,
+    "weight_pct": 85.5
+  },
+
+  "signature": "0x7f9a...d8e2",
+  "encryption_pubkey": "0x..."
+}
+```
+
+### 5.1 Verification Mechanics
+1. **Signature Validation:** The Verifier Engine runs `ecrecover` on the `signature` using the hashed `payload` + `timestamp`. If the recovered address does not match the `node_id`, the signal is rejected.
+2. **Confidence Scoring:** The `weight_pct` (0.0 to 100.0) is factored into the Node's Reputation Score calculation. High-weight signals that hit Stop Loss incur a heavier reputation penalty than low-weight signals, forcing node creators to accurately represent AI confidence.
