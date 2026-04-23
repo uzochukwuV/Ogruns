@@ -107,18 +107,24 @@ func (e *ResolutionEngine) resolveSignal(id string, sig *types.ActiveSignal, tic
 		// For LONG: if tick drops below or equals entry
 		// For SHORT: if tick spikes above or equals entry
 		hitEntry := (isLong && tick.Price <= payload.EntryPrice) || (isShort && tick.Price >= payload.EntryPrice)
-
+		
 		if hitEntry {
 			e.mu.RUnlock() // Escalate lock to write
 			e.mu.Lock()
 			sig.State = types.StateActive
 			sig.EntryHitAt = now
 			log.Printf("Engine: %s hit ENTRY at %.4f -> ACTIVE", sig.ID, tick.Price)
-			e.eventStream <- sig
+			
+			// Fire the event stream before unlocking so Webhooks trigger instantly
+			select {
+			case e.eventStream <- sig:
+			default:
+				log.Printf("Engine: Warning: Event stream channel full")
+			}
+			
 			e.mu.Unlock()
 			e.mu.RLock() // Re-acquire read lock
 		}
-		return
 	}
 
 	// Handle State: ACTIVE -> CLOSED

@@ -25,13 +25,15 @@ func VerifySignal(env types.SignalEnvelope) (bool, error) {
 	message := fmt.Sprintf("%d:%s", env.Timestamp, string(payloadBytes))
 
 	// 3. Hash the message using standard Ethereum signed message format
-	// "\x19Ethereum Signed Message:\n" + len(message) + message
+	// Frontend usually hashes the message first
+	messageHash := crypto.Keccak256Hash([]byte(message))
+	
+	// "\x19Ethereum Signed Message:\n" + len(messageHash) + messageHash
 
 	// If the node signed via personal_sign, the actual hash is prefixed
 	// We'll support standard EIP-191 personal sign format
-	prefixedHash := crypto.Keccak256Hash(
-		[]byte(fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)),
-	)
+	prefixedMessage := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(messageHash.Bytes()), messageHash.Bytes())
+	prefixedHash := crypto.Keccak256Hash([]byte(prefixedMessage))
 
 	// 4. Decode the signature from hex
 	sigBytes, err := hexutil.Decode(env.Signature)

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/0xprotocol/verification-layer/pkg/types"
@@ -126,8 +125,5 @@ func (a *CEXAggregator) readLoopBinance(conn *websocket.Conn) {
 }
 
 func normalizeBinanceSymbol(symbol string) string {
-	if strings.HasSuffix(symbol, "USDT") {
-		return strings.TrimSuffix(symbol, "USDT") + "/USDT"
-	}
-	return symbol // Fallback
+	return symbol // Leave it as BTCUSDT for simplicity
 }
