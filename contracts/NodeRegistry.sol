@@ -3,15 +3,11 @@ pragma solidity ^0.8.20;
 
 /// @title NodeRegistry
 /// @notice On-chain registry of AI signal nodes. Node developers call
-///         registerNode() once, then publishSignal() for every new signal blob
-///         they upload to 0G Storage. The Verifier Layer watches for
-///         SignalPublished events to discover and ingest new blobs.
-///
-/// @dev    Node identity = msg.sender = Ethereum address derived from the
-///         node's private key. The same key is used to sign signal envelopes
-///         off-chain (ECDSA, EIP-191) and to send on-chain transactions.
-///         This means a single private key authenticates both layers without
-///         any additional key management.
+///         registerNode() once.
+///         Because of the Layer 2 Batching Architecture, individual nodes do NOT
+///         publish signals here. Instead, the Verifier Layer bundles thousands of
+///         signals into a daily 0G Storage blob, and calls publishBatch() to
+///         anchor the proof of data on-chain.
 contract NodeRegistry {
 
     // ── Data structures ──────────────────────────────────────────────────────
@@ -29,6 +25,7 @@ contract NodeRegistry {
 
     mapping(address => NodeInfo) public nodes;
     address[] public nodeList;
+    address public verifier;
 
     // ── Events ────────────────────────────────────────────────────────────────
 
@@ -40,11 +37,9 @@ contract NodeRegistry {
         address creator
     );
 
-    /// @notice Emitted when a node publishes a new signal blob to 0G Storage.
-    ///         The Verifier Layer polls this event to discover new blobs.
-    ///         rootHash is the 0G Storage Merkle root of the uploaded blob.
-    event SignalPublished(
-        address indexed nodeId,
+    /// @notice Emitted when the Verifier Layer publishes a daily batch of signals
+    ///         to 0G Storage. This provides the cryptographic proof for auditing.
+    event BatchPublished(
         bytes32 rootHash,
         uint256 timestamp
     );
@@ -57,13 +52,17 @@ contract NodeRegistry {
     error AlreadyRegistered();
     error NotRegistered();
     error NotActive();
-    error NotCreator();
+    error OnlyVerifier();
 
     // ── Modifiers ─────────────────────────────────────────────────────────────
 
-    modifier onlyActiveNode() {
-        if (!nodes[msg.sender].active) revert NotActive();
+    modifier onlyVerifier() {
+        if (msg.sender != verifier) revert OnlyVerifier();
         _;
+    }
+
+    constructor(address _verifier) {
+        verifier = _verifier;
     }
 
     // ── Core functions ────────────────────────────────────────────────────────
@@ -89,11 +88,10 @@ contract NodeRegistry {
         emit NodeRegistered(msg.sender, name, tokenFocus, msg.sender);
     }
 
-    /// @notice Publish a new signal. Called after the blob is uploaded to
-    ///         0G Storage. rootHash is the storage Merkle root returned by
-    ///         the 0G indexer.
-    function publishSignal(bytes32 rootHash) external onlyActiveNode {
-        emit SignalPublished(msg.sender, rootHash, block.timestamp);
+    /// @notice Publish a daily batch of signals. Called by the Verifier after
+    ///         uploading the bundled JSON to 0G Storage.
+    function publishBatch(bytes32 rootHash) external onlyVerifier {
+        emit BatchPublished(rootHash, block.timestamp);
     }
 
     /// @notice Permanently deactivate this node. Cannot be reversed.
