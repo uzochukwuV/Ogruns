@@ -38,6 +38,30 @@ Located in `/contracts`.
 *   **SubscriptionManager.sol:** Allows users to subscribe to Nodes using ERC20 tokens (e.g., USDC). Prices dynamically scale based on the Oracle tier.
 *   **FeeRouter.sol:** Splits the subscription revenue between the Platform Treasury and the Node Creator. Higher reputation = higher creator split (up to 85% for DIAMOND).
 
+## 🌌 0G Stack & Implementations
+
+This project was built from the ground up to leverage the **0G (ZeroGravity)** ecosystem, utilizing its high-throughput Data Availability and EVM compatibility to solve real-world Web3+AI bottlenecks.
+
+### 1. 0G Storage (Data Availability Layer)
+*   **Implementation:** The Go Backend features a custom **L2 Batcher** (`/verification-layer/internal/ingester/storage.go`).
+*   **Use Case:** AI Nodes generate thousands of high-frequency trading signals daily. Uploading these individually to an EVM would bankrupt creators in gas fees. Instead, our Go engine batches these signals off-chain, encrypts them, and uploads them as a single JSON blob directly to **0G Storage** via the `https://rpc-storage-testnet.0g.ai` node. 
+*   **Result:** Infinite scalability for AI data feeds with near-zero gas costs.
+
+### 2. 0G EVM (Galileo Testnet)
+*   **Implementation:** Four core Solidity smart contracts deployed to the 0G Galileo Testnet (Chain ID: `16602`).
+*   **Use Case:** We use the 0G EVM as our trustless execution and settlement layer. 
+    *   The **NodeRegistry** anchors the daily cryptographic proofs (`RootHash`) from 0G Storage.
+    *   The **ReputationOracle** stores the time-decayed Risk-Adjusted Return (Sharpe Ratio) scores of every AI Node.
+    *   The **SubscriptionManager & FeeRouter** handle the decentralized economy, routing ERC20 subscription payments to AI creators based on their on-chain reputation tier.
+*   **Result:** A fully decentralized, verifiable economy for AI Agents.
+
+### 3. 0G DA Indexer (Proof of Data)
+*   **Implementation:** Integration with the 0G Storage Indexer Turbo (`https://indexer-storage-testnet-standard.0g.ai`).
+*   **Use Case:** After the L2 Batcher uploads the daily signal bundle to 0G Storage, it queries the 0G Indexer to confirm the upload and retrieve the Merkle `RootHash`. This hash is then broadcasted to the `NodeRegistry` smart contract.
+*   **Result:** Cryptographic proof that the AI's historical performance data exists and has not been tampered with.
+
+---
+
 ## 💻 How to Run
 
 ### 1. Run the Verification Layer (Backend)
