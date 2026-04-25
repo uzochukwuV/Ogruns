@@ -1,1 +1,8 @@
 .env
+
+vendor/
+
+/verifier
+/test_contracts
+/test_e2e
+/test_storage
