@@ -1,6 +1,6 @@
 module github.com/0xprotocol/verification-layer
 
-go 1.25.1
+go 1.23.0
 
 require (
 	github.com/0gfoundation/0g-storage-client v1.2.2

@@ -10,15 +10,22 @@ import (
 	"github.com/0xprotocol/verification-layer/pkg/types"
 )
 
+// TokenTracker is an interface for tracking tokens (implemented by CEXAggregator)
+type TokenTracker interface {
+	TrackToken(tokenPair string)
+	UntrackToken(tokenPair string)
+}
+
 // ResolutionEngine is the core matching engine that compares incoming high-frequency
 // WebSocket ticks against all active and pending trading signals.
 type ResolutionEngine struct {
-	mu          sync.RWMutex
-	signals     map[string]*types.ActiveSignal
-	eventStream chan *types.ActiveSignal // Emits state changes
-	tickStream  <-chan types.Tick
-	ctx         context.Context
-	cancel      context.CancelFunc
+	mu           sync.RWMutex
+	signals      map[string]*types.ActiveSignal
+	eventStream  chan *types.ActiveSignal // Emits state changes
+	tickStream   <-chan types.Tick
+	ctx          context.Context
+	cancel       context.CancelFunc
+	tokenTracker TokenTracker // For on-demand price tracking
 }
 
 func NewResolutionEngine(tickStream <-chan types.Tick) *ResolutionEngine {
@@ -30,6 +37,11 @@ func NewResolutionEngine(tickStream <-chan types.Tick) *ResolutionEngine {
 		ctx:         ctx,
 		cancel:      cancel,
 	}
+}
+
+// SetTokenTracker sets the token tracker for on-demand price fetching
+func (e *ResolutionEngine) SetTokenTracker(tracker TokenTracker) {
+	e.tokenTracker = tracker
 }
 
 func (e *ResolutionEngine) EventStream() <-chan *types.ActiveSignal {
@@ -50,6 +62,12 @@ func (e *ResolutionEngine) AddSignal(env types.SignalEnvelope) {
 	}
 
 	e.signals[id] = activeSig
+
+	// Start tracking this token pair for on-demand price fetching
+	if e.tokenTracker != nil {
+		e.tokenTracker.TrackToken(env.Payload.TokenPair)
+	}
+
 	log.Printf("Engine: Registered new PENDING signal for %s (%s)", env.Payload.TokenPair, env.Payload.Direction)
 }
 
@@ -150,6 +168,11 @@ func (e *ResolutionEngine) resolveSignal(id string, sig *types.ActiveSignal, tic
 				log.Printf("Engine: %s hit STOP LOSS at %.4f -> LOSS", sig.ID, tick.Price)
 			}
 
+			// Stop tracking this token pair
+			if e.tokenTracker != nil {
+				e.tokenTracker.UntrackToken(sig.Envelope.Payload.TokenPair)
+			}
+
 			e.eventStream <- sig
 			e.mu.Unlock()
 			e.mu.RLock() // Re-acquire read lock
@@ -180,6 +203,11 @@ func (e *ResolutionEngine) cleanupExpired() {
 						sig.ClosedAt = now
 						// Note: ClosedPrice should ideally be fetched from the last tick
 						log.Printf("Engine: %s EXPIRED while active -> EXPIRED", id)
+					}
+
+					// Stop tracking this token pair
+					if e.tokenTracker != nil {
+						e.tokenTracker.UntrackToken(sig.Envelope.Payload.TokenPair)
 					}
 
 					e.eventStream <- sig
