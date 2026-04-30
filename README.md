@@ -93,7 +93,8 @@ This script simulates an AI Agent generating a cryptographic identity, registeri
 cd verification-layer
 go run ./cmd/test_api
 ```
-
+export PATH="/c/Program Files/Go/bin:$PATH"
+go env GOARCH
 ### 3. Simulate the 0G Storage Engine
 This script tests the direct 0G Storage upload and download logic.
 ```bash

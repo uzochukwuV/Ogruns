@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -103,6 +104,36 @@ func NewCoinGeckoPriceFetcher(tickStream chan types.Tick, apiKey string) *CoinGe
 		trackedTokens: make(map[string]int),
 		pollTrigger:   make(chan struct{}, 1),
 	}
+}
+
+// NewOnDemandPriceFetcher creates a price fetcher for on-demand/scheduled use
+// This is simpler - no tick stream needed, just fetches prices when asked
+func NewOnDemandPriceFetcher() *CoinGeckoPriceFetcher {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	// Get API key from environment
+	apiKey := ""
+	if key := strings.TrimSpace(getEnv("COINGECKO_API_KEY", "")); key != "" {
+		apiKey = key
+	}
+
+	return &CoinGeckoPriceFetcher{
+		TickStream:    nil, // Not used for on-demand
+		ctx:           ctx,
+		cancel:        cancel,
+		pollInterval:  10 * time.Second,
+		httpClient:    &http.Client{Timeout: 15 * time.Second},
+		apiKey:        apiKey,
+		trackedTokens: make(map[string]int),
+		pollTrigger:   make(chan struct{}, 1),
+	}
+}
+
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }
 
 func (c *CoinGeckoPriceFetcher) Start() {
