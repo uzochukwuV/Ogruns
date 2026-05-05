@@ -16,18 +16,21 @@ import (
 
 // WebhookPayload is sent to subscribers when a signal is analyzed
 type WebhookPayload struct {
-	EventType    string  `json:"event_type"`
-	SignalID     string  `json:"signal_id"`
-	NodeID       string  `json:"node_id"`
-	TokenPair    string  `json:"token_pair"`
-	Direction    string  `json:"direction"`
-	EntryPrice   float64 `json:"entry_price"`
-	TargetPrice  float64 `json:"target_price"`
-	StopLoss     float64 `json:"stop_loss"`
+	EventType     string  `json:"event_type"`
+	SignalID      string  `json:"signal_id"`
+	NodeID        string  `json:"node_id"`
+	TokenPair     string  `json:"token_pair"`
+	Direction     string  `json:"direction"`
+	TradeType     string  `json:"trade_type"`            // "spot", "perpetual", "futures"
+	Leverage      float64 `json:"leverage"`              // 1x for spot, higher for perps
+	EntryPrice    float64 `json:"entry_price"`
+	TargetPrice   float64 `json:"target_price"`
+	StopLoss      float64 `json:"stop_loss"`
 	PriceAtExpiry float64 `json:"price_at_expiry"`
-	Outcome      string  `json:"outcome"`
-	PnLPercent   float64 `json:"pnl_percent"`
-	RiskReward   float64 `json:"risk_reward"`
+	Outcome       string  `json:"outcome"`
+	PnLPercent    float64 `json:"pnl_percent"`
+	LeveragedPnL  float64 `json:"leveraged_pnl_percent"` // PnL with leverage applied
+	RiskReward    float64 `json:"risk_reward"`
 	// Node's updated reputation after this signal
 	NodeTrustScore float64 `json:"node_trust_score"`
 	NodeTier       string  `json:"node_tier"`
@@ -127,6 +130,8 @@ func (h *AnalysisHandler) fireWebhooks(nodeID string, result AnalysisResult, sta
 
 	payload := result.Signal.Envelope.Payload
 	rr := calculateRiskReward(payload)
+	leverage := payload.GetLeverage()
+	leveragedPnL := result.PnLPercent * leverage
 
 	webhookPayload := WebhookPayload{
 		EventType:      "SIGNAL_ANALYZED",
@@ -134,12 +139,15 @@ func (h *AnalysisHandler) fireWebhooks(nodeID string, result AnalysisResult, sta
 		NodeID:         nodeID,
 		TokenPair:      payload.TokenPair,
 		Direction:      payload.Direction,
+		TradeType:      payload.GetTradeType(),
+		Leverage:       leverage,
 		EntryPrice:     payload.EntryPrice,
 		TargetPrice:    payload.TakeProfit,
 		StopLoss:       payload.StopLoss,
 		PriceAtExpiry:  result.PriceAtExpiry,
 		Outcome:        string(result.Outcome),
 		PnLPercent:     result.PnLPercent,
+		LeveragedPnL:   leveragedPnL,
 		RiskReward:     rr,
 		NodeTrustScore: stats.TrustScore,
 		NodeTier:       string(stats.Tier),

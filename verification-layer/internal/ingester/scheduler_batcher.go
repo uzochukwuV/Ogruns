@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/0xprotocol/verification-layer/internal/contracts"
+	"github.com/0xprotocol/verification-layer/internal/crypto"
 	"github.com/0xprotocol/verification-layer/internal/scheduler"
 	"github.com/0xprotocol/verification-layer/pkg/types"
 )
@@ -29,6 +30,9 @@ type SchedulerBatcher struct {
 	mu      sync.Mutex
 	signals []types.SignalEnvelope
 
+	// Encrypted persistence for active signals
+	encStore *crypto.EncryptedSignalStore
+
 	// Event stream for WebSocket clients
 	eventStream chan *types.ActiveSignal
 }
@@ -39,6 +43,17 @@ func NewSchedulerBatcher(
 	priceFetcher scheduler.PriceFetcher,
 	cm *contracts.ContractManager,
 	verify VerifyFn,
+) *SchedulerBatcher {
+	return NewSchedulerBatcherWithEncryption(storage, priceFetcher, cm, verify, "")
+}
+
+// NewSchedulerBatcherWithEncryption creates a batcher with encrypted signal persistence
+func NewSchedulerBatcherWithEncryption(
+	storage *StorageClient,
+	priceFetcher scheduler.PriceFetcher,
+	cm *contracts.ContractManager,
+	verify VerifyFn,
+	privateKeyHex string,
 ) *SchedulerBatcher {
 	eventStream := make(chan *types.ActiveSignal, 1000)
 
@@ -66,6 +81,22 @@ func NewSchedulerBatcher(
 	// Create the scheduler with our result handler
 	sched := scheduler.NewSignalScheduler(priceFetcher, resultHandler)
 
+	// Initialize encrypted storage if private key provided
+	var encStore *crypto.EncryptedSignalStore
+	if privateKeyHex != "" {
+		dataDir := filepath.Join(os.Getenv("HOME"), ".0g-verifier", "signals")
+		if home := os.Getenv("USERPROFILE"); home != "" {
+			dataDir = filepath.Join(home, ".0g-verifier", "signals") // Windows
+		}
+		var err error
+		encStore, err = crypto.NewEncryptedSignalStore(dataDir, privateKeyHex)
+		if err != nil {
+			log.Printf("SchedulerBatcher: ⚠️ Failed to init encrypted storage: %v", err)
+		} else {
+			log.Println("SchedulerBatcher: ✅ Encrypted signal persistence enabled")
+		}
+	}
+
 	return &SchedulerBatcher{
 		storage:       storage,
 		scheduler:     sched,
@@ -74,6 +105,7 @@ func NewSchedulerBatcher(
 		verifyFn:      verify,
 		batchInterval: 24 * time.Hour,
 		signals:       make([]types.SignalEnvelope, 0),
+		encStore:      encStore,
 		eventStream:   eventStream,
 	}
 }
@@ -82,13 +114,39 @@ func NewSchedulerBatcher(
 func (b *SchedulerBatcher) Start(ctx context.Context, apiQueue <-chan types.SubmitRawSignalRequest) {
 	log.Printf("SchedulerBatcher: L2 Sequencer started with scheduled analysis. Batch interval: %s", b.batchInterval)
 
-	ticker := time.NewTicker(b.batchInterval)
-	defer ticker.Stop()
+	// Load any persisted signals from encrypted storage
+	if b.encStore != nil {
+		if signals, err := b.encStore.Load(); err != nil {
+			log.Printf("SchedulerBatcher: ⚠️ Failed to load persisted signals: %v", err)
+		} else if len(signals) > 0 {
+			b.mu.Lock()
+			b.signals = append(b.signals, signals...)
+			b.mu.Unlock()
+			log.Printf("SchedulerBatcher: ✅ Restored %d signals from encrypted storage", len(signals))
+
+			// Re-schedule any signals that haven't expired yet
+			for _, sig := range signals {
+				if sig.Payload.ExpiryTime > time.Now().Unix() {
+					if err := b.scheduler.AddSignal(sig); err != nil {
+						log.Printf("SchedulerBatcher: Failed to reschedule signal: %v", err)
+					}
+				}
+			}
+		}
+	}
+
+	batchTicker := time.NewTicker(b.batchInterval)
+	defer batchTicker.Stop()
+
+	// Auto-save active signals every 2 minutes
+	saveTicker := time.NewTicker(2 * time.Minute)
+	defer saveTicker.Stop()
 
 	for {
 		select {
 		case <-ctx.Done():
-			b.flushTo0G(context.Background()) // Try to flush before shutdown
+			b.persistActiveSignals() // Save before shutdown
+			b.flushTo0G(context.Background())
 			b.scheduler.Stop()
 			return
 
@@ -98,21 +156,58 @@ func (b *SchedulerBatcher) Start(ctx context.Context, apiQueue <-chan types.Subm
 			}
 			b.processIncomingSignal(req)
 
-		case <-ticker.C:
+		case <-batchTicker.C:
 			b.flushTo0G(ctx)
+
+		case <-saveTicker.C:
+			b.persistActiveSignals()
 		}
 	}
 }
 
-func (b *SchedulerBatcher) processIncomingSignal(req types.SubmitRawSignalRequest) {
-	// 1. Cryptographic Verification
-	ok, err := b.verifyFn(req.Envelope)
-	if err != nil || !ok {
-		log.Printf("SchedulerBatcher: ❌ Rejected invalid signal from %s: %v", req.NodeID, err)
+// persistActiveSignals saves current active signals to encrypted storage
+func (b *SchedulerBatcher) persistActiveSignals() {
+	if b.encStore == nil {
 		return
 	}
 
-	// 2. Schedule for expiry-time analysis (replaces real-time engine)
+	b.mu.Lock()
+	// Filter to only keep active (non-expired) signals
+	now := time.Now().Unix()
+	active := make([]types.SignalEnvelope, 0)
+	for _, sig := range b.signals {
+		if sig.Payload.ExpiryTime > now {
+			active = append(active, sig)
+		}
+	}
+	b.mu.Unlock()
+
+	if err := b.encStore.Save(active); err != nil {
+		log.Printf("SchedulerBatcher: ⚠️ Failed to persist signals: %v", err)
+	} else if len(active) > 0 {
+		log.Printf("SchedulerBatcher: 🔒 Persisted %d active signals (encrypted)", len(active))
+	}
+}
+
+func (b *SchedulerBatcher) processIncomingSignal(req types.SubmitRawSignalRequest) {
+	// 1. Signal Payload Validation
+	validation := req.Envelope.Validate()
+	if !validation.Valid {
+		log.Printf("SchedulerBatcher: ❌ Invalid signal from %s: %s", req.NodeID, validation.Error)
+		return
+	}
+	for _, warn := range validation.Warnings {
+		log.Printf("SchedulerBatcher: ⚠️ Signal warning from %s: %s", req.NodeID[:16]+"...", warn)
+	}
+
+	// 2. Cryptographic Verification
+	ok, err := b.verifyFn(req.Envelope)
+	if err != nil || !ok {
+		log.Printf("SchedulerBatcher: ❌ Rejected invalid signature from %s: %v", req.NodeID, err)
+		return
+	}
+
+	// 3. Schedule for expiry-time analysis (replaces real-time engine)
 	if err := b.scheduler.AddSignal(req.Envelope); err != nil {
 		log.Printf("SchedulerBatcher: ⚠️ Failed to schedule signal: %v", err)
 		return

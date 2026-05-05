@@ -197,9 +197,12 @@ func (c *CoinGeckoPriceFetcher) GetTrackedTokens() []string {
 
 // FetchPriceOnce fetches price for a single token immediately (for signal resolution)
 func (c *CoinGeckoPriceFetcher) FetchPriceOnce(tokenPair string) (float64, error) {
-	coinID, ok := tokenPairToCoinGeckoID[tokenPair]
+	// Normalize token pair: "BTC/USDT" -> "BTCUSDT"
+	normalizedPair := strings.ReplaceAll(strings.ToUpper(tokenPair), "/", "")
+
+	coinID, ok := tokenPairToCoinGeckoID[normalizedPair]
 	if !ok {
-		return 0, fmt.Errorf("unsupported token pair: %s", tokenPair)
+		return 0, fmt.Errorf("unsupported token pair: %s (normalized: %s)", tokenPair, normalizedPair)
 	}
 
 	url := fmt.Sprintf(

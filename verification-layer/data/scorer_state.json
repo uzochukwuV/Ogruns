@@ -1,0 +1,137 @@
+{
+  "version": "1.0",
+  "saved_at": 1777996932,
+  "node_stats": {
+    "0x82d441e43BCD5D9309E7227d888291210a6bD77D": {
+      "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
+      "total_signals": 5,
+      "win_count": 1,
+      "loss_count": 4,
+      "expired_count": 5,
+      "win_rate": 0.2,
+      "avg_ev": -0.0004505831610811548,
+      "sharpe_ratio": -0.9769868310165432,
+      "trust_score": 5,
+      "tier": "BRONZE",
+      "updated_at": 1777765235
+    }
+  },
+  "closed_signals": {
+    "0x82d441e43BCD5D9309E7227d888291210a6bD77D": [
+      {
+        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648287",
+        "Envelope": {
+          "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
+          "timestamp": 1777648287,
+          "payload": {
+            "token_pair": "BTC/USDT",
+            "exchange": "binance",
+            "direction": "SHORT",
+            "entry_price": 78197.97,
+            "take_profit": 75908.99,
+            "stop_loss": 79338.99,
+            "expiry_time": 1777648407,
+            "weight_pct": 82
+          },
+          "signature": "0x601bcd1d8fb3280bfb42acd5877cba7937cc4602e68a81691718dfb5ef67cb37629ac1e603239a1fa10cb65afccf079960e9ad2303a13bad445c4009125699dd1c"
+        },
+        "State": "EXPIRED",
+        "EntryHitAt": 0,
+        "ClosedAt": 1777648411,
+        "ClosedPrice": 78310
+      },
+      {
+        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648677",
+        "Envelope": {
+          "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
+          "timestamp": 1777648677,
+          "payload": {
+            "token_pair": "BTC/USDT",
+            "exchange": "binance",
+            "direction": "SHORT",
+            "entry_price": 78411.67,
+            "take_profit": 74618.1,
+            "stop_loss": 80072.3,
+            "expiry_time": 1777648797,
+            "weight_pct": 96
+          },
+          "signature": "0xba847fb5b61cbc97db6cfb7bdec9c48f235d1b8b3464b6f13a9785cf2235fed317d52ca28aa9090b5e2da194b453b518922828e89b22e430d5a0e96511a01e8a1c"
+        },
+        "State": "EXPIRED",
+        "EntryHitAt": 0,
+        "ClosedAt": 1777648799,
+        "ClosedPrice": 78425
+      },
+      {
+        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648682",
+        "Envelope": {
+          "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
+          "timestamp": 1777648682,
+          "payload": {
+            "token_pair": "BTC/USDT",
+            "exchange": "binance",
+            "direction": "LONG",
+            "entry_price": 78523.56,
+            "take_profit": 82386.3,
+            "stop_loss": 76404.21,
+            "expiry_time": 1777648802,
+            "weight_pct": 53
+          },
+          "signature": "0xdcc60c7e6f2e324d20360a637e90581d610e1ebb477ecbfddcbb0ef86f35944e310467f24934f13af838a689fc78aaedc780a679bd00253c2e5a8b96af966fc91b"
+        },
+        "State": "EXPIRED",
+        "EntryHitAt": 0,
+        "ClosedAt": 1777648803,
+        "ClosedPrice": 78425
+      },
+      {
+        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777764989",
+        "Envelope": {
+          "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
+          "timestamp": 1777764989,
+          "payload": {
+            "token_pair": "BTC/USDT",
+            "exchange": "binance",
+            "direction": "short",
+            "entry_price": 78762.34,
+            "take_profit": 77499.93,
+            "stop_loss": 79599.25,
+            "expiry_time": 1777765109,
+            "weight_pct": 95,
+            "trade_type": "perpetual",
+            "leverage": 5
+          },
+          "signature": "0x7b16072e8d20bff3dc61f3a28415f5fd3514261719b88783a90d58013064bda313dbdc67efab640a32b2affadafec2926eef42a14190b534a4ba64aec8ec34161c"
+        },
+        "State": "EXPIRED",
+        "EntryHitAt": 0,
+        "ClosedAt": 1777765110,
+        "ClosedPrice": 78762
+      },
+      {
+        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777765114",
+        "Envelope": {
+          "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
+          "timestamp": 1777765114,
+          "payload": {
+            "token_pair": "BTC/USDT",
+            "exchange": "binance",
+            "direction": "short",
+            "entry_price": 78664.61,
+            "take_profit": 77302.48,
+            "stop_loss": 79147.76,
+            "expiry_time": 1777765234,
+            "weight_pct": 55,
+            "trade_type": "perpetual",
+            "leverage": 20
+          },
+          "signature": "0xa8bbdf1ba31ea885cfc76b6e139bf2086447e7369cca98e44da51b4bf2ff36a4300bc2657a6539c9139ce20897c96a568617261ab7188631e3b762614aec75541c"
+        },
+        "State": "EXPIRED",
+        "EntryHitAt": 0,
+        "ClosedAt": 1777765235,
+        "ClosedPrice": 78707
+      }
+    ]
+  }
+}

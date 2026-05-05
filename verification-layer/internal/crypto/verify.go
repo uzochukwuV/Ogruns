@@ -24,15 +24,10 @@ func VerifySignal(env types.SignalEnvelope) (bool, error) {
 	// Format: <timestamp>:<payload_json>
 	message := fmt.Sprintf("%d:%s", env.Timestamp, string(payloadBytes))
 
-	// 3. Hash the message using standard Ethereum signed message format
-	// Frontend usually hashes the message first
-	messageHash := crypto.Keccak256Hash([]byte(message))
-	
-	// "\x19Ethereum Signed Message:\n" + len(messageHash) + messageHash
-
-	// If the node signed via personal_sign, the actual hash is prefixed
-	// We'll support standard EIP-191 personal sign format
-	prefixedMessage := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(messageHash.Bytes()), messageHash.Bytes())
+	// 3. Apply EIP-191 personal_sign prefix directly to the message
+	// This matches what ethers.js wallet.signMessage() does:
+	// hash = keccak256("\x19Ethereum Signed Message:\n" + len(message) + message)
+	prefixedMessage := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)
 	prefixedHash := crypto.Keccak256Hash([]byte(prefixedMessage))
 
 	// 4. Decode the signature from hex

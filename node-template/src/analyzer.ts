@@ -56,7 +56,7 @@ export const builtinRSIAnalyzer: Analyzer = async (
     const takeProfit = entry + (entry - stopLoss) * RR_RATIO;
     const confidence = Math.min(100, ((RSI_OVERSOLD - rsi) / RSI_OVERSOLD) * 200);
     return {
-      direction:   "LONG",
+      direction:   "long",       // lowercase to match Go validation
       entryPrice:  entry,
       takeProfit,
       stopLoss,
@@ -70,7 +70,7 @@ export const builtinRSIAnalyzer: Analyzer = async (
     const takeProfit = entry - (stopLoss - entry) * RR_RATIO;
     const confidence = Math.min(100, ((rsi - RSI_OVERBOUGHT) / (100 - RSI_OVERBOUGHT)) * 200);
     return {
-      direction:   "SHORT",
+      direction:   "short",      // lowercase to match Go validation
       entryPrice:  entry,
       takeProfit,
       stopLoss,

@@ -136,6 +136,32 @@ func (s *Scorer) ForBroadcast() []NodeStats {
 	return s.AllStats()
 }
 
+// GetSignalHistory returns all closed signals for a node (for analytics)
+func (s *Scorer) GetSignalHistory(nodeID string) []*types.ActiveSignal {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	if signals, ok := s.closedSignals[nodeID]; ok {
+		// Return a copy to avoid race conditions
+		result := make([]*types.ActiveSignal, len(signals))
+		copy(result, signals)
+		return result
+	}
+	return nil
+}
+
+// GetAllSignalHistory returns all closed signals across all nodes
+func (s *Scorer) GetAllSignalHistory() []*types.ActiveSignal {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var all []*types.ActiveSignal
+	for _, signals := range s.closedSignals {
+		all = append(all, signals...)
+	}
+	return all
+}
+
 // ─── Core computation ────────────────────────────────────────────────────────
 
 func (s *Scorer) compute(nodeID string, signals []*types.ActiveSignal) NodeStats {
@@ -179,6 +205,7 @@ func (s *Scorer) compute(nodeID string, signals []*types.ActiveSignal) NodeStats
 
 		case types.StateExpired:
 			// Measure actual PnL at expiry vs entry.
+			expired++
 			if payload.EntryPrice > 0 && sig.ClosedPrice > 0 {
 				var pct float64
 				if payload.Direction == "LONG" {
@@ -187,13 +214,15 @@ func (s *Scorer) compute(nodeID string, signals []*types.ActiveSignal) NodeStats
 					pct = (payload.EntryPrice - sig.ClosedPrice) / payload.EntryPrice
 				}
 				ret = pct * weightScale
+				// Only count as win/loss if we have valid price data
+				if ret > 0 {
+					wins++
+				} else if ret < 0 {
+					losses++
+				}
+				// ret == 0 exactly is neutral, don't count as win or loss
 			}
-			expired++
-			if ret < 0 {
-				losses++
-			} else {
-				wins++
-			}
+			// If no valid price data (ClosedPrice == 0), don't count as win or loss
 		}
 
 		weightedEVSum += ret * tw

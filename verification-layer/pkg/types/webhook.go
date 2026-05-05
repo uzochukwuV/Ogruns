@@ -5,6 +5,7 @@ package types
 type RegisterWebhookRequest struct {
 	SubscriberAddress string `json:"subscriber_address"` // Their Ethereum identity
 	Signature         string `json:"signature"`          // Proof of identity
+	Timestamp         string `json:"timestamp"`          // Unix timestamp for replay protection
 	TargetURL         string `json:"target_url"`         // e.g., "https://my-ai-bot.vercel.app/trade"
 	NodeID            string `json:"node_id"`            // The specific Node they are subscribed to
 }

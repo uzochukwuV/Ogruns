@@ -57,7 +57,7 @@ func main() {
 
 	// ── 4. API Server ────────────────────────────────────────────────────────
 	dispatch := dispatcher.NewWebhookDispatcher()
-	srv := api.NewServer(sc, eng.EventStream(), dispatch)
+	srv := api.NewServer(sc, eng.EventStream(), dispatch, nil) // nil = no subscription gating
 	go func() {
 		if err := srv.Start(cfg.APIAddr); err != nil {
 			log.Fatalf("API server error: %v", err)

@@ -47,8 +47,9 @@ func main() {
 	fmt.Println("[2] Started In-Memory Resolution Engine")
 
 	// 3. Initialize the API Server (receives signals via HTTP POST)
+	// Pass nil for ContractManager to disable subscription gating in test mode
 	sc := scorer.NewScorer()
-	apiServer := api.NewServer(sc, eng.EventStream(), nil)
+	apiServer := api.NewServer(sc, eng.EventStream(), nil, nil)
 	go func() {
 		if err := apiServer.Start(":8000"); err != nil && err != http.ErrServerClosed {
 			log.Printf("API server error: %v", err)

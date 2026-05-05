@@ -22,17 +22,26 @@ const reputationOracleABI = `[{"inputs":[{"internalType":"address","name":"nodeI
 // NodeRegistry ABI definitions for `registerNode`, `publishBatch`, and `nodes`
 const nodeRegistryABI = `[{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"}],"name":"registerNode","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"rootHash","type":"bytes32"}],"name":"publishBatch","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nodes","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"bool","name":"active","type":"bool"},{"internalType":"uint256","name":"registeredAt","type":"uint256"}],"stateMutability":"view","type":"function"}]`
 
+// SubscriptionManager ABI for subscription verification
+const subscriptionManagerABI = `[{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"address","name":"nodeId","type":"address"}],"name":"isSubscribed","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"address","name":"nodeId","type":"address"}],"name":"subscriptionEnd","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"nodeId","type":"address"}],"name":"priceFor","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]`
+
 type ContractManager struct {
-	client          *ethclient.Client
-	privateKey      *ecdsa.PrivateKey
-	address         common.Address
-	oracleABI       abi.ABI
-	oracleAddress   common.Address
-	registryABI     abi.ABI
-	registryAddress common.Address
+	client              *ethclient.Client
+	privateKey          *ecdsa.PrivateKey
+	address             common.Address
+	oracleABI           abi.ABI
+	oracleAddress       common.Address
+	registryABI         abi.ABI
+	registryAddress     common.Address
+	subscriptionABI     abi.ABI
+	subscriptionAddress common.Address
 }
 
 func NewContractManager(rpcURL, privKeyHex, oracleAddr, registryAddr string) (*ContractManager, error) {
+	return NewContractManagerWithSubscription(rpcURL, privKeyHex, oracleAddr, registryAddr, "")
+}
+
+func NewContractManagerWithSubscription(rpcURL, privKeyHex, oracleAddr, registryAddr, subscriptionAddr string) (*ContractManager, error) {
 	client, err := ethclient.Dial(rpcURL)
 	if err != nil {
 		return nil, err
@@ -61,14 +70,21 @@ func NewContractManager(rpcURL, privKeyHex, oracleAddr, registryAddr string) (*C
 		return nil, err
 	}
 
+	parsedSubscriptionABI, err := abi.JSON(strings.NewReader(subscriptionManagerABI))
+	if err != nil {
+		return nil, err
+	}
+
 	return &ContractManager{
-		client:          client,
-		privateKey:      privateKey,
-		address:         address,
-		oracleABI:       parsedOracleABI,
-		oracleAddress:   common.HexToAddress(oracleAddr),
-		registryABI:     parsedRegistryABI,
-		registryAddress: common.HexToAddress(registryAddr),
+		client:              client,
+		privateKey:          privateKey,
+		address:             address,
+		oracleABI:           parsedOracleABI,
+		oracleAddress:       common.HexToAddress(oracleAddr),
+		registryABI:         parsedRegistryABI,
+		registryAddress:     common.HexToAddress(registryAddr),
+		subscriptionABI:     parsedSubscriptionABI,
+		subscriptionAddress: common.HexToAddress(subscriptionAddr),
 	}, nil
 }
 
@@ -197,4 +213,113 @@ func (m *ContractManager) sendTransaction(ctx context.Context, to common.Address
 		return fmt.Errorf("transaction %s reverted (status=0)", signedTx.Hash().Hex())
 	}
 	return nil
+}
+
+// ── Subscription Manager Methods ─────────────────────────────────────────────
+
+// SubscriptionInfo contains details about a user's subscription to a node
+type SubscriptionInfo struct {
+	IsSubscribed bool
+	EndTime      *big.Int
+}
+
+// IsSubscribed checks if a user address is subscribed to a node on-chain
+func (m *ContractManager) IsSubscribed(ctx context.Context, userAddr, nodeID string) (bool, error) {
+	if m.subscriptionAddress == (common.Address{}) {
+		// No subscription contract configured - allow access (dev mode)
+		return true, nil
+	}
+
+	user := common.HexToAddress(userAddr)
+	node := common.HexToAddress(nodeID)
+
+	data, err := m.subscriptionABI.Pack("isSubscribed", user, node)
+	if err != nil {
+		return false, fmt.Errorf("failed to pack isSubscribed: %w", err)
+	}
+
+	callMsg := ethereum.CallMsg{
+		To:   &m.subscriptionAddress,
+		Data: data,
+	}
+
+	result, err := m.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		return false, fmt.Errorf("contract call failed: %w", err)
+	}
+
+	var subscribed bool
+	if err := m.subscriptionABI.UnpackIntoInterface(&subscribed, "isSubscribed", result); err != nil {
+		return false, fmt.Errorf("failed to unpack result: %w", err)
+	}
+
+	return subscribed, nil
+}
+
+// GetSubscriptionEnd returns the subscription end timestamp for a user-node pair
+func (m *ContractManager) GetSubscriptionEnd(ctx context.Context, userAddr, nodeID string) (*big.Int, error) {
+	if m.subscriptionAddress == (common.Address{}) {
+		return big.NewInt(0), nil
+	}
+
+	user := common.HexToAddress(userAddr)
+	node := common.HexToAddress(nodeID)
+
+	data, err := m.subscriptionABI.Pack("subscriptionEnd", user, node)
+	if err != nil {
+		return nil, err
+	}
+
+	callMsg := ethereum.CallMsg{
+		To:   &m.subscriptionAddress,
+		Data: data,
+	}
+
+	result, err := m.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var endTime *big.Int
+	if err := m.subscriptionABI.UnpackIntoInterface(&endTime, "subscriptionEnd", result); err != nil {
+		return nil, err
+	}
+
+	return endTime, nil
+}
+
+// GetSubscriptionPrice returns the price to subscribe to a node
+func (m *ContractManager) GetSubscriptionPrice(ctx context.Context, nodeID string) (*big.Int, error) {
+	if m.subscriptionAddress == (common.Address{}) {
+		return big.NewInt(0), nil
+	}
+
+	node := common.HexToAddress(nodeID)
+
+	data, err := m.subscriptionABI.Pack("priceFor", node)
+	if err != nil {
+		return nil, err
+	}
+
+	callMsg := ethereum.CallMsg{
+		To:   &m.subscriptionAddress,
+		Data: data,
+	}
+
+	result, err := m.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var price *big.Int
+	if err := m.subscriptionABI.UnpackIntoInterface(&price, "priceFor", result); err != nil {
+		return nil, err
+	}
+
+	return price, nil
+}
+
+// HasSubscriptionContract returns whether the subscription contract is configured
+func (m *ContractManager) HasSubscriptionContract() bool {
+	return m.subscriptionAddress != (common.Address{})
 }

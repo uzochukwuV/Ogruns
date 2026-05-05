@@ -31,16 +31,40 @@ export async function signEnvelope(
   timestamp: number
 ): Promise<SignalEnvelope> {
   // Serialise with the same field order as Go's json.Marshal (struct tag order).
-  const orderedPayload = {
-    token_pair:  payload.token_pair,
-    exchange:    payload.exchange,
-    direction:   payload.direction,
-    entry_price: payload.entry_price,
-    take_profit: payload.take_profit,
-    stop_loss:   payload.stop_loss,
-    expiry_time: payload.expiry_time,
-    weight_pct:  payload.weight_pct,
+  // CRITICAL: Fields with `omitempty` in Go must only be included if they have values.
+  // Go excludes: empty strings, 0 numbers, nil/empty slices.
+
+  const orderedPayload: Record<string, unknown> = {
+    token_pair: payload.token_pair,
   };
+
+  // exchange: omitempty - only include if non-empty string
+  if (payload.exchange) {
+    orderedPayload.exchange = payload.exchange;
+  }
+
+  // Required fields (no omitempty)
+  orderedPayload.direction = payload.direction;
+  orderedPayload.entry_price = payload.entry_price;
+  orderedPayload.take_profit = payload.take_profit;
+  orderedPayload.stop_loss = payload.stop_loss;
+  orderedPayload.expiry_time = payload.expiry_time;
+  orderedPayload.weight_pct = payload.weight_pct;
+
+  // trade_type: omitempty - only include if non-empty string
+  if (payload.trade_type) {
+    orderedPayload.trade_type = payload.trade_type;
+  }
+
+  // leverage: omitempty - only include if > 0
+  if (payload.leverage && payload.leverage > 0) {
+    orderedPayload.leverage = payload.leverage;
+  }
+
+  // take_profits: omitempty - only include if non-empty array
+  if (payload.take_profits && payload.take_profits.length > 0) {
+    orderedPayload.take_profits = payload.take_profits;
+  }
 
   const payloadJSON = JSON.stringify(orderedPayload);
   const message = `${timestamp}:${payloadJSON}`;
