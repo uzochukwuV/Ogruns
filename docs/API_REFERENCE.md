@@ -98,13 +98,13 @@ interface SignalEnvelope {
 }
 ```
 
-### NodeStats
+### AgentStats
 
-Statistics for a signal node.
+Statistics for an AI Trading Signal Agent.
 
 ```typescript
-interface NodeStats {
-  node_id:       string;
+interface AgentStats {
+  node_id:       string;   // Agent's Ethereum address
   total_signals: number;
   win_count:     number;
   loss_count:    number;
@@ -115,6 +115,10 @@ interface NodeStats {
   trust_score:   number;   // 0 - 100
   tier:          "BRONZE" | "SILVER" | "GOLD" | "DIAMOND";
   updated_at:    number;   // Unix timestamp
+
+  // Agentic ID (ERC-7857) verification
+  is_verified:   boolean;  // True if linked to Agentic ID NFT
+  agentic_id?:   number;   // ERC-7857 token ID (omitted if not verified)
 }
 ```
 

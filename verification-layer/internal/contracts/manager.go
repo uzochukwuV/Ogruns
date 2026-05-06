@@ -19,8 +19,18 @@ import (
 // ReputationOracle ABI definition for `updateScore(address,uint256,uint8)`
 const reputationOracleABI = `[{"inputs":[{"internalType":"address","name":"nodeId","type":"address"},{"internalType":"uint256","name":"score","type":"uint256"},{"internalType":"uint8","name":"tier","type":"uint8"}],"name":"updateScore","outputs":[],"stateMutability":"nonpayable","type":"function"}]`
 
-// NodeRegistry ABI definitions for `registerNode`, `publishBatch`, and `nodes`
-const nodeRegistryABI = `[{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"}],"name":"registerNode","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"rootHash","type":"bytes32"}],"name":"publishBatch","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nodes","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"bool","name":"active","type":"bool"},{"internalType":"uint256","name":"registeredAt","type":"uint256"}],"stateMutability":"view","type":"function"}]`
+// AgentRegistry ABI definitions (backward compatible with NodeRegistry)
+// Includes new Agentic ID verification methods
+const nodeRegistryABI = `[
+  {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"}],"name":"registerNode","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"}],"name":"registerAgent","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"uint256","name":"agenticId","type":"uint256"}],"name":"registerVerifiedAgent","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"bytes32","name":"rootHash","type":"bytes32"}],"name":"publishBatch","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nodes","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"bool","name":"active","type":"bool"},{"internalType":"uint256","name":"registeredAt","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"agents","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"bool","name":"active","type":"bool"},{"internalType":"uint256","name":"registeredAt","type":"uint256"},{"internalType":"uint256","name":"agenticId","type":"uint256"},{"internalType":"bool","name":"isVerified","type":"bool"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"agentId","type":"address"}],"name":"isVerifiedAgent","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"agentId","type":"address"}],"name":"getAgenticId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+]`
 
 // SubscriptionManager ABI for subscription verification
 const subscriptionManagerABI = `[{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"address","name":"nodeId","type":"address"}],"name":"isSubscribed","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"address","name":"nodeId","type":"address"}],"name":"subscriptionEnd","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"nodeId","type":"address"}],"name":"priceFor","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]`
@@ -322,4 +332,140 @@ func (m *ContractManager) GetSubscriptionPrice(ctx context.Context, nodeID strin
 // HasSubscriptionContract returns whether the subscription contract is configured
 func (m *ContractManager) HasSubscriptionContract() bool {
 	return m.subscriptionAddress != (common.Address{})
+}
+
+// ── Agent Verification Methods (Agentic ID Integration) ─────────────────────
+
+// AgentInfo contains details about a registered AI trading signal agent
+type AgentInfo struct {
+	Name         string
+	TokenFocus   string
+	Description  string
+	Creator      common.Address
+	Active       bool
+	RegisteredAt *big.Int
+	AgenticId    *big.Int
+	IsVerified   bool
+}
+
+// IsVerifiedAgent checks if an agent has a linked ERC-7857 Agentic ID
+func (m *ContractManager) IsVerifiedAgent(ctx context.Context, agentID string) (bool, error) {
+	if m.registryAddress == (common.Address{}) {
+		return false, nil
+	}
+
+	agentAddr := common.HexToAddress(agentID)
+	data, err := m.registryABI.Pack("isVerifiedAgent", agentAddr)
+	if err != nil {
+		// Method might not exist on older contracts, return false
+		return false, nil
+	}
+
+	callMsg := ethereum.CallMsg{
+		To:   &m.registryAddress,
+		Data: data,
+	}
+
+	result, err := m.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		// Contract might not have this method, return false
+		return false, nil
+	}
+
+	var isVerified bool
+	if err := m.registryABI.UnpackIntoInterface(&isVerified, "isVerifiedAgent", result); err != nil {
+		return false, nil
+	}
+
+	return isVerified, nil
+}
+
+// GetAgenticId returns the ERC-7857 token ID for an agent (0 if not verified)
+func (m *ContractManager) GetAgenticId(ctx context.Context, agentID string) (*big.Int, error) {
+	if m.registryAddress == (common.Address{}) {
+		return big.NewInt(0), nil
+	}
+
+	agentAddr := common.HexToAddress(agentID)
+	data, err := m.registryABI.Pack("getAgenticId", agentAddr)
+	if err != nil {
+		return big.NewInt(0), nil
+	}
+
+	callMsg := ethereum.CallMsg{
+		To:   &m.registryAddress,
+		Data: data,
+	}
+
+	result, err := m.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		return big.NewInt(0), nil
+	}
+
+	var agenticId *big.Int
+	if err := m.registryABI.UnpackIntoInterface(&agenticId, "getAgenticId", result); err != nil {
+		return big.NewInt(0), nil
+	}
+
+	return agenticId, nil
+}
+
+// GetAgentInfo returns full agent information including Agentic ID status
+func (m *ContractManager) GetAgentInfo(ctx context.Context, agentID string) (*AgentInfo, error) {
+	if m.registryAddress == (common.Address{}) {
+		return nil, fmt.Errorf("registry address not configured")
+	}
+
+	agentAddr := common.HexToAddress(agentID)
+	data, err := m.registryABI.Pack("agents", agentAddr)
+	if err != nil {
+		// Fall back to old "nodes" method
+		return m.getNodeInfoAsAgent(ctx, agentID)
+	}
+
+	callMsg := ethereum.CallMsg{
+		To:   &m.registryAddress,
+		Data: data,
+	}
+
+	result, err := m.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		// Fall back to old "nodes" method
+		return m.getNodeInfoAsAgent(ctx, agentID)
+	}
+
+	var out []interface{}
+	if err := m.registryABI.UnpackIntoInterface(&out, "agents", result); err != nil {
+		return m.getNodeInfoAsAgent(ctx, agentID)
+	}
+
+	return &AgentInfo{
+		Name:         out[0].(string),
+		TokenFocus:   out[1].(string),
+		Description:  out[2].(string),
+		Creator:      out[3].(common.Address),
+		Active:       out[4].(bool),
+		RegisteredAt: out[5].(*big.Int),
+		AgenticId:    out[6].(*big.Int),
+		IsVerified:   out[7].(bool),
+	}, nil
+}
+
+// getNodeInfoAsAgent falls back to the old nodes() method for backward compatibility
+func (m *ContractManager) getNodeInfoAsAgent(ctx context.Context, agentID string) (*AgentInfo, error) {
+	name, tokenFocus, description, creator, active, registeredAt, err := m.GetNodeInfo(ctx, agentID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AgentInfo{
+		Name:         name,
+		TokenFocus:   tokenFocus,
+		Description:  description,
+		Creator:      creator,
+		Active:       active,
+		RegisteredAt: registeredAt,
+		AgenticId:    big.NewInt(0),
+		IsVerified:   false,
+	}, nil
 }

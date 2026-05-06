@@ -14,6 +14,14 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "AgentRegistry",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AgentRegistry__factory>;
+    getContractFactory(
+      name: "IAgenticID",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IAgenticID__factory>;
+    getContractFactory(
       name: "FeeRouter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FeeRouter__factory>;
@@ -31,6 +39,16 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.SubscriptionManager__factory>;
 
     getContractAt(
+      name: "AgentRegistry",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AgentRegistry>;
+    getContractAt(
+      name: "IAgenticID",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IAgenticID>;
+    getContractAt(
       name: "FeeRouter",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -52,6 +70,14 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.SubscriptionManager>;
 
     deployContract(
+      name: "AgentRegistry",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AgentRegistry>;
+    deployContract(
+      name: "IAgenticID",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IAgenticID>;
+    deployContract(
       name: "FeeRouter",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FeeRouter>;
@@ -68,6 +94,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SubscriptionManager>;
 
+    deployContract(
+      name: "AgentRegistry",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.AgentRegistry>;
+    deployContract(
+      name: "IAgenticID",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IAgenticID>;
     deployContract(
       name: "FeeRouter",
       args: any[],

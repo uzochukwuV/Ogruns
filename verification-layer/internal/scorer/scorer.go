@@ -44,7 +44,8 @@ var TierPriceUSDCents = map[Tier]uint64{
 	TierDiamond: 10000, // $100
 }
 
-// NodeStats is the full computed reputation snapshot for a single node.
+// NodeStats is the full computed reputation snapshot for a single AI Trading Signal Agent.
+// Note: Named "NodeStats" for backward compatibility, but represents "Agent" stats.
 type NodeStats struct {
 	NodeID       string  `json:"node_id"`
 	TotalSignals int     `json:"total_signals"`
@@ -57,6 +58,10 @@ type NodeStats struct {
 	TrustScore   float64 `json:"trust_score"`  // 0–100, the canonical reputation number
 	Tier         Tier    `json:"tier"`
 	UpdatedAt    int64   `json:"updated_at"` // Unix timestamp
+
+	// Agentic ID fields (ERC-7857 integration for verified AI agents)
+	IsVerified bool   `json:"is_verified"`          // True if linked to Agentic ID NFT
+	AgenticId  uint64 `json:"agentic_id,omitempty"` // ERC-7857 token ID (0 if not verified)
 }
 
 // Scorer computes NodeStats from a slice of resolved ActiveSignals.

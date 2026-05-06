@@ -1,9 +1,46 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/workspace/contracts/src/FeeRouter.sol": {
-      "lastModificationDate": 1776973867707,
-      "contentHash": "07f6fbd8908f602ded1d21b250a88a08",
+    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\AgentRegistry.sol": {
+      "lastModificationDate": 1778005661915,
+      "contentHash": "8c8b668b8ae6ded1f43ef5274700b0b8",
+      "sourceName": "src/AgentRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "AgentRegistry",
+        "IAgenticID"
+      ]
+    },
+    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\FeeRouter.sol": {
+      "lastModificationDate": 1777561609947,
+      "contentHash": "a872a3cccd0716b673228f634c43d0e0",
       "sourceName": "src/FeeRouter.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -39,9 +76,9 @@
         "FeeRouter"
       ]
     },
-    "/workspace/contracts/src/NodeRegistry.sol": {
-      "lastModificationDate": 1776973867707,
-      "contentHash": "9300e240875b2a65adedf953a5ff77f8",
+    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\NodeRegistry.sol": {
+      "lastModificationDate": 1777561609947,
+      "contentHash": "35987a9ae746f58b76caeb45d32ef8fa",
       "sourceName": "src/NodeRegistry.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -75,9 +112,9 @@
         "NodeRegistry"
       ]
     },
-    "/workspace/contracts/src/SubscriptionManager.sol": {
-      "lastModificationDate": 1776973867707,
-      "contentHash": "6203a5b24199d031a2b606db48223e02",
+    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\SubscriptionManager.sol": {
+      "lastModificationDate": 1777561609947,
+      "contentHash": "a7cdb2872ad54835bdf4543be3e85138",
       "sourceName": "src/SubscriptionManager.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -114,9 +151,9 @@
         "SubscriptionManager"
       ]
     },
-    "/workspace/contracts/src/ReputationOracle.sol": {
-      "lastModificationDate": 1776973867707,
-      "contentHash": "81e58d471745ebededdf63108abcbdab",
+    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\ReputationOracle.sol": {
+      "lastModificationDate": 1777561609947,
+      "contentHash": "cb1531d839ecb138c4ed3c420166bed2",
       "sourceName": "src/ReputationOracle.sol",
       "solcConfig": {
         "version": "0.8.24",
