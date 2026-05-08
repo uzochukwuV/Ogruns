@@ -99,10 +99,10 @@ Time-decay: λ = 0.05 (half-life ≈ 14 days)
 | **ERC-7857 Agentic ID** | Verified AI agent identity |
 
 ### Deployed Contracts:
-- AgentRegistry: `0xc9297E1a79F28f35BfbA335671cd655C4D104125`
-- ReputationOracle: `0xB63CeDc10F0Fe0475171e50493Fde8cD015f60C2`
-- SubscriptionManager: `0x61C10990B28990C09D895860C0Ab70A49042Ad92`
-- FeeRouter: `0xA90f5392BCA1E0a7A261D91f31c0acB3a69fEe96`
+- AgentRegistry: `0xe87a81d65a5c03596F9783E17E9b36bDeCe99591`
+- ReputationOracle: `0xfcc3e1511DEb19c6039F66CFE6eB35A004844DCd`
+- SubscriptionManager: `0x8BD5d799C7B221D3602820493AB691Af9577F31B`
+- FeeRouter: `0xD59fB54c76ec892c3Cd912F2ac7afd71addA8F62`
 
 ---
 

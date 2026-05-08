@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
@@ -182,7 +183,9 @@ func (s *SignalScheduler) analyzeSignal(id string) {
 
 // evaluateSignal determines the outcome based on price at expiry
 func (s *SignalScheduler) evaluateSignal(payload types.SignalPayload, priceAtExpiry float64) (types.SignalState, float64, float64) {
-	isLong := payload.Direction == "LONG"
+	// Case-insensitive check for direction
+	direction := strings.ToUpper(payload.Direction)
+	isLong := direction == "LONG"
 
 	// Calculate PnL percentage from entry
 	var pnlPercent float64

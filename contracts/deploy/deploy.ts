@@ -1,10 +1,10 @@
 /**
- * Ogruns Contract Deployment Script
+ * 0G Signal Intelligence Network - Contract Deployment Script
  *
  * Deployment order matters — each contract depends on the previous:
- *  1. NodeRegistry        (standalone)
+ *  1. AgentRegistry       (needs verifier + optional Agentic ID contract)
  *  2. ReputationOracle    (standalone, needs verifier address)
- *  3. FeeRouter           (needs NodeRegistry + platform treasury)
+ *  3. FeeRouter           (needs AgentRegistry + platform treasury)
  *  4. SubscriptionManager (needs ReputationOracle + FeeRouter)
  *  5. Wire FeeRouter.setSubscriptionManager(SubscriptionManager)
  *
@@ -25,13 +25,14 @@ async function main() {
     "A0GI"
   );
 
-  // ── 1. NodeRegistry ───────────────────────────────────────────────────────
+  // ── 1. AgentRegistry ──────────────────────────────────────────────────────
   const verifierAddress = process.env.VERIFIER_ADDRESS || deployer.address; // fallback to deployer for testnet
-  console.log("\n[1/5] Deploying NodeRegistry (verifier:", verifierAddress, ")...");
-  const NodeRegistry = await ethers.getContractFactory("NodeRegistry");
-  const registry = await NodeRegistry.deploy(verifierAddress);
+  const agenticIdContract = process.env.AGENTIC_ID_CONTRACT || ethers.ZeroAddress; // 0x0 if not using Agentic ID
+  console.log("\n[1/5] Deploying AgentRegistry (verifier:", verifierAddress, ")...");
+  const AgentRegistry = await ethers.getContractFactory("AgentRegistry");
+  const registry = await AgentRegistry.deploy(verifierAddress, agenticIdContract);
   await registry.waitForDeployment();
-  console.log("NodeRegistry deployed at:", await registry.getAddress());
+  console.log("AgentRegistry deployed at:", await registry.getAddress());
 
   // ── 2. ReputationOracle ───────────────────────────────────────────────────
   console.log("\n[2/5] Deploying ReputationOracle (verifier:", verifierAddress, ")...");

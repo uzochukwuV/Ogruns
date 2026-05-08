@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./NodeRegistry.sol";
+import "./AgentRegistry.sol";
 
 /// @title FeeRouter
-/// @notice Splits subscription payments between the node creator and the
-///         platform treasury, with the split ratio determined by the node's
+/// @notice Splits subscription payments between the agent creator and the
+///         platform treasury, with the split ratio determined by the agent's
 ///         reputation tier.
 ///
 ///         Tier → Creator share (basis points out of 10 000):
@@ -24,7 +24,7 @@ contract FeeRouter {
 
     // ── Storage ───────────────────────────────────────────────────────────────
 
-    NodeRegistry public immutable registry;
+    AgentRegistry public immutable registry;
     address      public           platformTreasury;
     address      public           admin;
 
@@ -62,10 +62,10 @@ contract FeeRouter {
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
-    /// @param _registry         Deployed NodeRegistry address.
+    /// @param _registry         Deployed AgentRegistry address.
     /// @param _platformTreasury Platform wallet that receives its cut immediately.
     constructor(address _registry, address _platformTreasury) {
-        registry         = NodeRegistry(_registry);
+        registry         = AgentRegistry(_registry);
         platformTreasury = _platformTreasury;
         admin            = msg.sender;
 

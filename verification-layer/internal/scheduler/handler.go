@@ -37,6 +37,11 @@ type WebhookPayload struct {
 	NodeWinRate    float64 `json:"node_win_rate"`
 	NodeSharpe     float64 `json:"node_sharpe_ratio"`
 	AnalyzedAt     int64   `json:"analyzed_at"`
+	// 0G AI evaluation (if available)
+	AIScore       float64  `json:"ai_score,omitempty"`        // 0-100 quality score from 0G AI
+	AIRiskRating  string   `json:"ai_risk_rating,omitempty"`  // LOW, MEDIUM, HIGH, EXTREME
+	AIReasoning   string   `json:"ai_reasoning,omitempty"`    // AI's explanation
+	AITEEVerified bool     `json:"ai_tee_verified,omitempty"` // TEE verification status
 }
 
 // OnChainBroadcaster interface for pushing scores on-chain
@@ -48,6 +53,7 @@ type OnChainBroadcaster interface {
 type AnalysisHandler struct {
 	mu          sync.RWMutex
 	scorer      *scorer.Scorer
+	aiScorer    *scorer.AIScorer    // 0G AI-powered signal evaluator
 	webhooks    map[string][]string // nodeID -> webhook URLs
 	httpClient  *http.Client
 	broadcaster OnChainBroadcaster // Optional on-chain broadcaster
@@ -56,6 +62,7 @@ type AnalysisHandler struct {
 func NewAnalysisHandler() *AnalysisHandler {
 	return &AnalysisHandler{
 		scorer:     scorer.NewScorer(),
+		aiScorer:   scorer.NewAIScorer(),
 		webhooks:   make(map[string][]string),
 		httpClient: &http.Client{Timeout: 10 * time.Second},
 	}
@@ -78,7 +85,8 @@ func (h *AnalysisHandler) RegisterWebhook(nodeID, webhookURL string) {
 	log.Printf("Handler: Registered webhook for node %s: %s", nodeID, webhookURL)
 }
 
-// HandleResult processes an analysis result using the sophisticated scorer
+
+// HandleResult processes an analysis result using AI-adjusted scoring
 func (h *AnalysisHandler) HandleResult(result AnalysisResult) {
 	nodeID := result.Signal.Envelope.NodeID
 
@@ -86,40 +94,165 @@ func (h *AnalysisHandler) HandleResult(result AnalysisResult) {
 	result.Signal.ClosedPrice = result.PriceAtExpiry
 	result.Signal.ClosedAt = result.AnalyzedAt
 
-	// Use the sophisticated scorer to update node reputation
-	stats := h.scorer.RecordClosed(result.Signal)
+	// Step 1: Get algorithmic score
+	algorithmicStats := h.scorer.RecordClosed(result.Signal)
 
-	// Fire webhooks with updated reputation
-	h.fireWebhooks(nodeID, result, stats)
+	// Step 2: Build signal history for manipulation detection
+	history := h.buildSignalHistory(nodeID)
 
-	// Push score on-chain if broadcaster is configured
+	// Step 3: Determine outcome string
+	outcome := "EXPIRED"
+	if result.Outcome == types.StateClosedWin {
+		outcome = "WIN"
+	} else if result.Outcome == types.StateClosedLoss {
+		outcome = "LOSS"
+	}
+
+	// Step 4: Get AI-adjusted score (this is the FINAL score for on-chain)
+	var finalScore float64
+	var aiResult *scorer.AIScoreResult
+
+	if h.aiScorer != nil && h.aiScorer.IsEnabled() {
+		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		aiResult, _ = h.aiScorer.EvaluateAndAdjustScore(
+			ctx,
+			result.Signal.Envelope,
+			algorithmicStats.TrustScore,
+			history,
+			outcome,
+			result.PnLPercent,
+		)
+		cancel()
+
+		if aiResult != nil {
+			finalScore = aiResult.Score
+		} else {
+			finalScore = algorithmicStats.TrustScore
+		}
+	} else {
+		finalScore = algorithmicStats.TrustScore
+	}
+
+	// Step 5: Update stats with AI-adjusted score
+	finalStats := algorithmicStats
+	finalStats.TrustScore = finalScore
+	finalStats.Tier = tierFromScore(finalScore)
+
+	// Step 6: Store AI proof locally (will be included in daily 0G Storage batch)
+	if aiResult != nil {
+		proof := scorer.AIProof{
+			NodeID:           nodeID,
+			SignalID:         result.Signal.ID,
+			Timestamp:        time.Now().Unix(),
+			AlgorithmicScore: algorithmicStats.TrustScore,
+			AIAdjustedScore:  finalScore,
+			Adjustment:       aiResult.Adjustment,
+			ManipulationFlag: aiResult.ManipulationFlag,
+			ManipulationType: aiResult.ManipulationType,
+			AIReasoning:      aiResult.Reasoning,
+			TEEVerified:      aiResult.Verified,
+			Outcome:          outcome,
+			PnLPercent:       result.PnLPercent,
+			FinalTier:        string(finalStats.Tier),
+		}
+		h.scorer.AddAIProof(proof)
+		log.Printf("Handler: 📝 AI proof stored locally for %s (will upload in daily batch)", nodeID[:16]+"...")
+	}
+
+	// Step 7: Fire webhooks with AI-adjusted reputation
+	h.fireWebhooksWithAI(nodeID, result, finalStats, aiResult)
+
+	// Step 8: Push AI-ADJUSTED score on-chain (this is the authoritative score)
 	if h.broadcaster != nil {
 		go func() {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
 
-			tierIndex := scorer.TierIndex[stats.Tier]
-			err := h.broadcaster.UpdateNodeScore(ctx, nodeID, stats.TrustScore, tierIndex)
+			tierIndex := scorer.TierIndex[finalStats.Tier]
+			err := h.broadcaster.UpdateNodeScore(ctx, nodeID, finalScore, tierIndex)
 			if err != nil {
 				log.Printf("Handler: ❌ Failed to push score on-chain for %s: %v", nodeID[:16]+"...", err)
 			} else {
-				log.Printf("Handler: ✅ Score pushed on-chain for %s (%.1f, %s)", nodeID[:16]+"...", stats.TrustScore, stats.Tier)
+				log.Printf("Handler: ✅ AI-adjusted score pushed on-chain for %s (%.1f, %s)", nodeID[:16]+"...", finalScore, finalStats.Tier)
 			}
 		}()
 	}
 
-	// Log the result with full scoring details
-	log.Printf("Handler: Node %s updated -> Trust: %.1f, Tier: %s, WinRate: %.1f%%, Sharpe: %.2f, EV: %.2f",
-		nodeID[:16]+"...",
-		stats.TrustScore,
-		stats.Tier,
-		stats.WinRate*100,
-		stats.SharpeRatio,
-		stats.AvgEV,
-	)
+	// Log with AI adjustment details
+	if aiResult != nil && aiResult.Adjustment != 0 {
+		log.Printf("Handler: Node %s -> Algo: %.1f, AI: %.1f (adj: %+.1f), Tier: %s, Manipulation: %v",
+			nodeID[:16]+"...",
+			algorithmicStats.TrustScore,
+			finalScore,
+			aiResult.Adjustment,
+			finalStats.Tier,
+			aiResult.ManipulationFlag,
+		)
+	} else {
+		log.Printf("Handler: Node %s updated -> Trust: %.1f, Tier: %s, WinRate: %.1f%%, Sharpe: %.2f",
+			nodeID[:16]+"...",
+			finalScore,
+			finalStats.Tier,
+			finalStats.WinRate*100,
+			finalStats.SharpeRatio,
+		)
+	}
 }
 
-func (h *AnalysisHandler) fireWebhooks(nodeID string, result AnalysisResult, stats scorer.NodeStats) {
+// buildSignalHistory builds history from closed signals for manipulation detection
+func (h *AnalysisHandler) buildSignalHistory(nodeID string) []scorer.SignalHistory {
+	signals := h.scorer.GetSignalHistory(nodeID)
+	if signals == nil {
+		return nil
+	}
+
+	history := make([]scorer.SignalHistory, 0, len(signals))
+	for _, sig := range signals {
+		outcome := "EXPIRED"
+		if sig.State == types.StateClosedWin {
+			outcome = "WIN"
+		} else if sig.State == types.StateClosedLoss {
+			outcome = "LOSS"
+		}
+
+		pnl := 0.0
+		if sig.ClosedPrice > 0 && sig.Envelope.Payload.EntryPrice > 0 {
+			if sig.Envelope.Payload.Direction == "long" {
+				pnl = ((sig.ClosedPrice - sig.Envelope.Payload.EntryPrice) / sig.Envelope.Payload.EntryPrice) * 100
+			} else {
+				pnl = ((sig.Envelope.Payload.EntryPrice - sig.ClosedPrice) / sig.Envelope.Payload.EntryPrice) * 100
+			}
+		}
+
+		history = append(history, scorer.SignalHistory{
+			TokenPair:  sig.Envelope.Payload.TokenPair,
+			Direction:  sig.Envelope.Payload.Direction,
+			EntryPrice: sig.Envelope.Payload.EntryPrice,
+			Timestamp:  sig.ClosedAt,
+			Outcome:    outcome,
+			PnLPercent: pnl,
+		})
+	}
+
+	return history
+}
+
+// tierFromScore determines tier from score (mirrors scorer.go)
+func tierFromScore(score float64) scorer.Tier {
+	switch {
+	case score >= 91:
+		return scorer.TierDiamond
+	case score >= 71:
+		return scorer.TierGold
+	case score >= 41:
+		return scorer.TierSilver
+	default:
+		return scorer.TierBronze
+	}
+}
+
+// fireWebhooksWithAI sends webhooks with AI evaluation data
+func (h *AnalysisHandler) fireWebhooksWithAI(nodeID string, result AnalysisResult, stats scorer.NodeStats, aiResult *scorer.AIScoreResult) {
 	h.mu.RLock()
 	urls, exists := h.webhooks[nodeID]
 	h.mu.RUnlock()
@@ -154,6 +287,14 @@ func (h *AnalysisHandler) fireWebhooks(nodeID string, result AnalysisResult, sta
 		NodeWinRate:    stats.WinRate,
 		NodeSharpe:     stats.SharpeRatio,
 		AnalyzedAt:     result.AnalyzedAt,
+	}
+
+	// Add AI evaluation data
+	if aiResult != nil {
+		webhookPayload.AIScore = aiResult.Score
+		webhookPayload.AIRiskRating = aiResult.RiskRating
+		webhookPayload.AIReasoning = aiResult.Reasoning
+		webhookPayload.AITEEVerified = aiResult.Verified
 	}
 
 	jsonPayload, err := json.Marshal(webhookPayload)

@@ -7,10 +7,12 @@ import (
 
 // Signal validation constants
 const (
+	MinExpiryMinutes        = 30  // Minimum 30 minutes expiry (prevents gaming)
 	MaxExpiryHoursSpot      = 168 // 7 days for spot
 	MaxExpiryHoursLeveraged = 48  // 48 hours for leveraged positions
 	MaxLeverage             = 125 // Maximum allowed leverage
 	WarnExpiryHours         = 12  // Warn if expiry > 12 hours
+	MinTPSLDistancePct      = 0.5 // Minimum 0.5% distance between entry and TP/SL
 )
 
 // SignalEnvelope represents the standard JSON structure pushed to 0G Storage
@@ -99,15 +101,39 @@ func (e *SignalEnvelope) Validate() SignalValidationResult {
 	}
 
 	// Expiry time validation
-	expiryHours := float64(p.ExpiryTime-time.Now().Unix()) / 3600
+	expiryMinutes := float64(p.ExpiryTime-time.Now().Unix()) / 60
+	expiryHours := expiryMinutes / 60
 	maxExpiry := float64(MaxExpiryHoursSpot)
 	if p.IsLeveraged() {
 		maxExpiry = float64(MaxExpiryHoursLeveraged)
+	}
+	if expiryMinutes < MinExpiryMinutes {
+		result.Valid = false
+		result.Error = fmt.Sprintf("expiry_time too short: %.1f minutes (minimum %d minutes)", expiryMinutes, MinExpiryMinutes)
+		return result
 	}
 	if expiryHours > maxExpiry {
 		result.Valid = false
 		result.Error = fmt.Sprintf("expiry_time too far: %.1f hours (max %.0f for %s)", expiryHours, maxExpiry, tradeType)
 		return result
+	}
+
+	// TP/SL distance validation (prevent gaming with identical or near-identical values)
+	if p.TakeProfit > 0 {
+		tpDistancePct := abs((p.TakeProfit - p.EntryPrice) / p.EntryPrice * 100)
+		if tpDistancePct < MinTPSLDistancePct {
+			result.Valid = false
+			result.Error = fmt.Sprintf("take_profit too close to entry: %.2f%% (minimum %.1f%%)", tpDistancePct, MinTPSLDistancePct)
+			return result
+		}
+	}
+	if p.StopLoss > 0 {
+		slDistancePct := abs((p.StopLoss - p.EntryPrice) / p.EntryPrice * 100)
+		if slDistancePct < MinTPSLDistancePct {
+			result.Valid = false
+			result.Error = fmt.Sprintf("stop_loss too close to entry: %.2f%% (minimum %.1f%%)", slDistancePct, MinTPSLDistancePct)
+			return result
+		}
 	}
 
 	// Warnings
@@ -182,4 +208,12 @@ func (p *SignalPayload) GetLeverage() float64 {
 // IsLeveraged returns true if the signal uses leverage > 1x
 func (p *SignalPayload) IsLeveraged() bool {
 	return p.GetLeverage() > 1.0
+}
+
+// abs returns the absolute value of a float64
+func abs(x float64) float64 {
+	if x < 0 {
+		return -x
+	}
+	return x
 }

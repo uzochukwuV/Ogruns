@@ -19,9 +19,9 @@ import (
 // ReputationOracle ABI definition for `updateScore(address,uint256,uint8)`
 const reputationOracleABI = `[{"inputs":[{"internalType":"address","name":"nodeId","type":"address"},{"internalType":"uint256","name":"score","type":"uint256"},{"internalType":"uint8","name":"tier","type":"uint8"}],"name":"updateScore","outputs":[],"stateMutability":"nonpayable","type":"function"}]`
 
-// AgentRegistry ABI definitions (backward compatible with NodeRegistry)
-// Includes new Agentic ID verification methods
-const nodeRegistryABI = `[
+// AgentRegistry ABI definitions
+// Includes Agentic ID verification methods and backward-compatible node methods
+const agentRegistryABI = `[
   {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"}],"name":"registerNode","outputs":[],"stateMutability":"nonpayable","type":"function"},
   {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"}],"name":"registerAgent","outputs":[],"stateMutability":"nonpayable","type":"function"},
   {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"tokenFocus","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"uint256","name":"agenticId","type":"uint256"}],"name":"registerVerifiedAgent","outputs":[],"stateMutability":"nonpayable","type":"function"},
@@ -75,7 +75,7 @@ func NewContractManagerWithSubscription(rpcURL, privKeyHex, oracleAddr, registry
 		return nil, err
 	}
 
-	parsedRegistryABI, err := abi.JSON(strings.NewReader(nodeRegistryABI))
+	parsedRegistryABI, err := abi.JSON(strings.NewReader(agentRegistryABI))
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (m *ContractManager) PublishBatchHash(ctx context.Context, rootHashHex stri
 	return m.sendTransaction(ctx, m.registryAddress, data)
 }
 
-// RegisterNode registers a new signal node on the NodeRegistry contract
+// RegisterNode registers a new signal agent on the AgentRegistry contract
 func (m *ContractManager) RegisterNode(ctx context.Context, name, tokenFocus, description string) error {
 	if m.registryAddress == (common.Address{}) {
 		return fmt.Errorf("registry address not configured")
@@ -129,7 +129,7 @@ func (m *ContractManager) RegisterNode(ctx context.Context, name, tokenFocus, de
 	return m.sendTransaction(ctx, m.registryAddress, data)
 }
 
-// GetNodeInfo queries the NodeRegistry mapping for the given node address.
+// GetNodeInfo queries the AgentRegistry mapping for the given agent address.
 func (m *ContractManager) GetNodeInfo(ctx context.Context, nodeID string) (string, string, string, common.Address, bool, *big.Int, error) {
 	if m.registryAddress == (common.Address{}) {
 		return "", "", "", common.Address{}, false, nil, fmt.Errorf("registry address not configured")

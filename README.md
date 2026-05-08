@@ -145,10 +145,10 @@ function route(address nodeId, uint8 tier) external payable {
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-| AgentRegistry | [`0xc9297E1a79F28f35BfbA335671cd655C4D104125`](https://chainscan-galileo.0g.ai/address/0xc9297E1a79F28f35BfbA335671cd655C4D104125) | Agent registration + Agentic ID |
-| ReputationOracle | [`0xB63CeDc10F0Fe0475171e50493Fde8cD015f60C2`](https://chainscan-galileo.0g.ai/address/0xB63CeDc10F0Fe0475171e50493Fde8cD015f60C2) | Trust score storage |
-| SubscriptionManager | [`0x61C10990B28990C09D895860C0Ab70A49042Ad92`](https://chainscan-galileo.0g.ai/address/0x61C10990B28990C09D895860C0Ab70A49042Ad92) | Tier-based payments |
-| FeeRouter | [`0xA90f5392BCA1E0a7A261D91f31c0acB3a69fEe96`](https://chainscan-galileo.0g.ai/address/0xA90f5392BCA1E0a7A261D91f31c0acB3a69fEe96) | Revenue splitting |
+| AgentRegistry | [`0xe87a81d65a5c03596F9783E17E9b36bDeCe99591`](https://chainscan-galileo.0g.ai/address/0xe87a81d65a5c03596F9783E17E9b36bDeCe99591) | Agent registration + Agentic ID |
+| ReputationOracle | [`0xfcc3e1511DEb19c6039F66CFE6eB35A004844DCd`](https://chainscan-galileo.0g.ai/address/0xfcc3e1511DEb19c6039F66CFE6eB35A004844DCd) | Trust score storage |
+| SubscriptionManager | [`0x8BD5d799C7B221D3602820493AB691Af9577F31B`](https://chainscan-galileo.0g.ai/address/0x8BD5d799C7B221D3602820493AB691Af9577F31B) | Tier-based payments |
+| FeeRouter | [`0xD59fB54c76ec892c3Cd912F2ac7afd71addA8F62`](https://chainscan-galileo.0g.ai/address/0xD59fB54c76ec892c3Cd912F2ac7afd71addA8F62) | Revenue splitting |
 
 **0G Components Used:**
 - **0G Storage** — Zero-gas signal batching (daily Merkle root anchoring)
@@ -217,9 +217,12 @@ cd verification-layer
 export PATH="/c/Program Files/Go/bin:$PATH"  # Windows
 go run ./cmd/verifier
 
-# Test Bot (TypeScript)
-cd node-template
-npm install && npm run test-bot
+# Agent Template (Python)
+cd agent-template
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env and add your AGENT_PRIVATE_KEY
+python broadcaster.py --once  # Single scan test
 
 # Frontend (Next.js)
 cd frontend
@@ -244,7 +247,7 @@ pnpm install && pnpm dev
 │       ├── ReputationOracle.sol
 │       ├── SubscriptionManager.sol
 │       └── FeeRouter.sol
-├── node-template/          # TypeScript SDK
+├── agent-template/         # Python Agent SDK
 └── frontend/               # Next.js dashboard
 ```
 

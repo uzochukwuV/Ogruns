@@ -11,12 +11,30 @@ import (
 	"github.com/0xprotocol/verification-layer/pkg/types"
 )
 
+// AIProof contains the AI evaluation proof for a signal (for 0G Storage batch upload)
+type AIProof struct {
+	NodeID           string  `json:"node_id"`
+	SignalID         string  `json:"signal_id"`
+	Timestamp        int64   `json:"timestamp"`
+	AlgorithmicScore float64 `json:"algorithmic_score"`
+	AIAdjustedScore  float64 `json:"ai_adjusted_score"`
+	Adjustment       float64 `json:"adjustment"`
+	ManipulationFlag bool    `json:"manipulation_flag"`
+	ManipulationType string  `json:"manipulation_type"`
+	AIReasoning      string  `json:"ai_reasoning"`
+	TEEVerified      bool    `json:"tee_verified"`
+	Outcome          string  `json:"outcome"`
+	PnLPercent       float64 `json:"pnl_percent"`
+	FinalTier        string  `json:"final_tier"`
+}
+
 // PersistentState represents the full scorer state that gets saved to disk
 type PersistentState struct {
 	Version        string                            `json:"version"`
 	SavedAt        int64                             `json:"saved_at"`
 	NodeStats      map[string]*NodeStats             `json:"node_stats"`
 	ClosedSignals  map[string][]*types.ActiveSignal  `json:"closed_signals"`
+	AIProofs       []AIProof                         `json:"ai_proofs,omitempty"` // AI evaluation proofs for 0G Storage
 }
 
 const (
@@ -34,6 +52,7 @@ func (s *Scorer) SaveState(dataDir string) error {
 		SavedAt:       time.Now().Unix(),
 		NodeStats:     s.nodeStats,
 		ClosedSignals: s.closedSignals,
+		AIProofs:      s.aiProofs,
 	}
 
 	// Ensure directory exists
@@ -93,6 +112,9 @@ func (s *Scorer) LoadState(dataDir string) error {
 	}
 	if state.ClosedSignals != nil {
 		s.closedSignals = state.ClosedSignals
+	}
+	if state.AIProofs != nil {
+		s.aiProofs = state.AIProofs
 	}
 
 	savedTime := time.Unix(state.SavedAt, 0)

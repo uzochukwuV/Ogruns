@@ -85,6 +85,9 @@ type Scorer struct {
 
 	// closedSignals stores all resolved signals per node for re-scoring.
 	closedSignals map[string][]*types.ActiveSignal
+
+	// aiProofs stores AI evaluation proofs for 0G Storage daily batch upload
+	aiProofs []AIProof
 }
 
 func NewScorer() *Scorer {
@@ -92,7 +95,31 @@ func NewScorer() *Scorer {
 		DecayLambda:   0.05,
 		nodeStats:     make(map[string]*NodeStats),
 		closedSignals: make(map[string][]*types.ActiveSignal),
+		aiProofs:      make([]AIProof, 0),
 	}
+}
+
+// AddAIProof adds an AI evaluation proof to be included in daily 0G Storage batch
+func (s *Scorer) AddAIProof(proof AIProof) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.aiProofs = append(s.aiProofs, proof)
+}
+
+// GetAIProofs returns all pending AI proofs (for batch upload)
+func (s *Scorer) GetAIProofs() []AIProof {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	result := make([]AIProof, len(s.aiProofs))
+	copy(result, s.aiProofs)
+	return result
+}
+
+// ClearAIProofs clears the proofs after successful upload
+func (s *Scorer) ClearAIProofs() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.aiProofs = make([]AIProof, 0)
 }
 
 // RecordClosed ingests a newly closed signal and immediately recomputes the node score.

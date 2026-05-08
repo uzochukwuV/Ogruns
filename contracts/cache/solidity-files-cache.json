@@ -39,8 +39,8 @@
       ]
     },
     "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\FeeRouter.sol": {
-      "lastModificationDate": 1777561609947,
-      "contentHash": "a872a3cccd0716b673228f634c43d0e0",
+      "lastModificationDate": 1778179368324,
+      "contentHash": "b6c8cb8a02c5145e06fdfa1170294fbc",
       "sourceName": "src/FeeRouter.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -67,49 +67,13 @@
         }
       },
       "imports": [
-        "./NodeRegistry.sol"
+        "./AgentRegistry.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
         "FeeRouter"
-      ]
-    },
-    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\NodeRegistry.sol": {
-      "lastModificationDate": 1777561609947,
-      "contentHash": "35987a9ae746f58b76caeb45d32ef8fa",
-      "sourceName": "src/NodeRegistry.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "NodeRegistry"
       ]
     },
     "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\SubscriptionManager.sol": {

@@ -1,7 +1,21 @@
 {
   "version": "1.0",
-  "saved_at": 1778009266,
+  "saved_at": 1778200178,
   "node_stats": {
+    "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4": {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "total_signals": 9,
+      "win_count": 9,
+      "loss_count": 0,
+      "expired_count": 0,
+      "win_rate": 1,
+      "avg_ev": 0.85,
+      "sharpe_ratio": 0,
+      "trust_score": 50.5,
+      "tier": "SILVER",
+      "updated_at": 1778200059,
+      "is_verified": false
+    },
     "0x82d441e43BCD5D9309E7227d888291210a6bD77D": {
       "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
       "total_signals": 5,
@@ -13,10 +27,211 @@
       "sharpe_ratio": -0.9769868310165432,
       "trust_score": 5,
       "tier": "BRONZE",
-      "updated_at": 1777765235
+      "updated_at": 1777765235,
+      "is_verified": false
     }
   },
   "closed_signals": {
+    "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4": [
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195067",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778195067,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.10764,
+            "take_profit": 0.11264281,
+            "stop_loss": 0.1051386,
+            "expiry_time": 1778195667,
+            "weight_pct": 85
+          },
+          "signature": "0x8c25ba1043fd9300afbb1e27dc2aa08ba88fe494fa1dc61d213e2e32f6a8723a5348ca2d59df91943e62ebae3ac1a2f68a64928ee7dfbf1309f2cdc9d606de421c"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778195668,
+        "ClosedPrice": 0.107696
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195613",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778195613,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.107705,
+            "take_profit": 0.11271083,
+            "stop_loss": 0.10520209,
+            "expiry_time": 1778196213,
+            "weight_pct": 85
+          },
+          "signature": "0x666bde7a4a6a56e5bc806b9ca0a46f62666de795a00b954e9a34710fb77422774715b61c83e2b25f7439fc42d09912418fafd8934d30a0f82a4fd5b1f3e614401b"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778196213,
+        "ClosedPrice": 0.107673
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195704",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778195704,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.107694,
+            "take_profit": 0.11269932,
+            "stop_loss": 0.10519134,
+            "expiry_time": 1778196304,
+            "weight_pct": 85
+          },
+          "signature": "0x8577a0b4e92b881d722d2e27f6d86e9de866b03abe44ccefc5415c7b3de90f71359262b8b50a9c7c9411e6d70ab9dc36c490819fc945cc32c78f0afaaac27d6d1c"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778196305,
+        "ClosedPrice": 0.107678
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195795",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778195795,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.107688,
+            "take_profit": 0.11269304,
+            "stop_loss": 0.10518548,
+            "expiry_time": 1778196395,
+            "weight_pct": 85
+          },
+          "signature": "0x052f9aaf36af2ad4a9e867ccef3e441c5c6f58cb88c9cc50ce5f3496b4068c5a553dfc5c7eea531bc7d885fc1af34e31eb49c82fa2f11688d1dd3dd033739f761c"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778196395,
+        "ClosedPrice": 0.107676
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195886",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778195886,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.107733,
+            "take_profit": 0.11274013,
+            "stop_loss": 0.10522943,
+            "expiry_time": 1778196486,
+            "weight_pct": 85
+          },
+          "signature": "0xa5621cf31ad7c59b16db058d6d9cee96f47a3375ee44467681d67d6f8a30e7f937b589907fd8e2738ae99b2c75f3b4a8b1095293264eb746631c2d40a1c86d841c"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778196486,
+        "ClosedPrice": 0.107649
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198071",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778198071,
+          "payload": {
+            "token_pair": "ETH/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 2291.66,
+            "take_profit": 2361.10393811,
+            "stop_loss": 2256.93803095,
+            "expiry_time": 1778199871,
+            "weight_pct": 85
+          },
+          "signature": "0xc5baa234392d7e62d41537a1c3d8d7dbc4139900c6be54be98a6da3258ceb69602ae96da66ac6c738088a42c76b45e55930947c1cb289db32788bd752eabba8f1c"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778199872,
+        "ClosedPrice": 2292.09
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198257",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778198257,
+          "payload": {
+            "token_pair": "ETH/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 2291.08,
+            "take_profit": 2360.50636243,
+            "stop_loss": 2256.36681879,
+            "expiry_time": 1778200057,
+            "weight_pct": 85
+          },
+          "signature": "0x2353ab436be384504c085b2feae6ded02ad502922605b0b757ffab20dfa6438c12ac3e7a309197c988bff0f655245abfda7e116564c3b60b6e79eab6d182e9611b"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778200058,
+        "ClosedPrice": 2292.98
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198258",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778198258,
+          "payload": {
+            "token_pair": "XRP/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 1.39,
+            "take_profit": 1.43028986,
+            "stop_loss": 1.36985507,
+            "expiry_time": 1778200058,
+            "weight_pct": 85
+          },
+          "signature": "0x7c547bee1cfd270b7a5ed0f90e270d7b5e59e225ea5944be2cd423d161ebb83b201f7fe621ceba282e467a4ba129c20a608066fa807882f9f5f8a42334b870dc1b"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778200058,
+        "ClosedPrice": 1.39
+      },
+      {
+        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198259",
+        "Envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778198259,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.10779,
+            "take_profit": 0.11279978,
+            "stop_loss": 0.10528511,
+            "expiry_time": 1778200059,
+            "weight_pct": 85
+          },
+          "signature": "0xd4c576bf98846d884ca852d314b2bdc4b3c4e3555eab263016ad54632f66ce981746cf21a5e745d3037b883d0a1518abf7eddb6ae086ba87a67a23cfa97f74ad1c"
+        },
+        "State": "WIN",
+        "EntryHitAt": 0,
+        "ClosedAt": 1778200059,
+        "ClosedPrice": 0.107963
+      }
+    ],
     "0x82d441e43BCD5D9309E7227d888291210a6bD77D": [
       {
         "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648287",
@@ -133,5 +348,67 @@
         "ClosedPrice": 78707
       }
     ]
-  }
+  },
+  "ai_proofs": [
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198071",
+      "timestamp": 1778199879,
+      "algorithmic_score": 50.5,
+      "ai_adjusted_score": 45,
+      "adjustment": -5,
+      "manipulation_flag": true,
+      "manipulation_type": "WASH_TRADING",
+      "ai_reasoning": "The suspiciously high win rate with no losses and multiple duplicate signals within 2 hours suggests wash trading. This pattern indicates artificial inflation of the win rate.",
+      "tee_verified": false,
+      "outcome": "WIN",
+      "pnl_percent": -0.018763690948931825,
+      "final_tier": "SILVER"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198258",
+      "timestamp": 1778200066,
+      "algorithmic_score": 50.5,
+      "ai_adjusted_score": 45,
+      "adjustment": -5,
+      "manipulation_flag": true,
+      "manipulation_type": "WASH_TRADING",
+      "ai_reasoning": "The suspiciously high win rate with no losses and frequent duplicate signals over a short period suggest wash trading, which is a form of manipulation.",
+      "tee_verified": false,
+      "outcome": "WIN",
+      "pnl_percent": 0,
+      "final_tier": "SILVER"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198259",
+      "timestamp": 1778200066,
+      "algorithmic_score": 50.5,
+      "ai_adjusted_score": 45,
+      "adjustment": -5,
+      "manipulation_flag": true,
+      "manipulation_type": "WASH_TRADING",
+      "ai_reasoning": "The suspiciously high win rate and the presence of duplicate signals indicate wash trading activity, which is a form of manipulation.",
+      "tee_verified": false,
+      "outcome": "WIN",
+      "pnl_percent": -0.16049726319696306,
+      "final_tier": "SILVER"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198257",
+      "timestamp": 1778200066,
+      "algorithmic_score": 50.5,
+      "ai_adjusted_score": 45,
+      "adjustment": -5,
+      "manipulation_flag": true,
+      "manipulation_type": "WASH_TRADING",
+      "ai_reasoning": "The suspiciously high win rate with no losses and a low risk/reward ratio suggests wash trading. This pattern indicates artificial boosting of performance metrics.",
+      "tee_verified": false,
+      "outcome": "WIN",
+      "pnl_percent": -0.08293032107128913,
+      "final_tier": "SILVER"
+    }
+  ]
 }

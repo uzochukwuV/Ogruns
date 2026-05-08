@@ -66,6 +66,7 @@ export function DashboardStats() {
     const fetchData = async () => {
       try {
         const dashboardData = await apiClient.getDashboardSummary()
+        console.log('Dashboard data:', dashboardData)
         setData(dashboardData)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load dashboard data')

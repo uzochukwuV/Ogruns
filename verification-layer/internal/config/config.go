@@ -23,7 +23,7 @@ type Config struct {
         IndexerTurboURL    string
 
         // Smart contract addresses on 0G Network (set after deployment).
-        RegistryContractAddr     string // NodeRegistry.sol
+        RegistryContractAddr     string // AgentRegistry.sol
         ReputationContractAddr   string // ReputationOracle.sol
         SubscriptionContractAddr string // SubscriptionManager.sol
 

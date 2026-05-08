@@ -11,6 +11,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -91,6 +92,7 @@ var upgrader = websocket.Upgrader{
 // Server wires scorer and the engine event stream into HTTP handlers.
 type Server struct {
 	scorer      *scorer.Scorer
+	aiScorer    *scorer.AIScorer // 0G AI-powered signal evaluator
 	hub         *streamHub
 	dispatcher  *dispatcher.WebhookDispatcher
 	rateLimiter *ratelimit.RateLimiter
@@ -125,8 +127,12 @@ func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal, dispat
 	// Start subscription cache cleanup
 	subGate.StartCacheCleanup(ctx)
 
+	// Initialize AI scorer for 0G AI evaluation
+	aiScorer := scorer.NewAIScorer()
+
 	return &Server{
 		scorer:      sc,
+		aiScorer:    aiScorer,
 		hub:         hub,
 		dispatcher:  dispatch,
 		rateLimiter: rl,
@@ -150,6 +156,9 @@ func (s *Server) Start(addr string) error {
 	// Analytics endpoints for frontend dashboard
 	mux.HandleFunc("/api/v1/analytics/dashboard", s.handleDashboardSummary)
 	mux.HandleFunc("/api/v1/analytics/nodes/", s.handleAnalyticsRouter)
+
+	// 0G AI evaluation endpoint
+	mux.HandleFunc("/api/v1/ai/evaluate", s.handleAIEvaluate)
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -318,12 +327,16 @@ func (s *Server) handleSubmitSignal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate signal ID upfront (same as scheduler: node_id + timestamp)
+	signalID := fmt.Sprintf("%s_%d", req.Envelope.NodeID, req.Envelope.Timestamp)
+
 	// Push to internal queue for the Verification Engine and Batcher to consume
 	select {
 	case s.signalQueue <- req:
-		writeJSON(w, http.StatusAccepted, map[string]string{
-			"status":  "queued",
-			"message": "Signal accepted for verification and batching",
+		writeJSON(w, http.StatusAccepted, map[string]interface{}{
+			"status":    "queued",
+			"signal_id": signalID,
+			"message":   "Signal accepted for verification and batching",
 		})
 	default:
 		writeJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "server queue full"})
@@ -425,6 +438,133 @@ func (s *Server) handleRegisterWebhook(w http.ResponseWriter, r *http.Request) {
 		"status":  "success",
 		"message": "Webhook registered. Your AI Agent will be awoken on new signals.",
 	})
+}
+
+// ─── 0G AI Evaluation ─────────────────────────────────────────────────────────
+
+// AIEvaluateRequest is the request body for AI signal evaluation
+type AIEvaluateRequest struct {
+	TokenPair    string  `json:"token_pair"`
+	Direction    string  `json:"direction"`
+	EntryPrice   float64 `json:"entry_price"`
+	TakeProfit   float64 `json:"take_profit"`
+	StopLoss     float64 `json:"stop_loss"`
+	ExpiryTime   int64   `json:"expiry_time"`
+	WeightPct    float64 `json:"weight_pct"`
+	TradeType    string  `json:"trade_type,omitempty"`
+	Leverage     float64 `json:"leverage,omitempty"`
+	CurrentPrice float64 `json:"current_price,omitempty"` // Optional: current market price
+}
+
+// handleAIEvaluate provides on-demand AI evaluation of trading signals
+// POST /api/v1/ai/evaluate
+func (s *Server) handleAIEvaluate(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	if r.Method != http.MethodPost {
+		writeJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "POST required"})
+		return
+	}
+
+	// Check if AI scoring is enabled
+	if s.aiScorer == nil || !s.aiScorer.IsEnabled() {
+		writeJSON(w, http.StatusServiceUnavailable, map[string]string{
+			"error":   "ai_unavailable",
+			"message": "AI scoring is not configured. Set ZG_AI_API_KEY environment variable.",
+		})
+		return
+	}
+
+	var req AIEvaluateRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid JSON: " + err.Error()})
+		return
+	}
+
+	// Validate required fields
+	if req.TokenPair == "" || req.Direction == "" || req.EntryPrice <= 0 {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "missing required fields: token_pair, direction, entry_price",
+		})
+		return
+	}
+
+	// Build signal envelope for evaluation
+	payload := types.SignalPayload{
+		TokenPair:  req.TokenPair,
+		Direction:  req.Direction,
+		EntryPrice: req.EntryPrice,
+		TakeProfit: req.TakeProfit,
+		StopLoss:   req.StopLoss,
+		ExpiryTime: req.ExpiryTime,
+		WeightPct:  req.WeightPct,
+		TradeType:  req.TradeType,
+		Leverage:   req.Leverage,
+	}
+
+	envelope := types.SignalEnvelope{
+		NodeID:    "evaluation",
+		Timestamp: time.Now().Unix(),
+		Payload:   payload,
+	}
+
+	// Use current price if provided, otherwise use entry price
+	currentPrice := req.CurrentPrice
+	if currentPrice <= 0 {
+		currentPrice = req.EntryPrice
+	}
+
+	// Evaluate with AI
+	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	defer cancel()
+
+	result, err := s.aiScorer.EvaluateSignal(ctx, envelope, currentPrice)
+	if err != nil {
+		// Fallback to quick heuristic score
+		quickScore := s.aiScorer.QuickScore(payload)
+		writeJSON(w, http.StatusOK, map[string]any{
+			"score":        quickScore,
+			"confidence":   60,
+			"risk_rating":  getRiskRating(quickScore),
+			"reasoning":    "Heuristic evaluation (AI unavailable)",
+			"suggestions":  []string{},
+			"tee_verified": false,
+			"fallback":     true,
+		})
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]any{
+		"score":        result.Score,
+		"confidence":   result.Confidence,
+		"risk_rating":  result.RiskRating,
+		"reasoning":    result.Reasoning,
+		"suggestions":  result.Suggestions,
+		"tee_verified": result.Verified,
+		"fallback":     false,
+	})
+}
+
+// getRiskRating returns risk rating based on score
+func getRiskRating(score float64) string {
+	switch {
+	case score >= 70:
+		return "LOW"
+	case score >= 50:
+		return "MEDIUM"
+	case score >= 30:
+		return "HIGH"
+	default:
+		return "EXTREME"
+	}
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

@@ -180,10 +180,18 @@ func (s *EncryptedSignalStore) Save(signals []types.SignalEnvelope) error {
 }
 
 // Load retrieves signals from encrypted storage
+// If the file is corrupted (wrong key, etc.), it deletes it and returns empty slice
 func (s *EncryptedSignalStore) Load() ([]types.SignalEnvelope, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return s.encryptor.LoadEncryptedSignals(s.filepath)
+
+	signals, err := s.encryptor.LoadEncryptedSignals(s.filepath)
+	if err != nil {
+		// File is corrupted or encrypted with different key - delete and start fresh
+		os.Remove(s.filepath)
+		return nil, nil
+	}
+	return signals, nil
 }
 
 // Clear removes the encrypted signal file
