@@ -22,10 +22,10 @@ const (
 
 // ActiveSignal wraps a SignalEnvelope with its current state and metadata
 type ActiveSignal struct {
-	ID          string // Unique identifier (e.g., node_id + timestamp)
-	Envelope    SignalEnvelope
-	State       SignalState
-	EntryHitAt  int64   // Timestamp when State changed from PENDING to ACTIVE
-	ClosedAt    int64   // Timestamp when State changed to CLOSED
-	ClosedPrice float64 // The price at the time of closing
+	ID          string         `json:"id"`           // Unique identifier (e.g., node_id + timestamp)
+	Envelope    SignalEnvelope `json:"envelope"`     // The original signal envelope
+	State       SignalState    `json:"state"`        // Current state of the signal
+	EntryHitAt  int64          `json:"entry_hit_at"` // Timestamp when State changed from PENDING to ACTIVE
+	ClosedAt    int64          `json:"closed_at"`    // Timestamp when State changed to CLOSED
+	ClosedPrice float64        `json:"closed_price"` // The price at the time of closing
 }

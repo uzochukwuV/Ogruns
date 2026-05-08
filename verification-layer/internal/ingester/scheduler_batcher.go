@@ -213,7 +213,21 @@ func (b *SchedulerBatcher) processIncomingSignal(req types.SubmitRawSignalReques
 		return
 	}
 
-	// 3. Queue for Batching
+	// 4. Emit ACTIVE signal event to WebSocket stream (for AI trading agents)
+	signalID := fmt.Sprintf("%s_%d", req.Envelope.NodeID, req.Envelope.Timestamp)
+	activeSignal := &types.ActiveSignal{
+		ID:       signalID,
+		Envelope: req.Envelope,
+		State:    types.StateActive,
+	}
+	select {
+	case b.eventStream <- activeSignal:
+		// Successfully sent to event stream
+	default:
+		log.Printf("SchedulerBatcher: ⚠️ Event stream full, signal not broadcast")
+	}
+
+	// 5. Queue for Batching
 	b.mu.Lock()
 	b.signals = append(b.signals, req.Envelope)
 	b.mu.Unlock()

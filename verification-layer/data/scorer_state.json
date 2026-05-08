@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "saved_at": 1778200609,
+  "saved_at": 1778250922,
   "node_stats": {
     "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4": {
       "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
@@ -34,8 +34,8 @@
   "closed_signals": {
     "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4": [
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195067",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195067",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778195067,
           "payload": {
@@ -50,14 +50,14 @@
           },
           "signature": "0x8c25ba1043fd9300afbb1e27dc2aa08ba88fe494fa1dc61d213e2e32f6a8723a5348ca2d59df91943e62ebae3ac1a2f68a64928ee7dfbf1309f2cdc9d606de421c"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778195668,
-        "ClosedPrice": 0.107696
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195613",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195613",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778195613,
           "payload": {
@@ -72,14 +72,14 @@
           },
           "signature": "0x666bde7a4a6a56e5bc806b9ca0a46f62666de795a00b954e9a34710fb77422774715b61c83e2b25f7439fc42d09912418fafd8934d30a0f82a4fd5b1f3e614401b"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778196213,
-        "ClosedPrice": 0.107673
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195704",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195704",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778195704,
           "payload": {
@@ -94,14 +94,14 @@
           },
           "signature": "0x8577a0b4e92b881d722d2e27f6d86e9de866b03abe44ccefc5415c7b3de90f71359262b8b50a9c7c9411e6d70ab9dc36c490819fc945cc32c78f0afaaac27d6d1c"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778196305,
-        "ClosedPrice": 0.107678
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195795",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195795",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778195795,
           "payload": {
@@ -116,14 +116,14 @@
           },
           "signature": "0x052f9aaf36af2ad4a9e867ccef3e441c5c6f58cb88c9cc50ce5f3496b4068c5a553dfc5c7eea531bc7d885fc1af34e31eb49c82fa2f11688d1dd3dd033739f761c"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778196395,
-        "ClosedPrice": 0.107676
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195886",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778195886",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778195886,
           "payload": {
@@ -138,14 +138,14 @@
           },
           "signature": "0xa5621cf31ad7c59b16db058d6d9cee96f47a3375ee44467681d67d6f8a30e7f937b589907fd8e2738ae99b2c75f3b4a8b1095293264eb746631c2d40a1c86d841c"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778196486,
-        "ClosedPrice": 0.107649
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198071",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198071",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778198071,
           "payload": {
@@ -160,14 +160,14 @@
           },
           "signature": "0xc5baa234392d7e62d41537a1c3d8d7dbc4139900c6be54be98a6da3258ceb69602ae96da66ac6c738088a42c76b45e55930947c1cb289db32788bd752eabba8f1c"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778199872,
-        "ClosedPrice": 2292.09
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198257",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198257",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778198257,
           "payload": {
@@ -182,14 +182,14 @@
           },
           "signature": "0x2353ab436be384504c085b2feae6ded02ad502922605b0b757ffab20dfa6438c12ac3e7a309197c988bff0f655245abfda7e116564c3b60b6e79eab6d182e9611b"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778200058,
-        "ClosedPrice": 2292.98
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198258",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198258",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778198258,
           "payload": {
@@ -204,14 +204,14 @@
           },
           "signature": "0x7c547bee1cfd270b7a5ed0f90e270d7b5e59e225ea5944be2cd423d161ebb83b201f7fe621ceba282e467a4ba129c20a608066fa807882f9f5f8a42334b870dc1b"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778200058,
-        "ClosedPrice": 1.39
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198259",
-        "Envelope": {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778198259",
+        "envelope": {
           "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
           "timestamp": 1778198259,
           "payload": {
@@ -226,16 +226,16 @@
           },
           "signature": "0xd4c576bf98846d884ca852d314b2bdc4b3c4e3555eab263016ad54632f66ce981746cf21a5e745d3037b883d0a1518abf7eddb6ae086ba87a67a23cfa97f74ad1c"
         },
-        "State": "WIN",
-        "EntryHitAt": 0,
-        "ClosedAt": 1778200059,
-        "ClosedPrice": 0.107963
+        "state": "WIN",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       }
     ],
     "0x82d441e43BCD5D9309E7227d888291210a6bD77D": [
       {
-        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648287",
-        "Envelope": {
+        "id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648287",
+        "envelope": {
           "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
           "timestamp": 1777648287,
           "payload": {
@@ -250,14 +250,14 @@
           },
           "signature": "0x601bcd1d8fb3280bfb42acd5877cba7937cc4602e68a81691718dfb5ef67cb37629ac1e603239a1fa10cb65afccf079960e9ad2303a13bad445c4009125699dd1c"
         },
-        "State": "EXPIRED",
-        "EntryHitAt": 0,
-        "ClosedAt": 1777648411,
-        "ClosedPrice": 78310
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648677",
-        "Envelope": {
+        "id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648677",
+        "envelope": {
           "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
           "timestamp": 1777648677,
           "payload": {
@@ -272,14 +272,14 @@
           },
           "signature": "0xba847fb5b61cbc97db6cfb7bdec9c48f235d1b8b3464b6f13a9785cf2235fed317d52ca28aa9090b5e2da194b453b518922828e89b22e430d5a0e96511a01e8a1c"
         },
-        "State": "EXPIRED",
-        "EntryHitAt": 0,
-        "ClosedAt": 1777648799,
-        "ClosedPrice": 78425
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648682",
-        "Envelope": {
+        "id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777648682",
+        "envelope": {
           "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
           "timestamp": 1777648682,
           "payload": {
@@ -294,14 +294,14 @@
           },
           "signature": "0xdcc60c7e6f2e324d20360a637e90581d610e1ebb477ecbfddcbb0ef86f35944e310467f24934f13af838a689fc78aaedc780a679bd00253c2e5a8b96af966fc91b"
         },
-        "State": "EXPIRED",
-        "EntryHitAt": 0,
-        "ClosedAt": 1777648803,
-        "ClosedPrice": 78425
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777764989",
-        "Envelope": {
+        "id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777764989",
+        "envelope": {
           "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
           "timestamp": 1777764989,
           "payload": {
@@ -318,14 +318,14 @@
           },
           "signature": "0x7b16072e8d20bff3dc61f3a28415f5fd3514261719b88783a90d58013064bda313dbdc67efab640a32b2affadafec2926eef42a14190b534a4ba64aec8ec34161c"
         },
-        "State": "EXPIRED",
-        "EntryHitAt": 0,
-        "ClosedAt": 1777765110,
-        "ClosedPrice": 78762
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       },
       {
-        "ID": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777765114",
-        "Envelope": {
+        "id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D_1777765114",
+        "envelope": {
           "node_id": "0x82d441e43BCD5D9309E7227d888291210a6bD77D",
           "timestamp": 1777765114,
           "payload": {
@@ -342,10 +342,10 @@
           },
           "signature": "0xa8bbdf1ba31ea885cfc76b6e139bf2086447e7369cca98e44da51b4bf2ff36a4300bc2657a6539c9139ce20897c96a568617261ab7188631e3b762614aec75541c"
         },
-        "State": "EXPIRED",
-        "EntryHitAt": 0,
-        "ClosedAt": 1777765235,
-        "ClosedPrice": 78707
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 0,
+        "closed_price": 0
       }
     ]
   },

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ts-node *)",
+      "Bash(npx *)"
+    ]
+  },
+  "$version": 3
+}

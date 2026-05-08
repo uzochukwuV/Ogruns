@@ -18,6 +18,7 @@ import (
 	"github.com/0xprotocol/verification-layer/internal/dispatcher"
 	"github.com/0xprotocol/verification-layer/internal/ingester"
 	"github.com/0xprotocol/verification-layer/internal/scorer"
+	"github.com/0xprotocol/verification-layer/pkg/types"
 )
 
 func main() {
@@ -95,6 +96,12 @@ func main() {
 
 	// 9. Start the REST API & WebSocket Stream (with Subscription Gating)
 	server := api.NewServer(sc, eventStream, dispatch, cm)
+
+	// Wire up active signals fetcher for AI agents
+	server.SetActiveSignalsFetcher(func() []*types.ActiveSignal {
+		return batcher.GetScheduler().GetPendingSignals()
+	})
+
 	go func() {
 		if err := server.Start(cfg.APIAddr); err != nil {
 			log.Fatalf("API Server failed: %v", err)

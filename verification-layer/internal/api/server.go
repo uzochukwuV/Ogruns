@@ -52,7 +52,22 @@ func (h *streamHub) run(ctx context.Context) {
 				return
 			}
 			nodeID := ev.Envelope.NodeID
+
+			// Send to subscribers for this specific node
 			if raw, loaded := h.subs.Load(nodeID); loaded {
+				clients := raw.(*sync.Map)
+				clients.Range(func(_, chRaw any) bool {
+					ch := chRaw.(chan *types.ActiveSignal)
+					select {
+					case ch <- ev:
+					default: // drop if client is slow
+					}
+					return true
+				})
+			}
+
+			// Also send to wildcard "*" subscribers (public stream)
+			if raw, loaded := h.subs.Load("*"); loaded {
 				clients := raw.(*sync.Map)
 				clients.Range(func(_, chRaw any) bool {
 					ch := chRaw.(chan *types.ActiveSignal)
@@ -89,17 +104,21 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:      func(r *http.Request) bool { return true }, // tighten in prod
 }
 
+// ActiveSignalsFetcher is a function that returns all active/pending signals
+type ActiveSignalsFetcher func() []*types.ActiveSignal
+
 // Server wires scorer and the engine event stream into HTTP handlers.
 type Server struct {
-	scorer      *scorer.Scorer
-	aiScorer    *scorer.AIScorer // 0G AI-powered signal evaluator
-	hub         *streamHub
-	dispatcher  *dispatcher.WebhookDispatcher
-	rateLimiter *ratelimit.RateLimiter
-	subGate     *SubscriptionGate // Subscription verification for premium endpoints
-	ctx         context.Context
-	cancel      context.CancelFunc
-	signalQueue chan types.SubmitRawSignalRequest // L2 Ingestion Queue
+	scorer              *scorer.Scorer
+	aiScorer            *scorer.AIScorer // 0G AI-powered signal evaluator
+	hub                 *streamHub
+	dispatcher          *dispatcher.WebhookDispatcher
+	rateLimiter         *ratelimit.RateLimiter
+	subGate             *SubscriptionGate // Subscription verification for premium endpoints
+	ctx                 context.Context
+	cancel              context.CancelFunc
+	signalQueue         chan types.SubmitRawSignalRequest // L2 Ingestion Queue
+	activeSignalsFetcher ActiveSignalsFetcher              // Callback to get active signals
 }
 
 // NewServer creates a Server but does not start listening.
@@ -149,7 +168,9 @@ func (s *Server) Start(addr string) error {
 	mux.HandleFunc("/api/v1/nodes", s.handleNodes)
 	mux.HandleFunc("/api/v1/nodes/", s.handleNode) // trailing slash catches /{nodeId}
 	mux.HandleFunc("/api/v1/stream", s.handleStream)
+	mux.HandleFunc("/api/v1/stream/public", s.handlePublicStream) // Public stream for AI agents
 	mux.HandleFunc("/api/v1/signals", s.handleSubmitSignal)                // New L2 Ingestion endpoint
+	mux.HandleFunc("/api/v1/signals/active", s.handleActiveSignals)       // Get all active signals for AI agents
 	mux.HandleFunc("/api/v1/subscribers/webhook", s.handleRegisterWebhook) // AI Agent Webhook Registration
 	mux.HandleFunc("/api/v1/stats/ratelimit", s.handleRateLimitStats)      // Rate limit stats
 
@@ -182,6 +203,11 @@ func (s *Server) GetSignalQueue() <-chan types.SubmitRawSignalRequest {
 	return s.signalQueue
 }
 
+// SetActiveSignalsFetcher sets the callback to fetch active signals
+func (s *Server) SetActiveSignalsFetcher(fetcher ActiveSignalsFetcher) {
+	s.activeSignalsFetcher = fetcher
+}
+
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
 // GET /api/v1/nodes
@@ -195,6 +221,31 @@ func (s *Server) handleNodes(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
 		"nodes": all,
 		"count": len(all),
+	})
+}
+
+// GET /api/v1/signals/active
+// Returns all currently active/pending signals for AI trading agents.
+// This allows newly connected agents to catch up on signals they missed.
+func (s *Server) handleActiveSignals(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if s.activeSignalsFetcher == nil {
+		writeJSON(w, http.StatusOK, map[string]any{
+			"signals": []any{},
+			"count":   0,
+			"message": "Active signals fetcher not configured",
+		})
+		return
+	}
+
+	signals := s.activeSignalsFetcher()
+	writeJSON(w, http.StatusOK, map[string]any{
+		"signals": signals,
+		"count":   len(signals),
 	})
 }
 
@@ -286,6 +337,67 @@ func (s *Server) handleStream(w http.ResponseWriter, r *http.Request) {
 			}
 			if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
 				log.Printf("WS write error for %s: %v", clientID, err)
+				return
+			}
+		}
+	}
+}
+
+// handlePublicStream is an unauthenticated WebSocket endpoint that streams ALL signals.
+// WS /api/v1/stream/public
+//
+// This is intended for AI trading agents and demo purposes.
+// No subscription verification required - streams signals from all nodes.
+func (s *Server) handlePublicStream(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("WS public upgrade error: %v", err)
+		return
+	}
+	defer conn.Close()
+
+	clientID := r.RemoteAddr
+	// Subscribe to ALL nodes by using empty nodeID (hub will send everything)
+	ch, unsub := s.hub.subscribe("*", clientID)
+	defer unsub()
+
+	log.Printf("WS Public: AI agent connected from %s", clientID)
+
+	// Ping loop keeps the connection alive
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+					return
+				}
+			case <-s.ctx.Done():
+				return
+			}
+		}
+	}()
+
+	for {
+		select {
+		case <-s.ctx.Done():
+			return
+		case ev, ok := <-ch:
+			if !ok {
+				return
+			}
+			// Wrap in event format for Sentinel
+			event := map[string]interface{}{
+				"type": "signal_update",
+				"data": ev,
+			}
+			payload, err := json.Marshal(event)
+			if err != nil {
+				continue
+			}
+			if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
+				log.Printf("WS public write error for %s: %v", clientID, err)
 				return
 			}
 		}
