@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"sort"
 	"strconv"
@@ -240,6 +241,7 @@ func (s *Server) handleDashboardSummary(w http.ResponseWriter, r *http.Request) 
 	}
 
 	allStats := s.scorer.AllStats()
+	log.Printf("Dashboard: Returning %d nodes", len(allStats))
 
 	// Calculate aggregates
 	var totalSignals, totalWins, totalLosses int
