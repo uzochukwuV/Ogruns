@@ -1,19 +1,19 @@
 {
   "version": "1.0",
-  "saved_at": 1778250922,
+  "saved_at": 1778311360,
   "node_stats": {
     "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4": {
       "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
-      "total_signals": 9,
-      "win_count": 9,
-      "loss_count": 0,
-      "expired_count": 0,
-      "win_rate": 1,
-      "avg_ev": 0.85,
-      "sharpe_ratio": 0,
-      "trust_score": 50.5,
-      "tier": "SILVER",
-      "updated_at": 1778200059,
+      "total_signals": 74,
+      "win_count": 15,
+      "loss_count": 6,
+      "expired_count": 64,
+      "win_rate": 0.7142857142857143,
+      "avg_ev": -0.012117799030670676,
+      "sharpe_ratio": 0.3099305393318184,
+      "trust_score": 19.40679555380195,
+      "tier": "BRONZE",
+      "updated_at": 1778309516,
       "is_verified": false
     },
     "0x82d441e43BCD5D9309E7227d888291210a6bD77D": {
@@ -230,6 +230,1436 @@
         "entry_hit_at": 0,
         "closed_at": 0,
         "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778249786",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778249786,
+          "payload": {
+            "token_pair": "ATOM/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.87,
+            "take_profit": 1.81973118,
+            "stop_loss": 1.89513441,
+            "expiry_time": 1778251946,
+            "weight_pct": 65
+          },
+          "signature": "0x31070bf5044f2accf2ea160df54f166bfa8b46bf5f44d3fc6a12f0ba013f183114abbd0fddb5504cee044bd3a8785e01361b7164b9535d57f01413a2dad62fd51c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778251946,
+        "closed_price": 1.88
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778249789",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778249789,
+          "payload": {
+            "token_pair": "ATOM/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 1.87,
+            "take_profit": 1.92026882,
+            "stop_loss": 1.84486559,
+            "expiry_time": 1778251949,
+            "weight_pct": 85
+          },
+          "signature": "0x32b6e801c6dda4f525fc91c1f8a5f946d65e8cc308638cdf0fccbe17a4aac5030b8265a5a61d7359c4a434cf1365e5c800fefcae756650fc3239a094d64b58c91c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778251949,
+        "closed_price": 1.88
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778249788",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778249788,
+          "payload": {
+            "token_pair": "DOGE/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.107134,
+            "take_profit": 0.10349805,
+            "stop_loss": 0.10895198,
+            "expiry_time": 1778252368,
+            "weight_pct": 65
+          },
+          "signature": "0x454df48936741e3df219748277d5338e4420deb64f4add8579c52033b314fcfe58278460e722901f83efc1fecfe6acb05c60893a70f1f60a4f99f0c57e459ac91b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778252368,
+        "closed_price": 0.107718
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250189",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250189,
+          "payload": {
+            "token_pair": "ETC/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 9.39,
+            "take_profit": 8.93547855,
+            "stop_loss": 9.61726073,
+            "expiry_time": 1778253669,
+            "weight_pct": 100
+          },
+          "signature": "0xa5aae89b247b744ac005dc62f00ea165daadc37832bff4b28fcc33ca3e4830be5ae8cafae2948dbdb02a031de287146675ec25e3a88c72822f8d35b31c5dbf631c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778253669,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250196",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250196,
+          "payload": {
+            "token_pair": "APT/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.054,
+            "take_profit": 0.99094915,
+            "stop_loss": 1.08552542,
+            "expiry_time": 1778254336,
+            "weight_pct": 85
+          },
+          "signature": "0x5ff17bd771b8165bda756bab3800a85aaaf1f727cee8d4bc35b452b2411cce75439e7e8964c38e8daf03f0286d14cf2f24c48a36a042b28cb2b95fae31d59b531c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778254336,
+        "closed_price": 1.051
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250188",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250188,
+          "payload": {
+            "token_pair": "XMR/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 399.96,
+            "take_profit": 424.80894652,
+            "stop_loss": 387.53552674,
+            "expiry_time": 1778254508,
+            "weight_pct": 100
+          },
+          "signature": "0xd37abfa89d0ba7f0d2cba3d633c05c54bc8a9ce182f23f2abe30146fd6874f4670c336f9a872cc43d7936a35ebc7825964c094263d0c7488abd0050f8e91a1621b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778254774,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250192",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250192,
+          "payload": {
+            "token_pair": "OP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.151049,
+            "take_profit": 0.14181291,
+            "stop_loss": 0.15566705,
+            "expiry_time": 1778254452,
+            "weight_pct": 100
+          },
+          "signature": "0x2bb902069c31a4d8059253171e06cc14cc0bcafbb282087168a347519d9262c852864bcb8b6913a2ca5b8c987cfadbf8819bb8f3bc7f640e54c86f7c2fae26e01b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778254775,
+        "closed_price": 0.150824
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778251178",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778251178,
+          "payload": {
+            "token_pair": "FIL/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.11,
+            "take_profit": 1.05654391,
+            "stop_loss": 1.13672805,
+            "expiry_time": 1778254658,
+            "weight_pct": 80
+          },
+          "signature": "0x41c7c07d02f5ea8ea4c3e5ec8e7749363d81ad3064378b9604b1ab323da22d42470aa20ae00d7a8e03f84cbbc7f4d4f75209ec95fc2158032b153e55333020da1c"
+        },
+        "state": "LOSS",
+        "entry_hit_at": 0,
+        "closed_at": 1778254775,
+        "closed_price": 1.14
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250191",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250191,
+          "payload": {
+            "token_pair": "DASH/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 50.07,
+            "take_profit": 53.45089963,
+            "stop_loss": 48.37955018,
+            "expiry_time": 1778254811,
+            "weight_pct": 100
+          },
+          "signature": "0xae088ceae5df6cbc6ffa345f326064233001731cfcc6c02748f4538ad1edd7045a938a33884c81fc17eb65b27ddf9c38e7c62835386995b25f57cfcbb45db0921c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778254811,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250197",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250197,
+          "payload": {
+            "token_pair": "JUP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.214322,
+            "take_profit": 0.19875378,
+            "stop_loss": 0.22210611,
+            "expiry_time": 1778255117,
+            "weight_pct": 85
+          },
+          "signature": "0x2df083f71d7ba28c88d996d109b1e4e7eaf77107218980b43ae887b6b4138f635e4b3706a5e5b5511218b611f3536f380a745057fffa86eba7e02fb6c9e623461b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778255117,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778253231",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778253231,
+          "payload": {
+            "token_pair": "LDO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.399537,
+            "take_profit": 0.36859999,
+            "stop_loss": 0.41500551,
+            "expiry_time": 1778258451,
+            "weight_pct": 85
+          },
+          "signature": "0x7481ef93d73fcc5c5e8cf391e8126f64180f2c071100866012cf8cf14ea164de6208ac145680e795fbfc1b702b74d719291cc5aca713883a2f017b3ab3a145131c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250377",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250377,
+          "payload": {
+            "token_pair": "TIA/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.41976,
+            "take_profit": 0.3710197,
+            "stop_loss": 0.44413015,
+            "expiry_time": 1778257577,
+            "weight_pct": 100
+          },
+          "signature": "0x27a7af8fe04d0f9e11c0a9ea0ae1491cfbb9a3c3a70b19084bb3baf5ba81fc1577b94831d1ed4b983cb47b7284e847da8b00a1f68f1fb3cf655d9d87d1bb71c41c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250378",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250378,
+          "payload": {
+            "token_pair": "JTO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.55266,
+            "take_profit": 0.34478608,
+            "stop_loss": 0.65659696,
+            "expiry_time": 1778257578,
+            "weight_pct": 100
+          },
+          "signature": "0x09df4c89c19f16a0b2d9934a8663001d24caebd5772e450c3a65eefee88236866cb26e735c49a01bce4345cc8acfe04ceb984d5e9e9cf31b3e70d9a7952e67c31b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778251180",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778251180,
+          "payload": {
+            "token_pair": "DYDX/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.172234,
+            "take_profit": 0.1294997,
+            "stop_loss": 0.19360115,
+            "expiry_time": 1778258380,
+            "weight_pct": 80
+          },
+          "signature": "0x91458970237b419dcb49174750fa7882c0e5d5b5f6fb298a6754af21721c7e960f2ad5ea9646059c8667c24db865e730c5270553316a77634dece90d54c29a681b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250379",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250379,
+          "payload": {
+            "token_pair": "EIGEN/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.219267,
+            "take_profit": 0.18360001,
+            "stop_loss": 0.2371005,
+            "expiry_time": 1778257579,
+            "weight_pct": 100
+          },
+          "signature": "0x90ee1f201e2d1ece734c6d955b64fecadc66df4785c4ad77219e16f3afb1db6f02c77b4663adc526cf6dfe3ddf408f16f251fdeb84b94a8ce65826f15d36977e1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250669",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250669,
+          "payload": {
+            "token_pair": "ONDO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.411316,
+            "take_profit": 0.33499482,
+            "stop_loss": 0.44947659,
+            "expiry_time": 1778257869,
+            "weight_pct": 95
+          },
+          "signature": "0x893c01e7fe9fe21dff5e8064b0f30a668d5883d1752f8ed01ca77dd4e361d7002799867487a766363d1970cc0c1417cb70d907243f57424de5f5d48ab85dbc091c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250194",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250194,
+          "payload": {
+            "token_pair": "COMP/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 22.02,
+            "take_profit": 23.87869926,
+            "stop_loss": 21.09065037,
+            "expiry_time": 1778255834,
+            "weight_pct": 100
+          },
+          "signature": "0x8ed9c6b5f27f217f2ff02ef4868df606b13c0ed10a9bf6fe0f11a451a038194e1230b1e34f00b953416cd8eac401482c5ae3d67da5647c733062403b4fddabb71c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778254256",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778254256,
+          "payload": {
+            "token_pair": "SEI/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.062051,
+            "take_profit": 0.05948182,
+            "stop_loss": 0.06333559,
+            "expiry_time": 1778257316,
+            "weight_pct": 85
+          },
+          "signature": "0x5c204955e98463d8270747c58e3f705761a11ca380b199a14dc5c557b611c91265280ed200531b31f11284f355b94502f331a6f0c9d45424685030a127a1d1001b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250376",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250376,
+          "payload": {
+            "token_pair": "PENDLE/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 2.03,
+            "take_profit": 1.7526776,
+            "stop_loss": 2.1686612,
+            "expiry_time": 1778257576,
+            "weight_pct": 100
+          },
+          "signature": "0xf480b17a644ebedc88550bee878a121e39bf229d08cdde88a49c824e26619f690b7ca5a7f975d2eabe927c711d40e9145d4b1c20648790cb885038c8e30923331b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778252198",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778252198,
+          "payload": {
+            "token_pair": "TON/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 2.61,
+            "take_profit": 2.16949367,
+            "stop_loss": 2.83025316,
+            "expiry_time": 1778259398,
+            "weight_pct": 65
+          },
+          "signature": "0xc3cbaae27185b5eeadd8f09d05e1d7d5e12e2d3f507acc2e282d5ae50d1a852f4309e75e35f35116037f74415434867ca6e8954efdeea922234e2e2a21bf9f201c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778253741",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778253741,
+          "payload": {
+            "token_pair": "SUI/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.008,
+            "take_profit": 0.95349264,
+            "stop_loss": 1.03525368,
+            "expiry_time": 1778257581,
+            "weight_pct": 87
+          },
+          "signature": "0x1eddbed6b3a69e76c3f9b30870f1ef8445626f054184ff035047e035c61a6add2f79f432b7fe6b607c9cb7e924c85c90b47f368db5a3b7a726d751139fcd9e151b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250190",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778250190,
+          "payload": {
+            "token_pair": "INJ/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 4.09,
+            "take_profit": 3.76795276,
+            "stop_loss": 4.25102362,
+            "expiry_time": 1778255470,
+            "weight_pct": 100
+          },
+          "signature": "0x197af4943d14afa249f583da14c0441a81641e78af63264f409590bb7ab6783d2c74e0cd4a6320b5a8f506ac9a1ca694a95b8f60ba0cc480301b66b59058dd781c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778252199",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778252199,
+          "payload": {
+            "token_pair": "ARB/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.135091,
+            "take_profit": 0.12374607,
+            "stop_loss": 0.14076346,
+            "expiry_time": 1778257779,
+            "weight_pct": 65
+          },
+          "signature": "0x55766b270d844582a4a44ad332b739c18a58fd3c5bd76d05f5fe201f4558fae7071acd9fb19d7908e3aaf6790f929b61155e9553462b306099b1aa47c304ba0f1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778254253",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778254253,
+          "payload": {
+            "token_pair": "UNI/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 3.53,
+            "take_profit": 3.32174041,
+            "stop_loss": 3.63412979,
+            "expiry_time": 1778258333,
+            "weight_pct": 85
+          },
+          "signature": "0xda6abfbf7a1240f10b39871c6c6a963ed20e0fe2d096a12878bc0f087e6859b17cb2ce974b7734dbf62cae7efbbc61a4417e66da8cbfa91c8803cba60971d52d1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778268943,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270757",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270757,
+          "payload": {
+            "token_pair": "SYRUP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.253734,
+            "take_profit": 0.2371021,
+            "stop_loss": 0.26204995,
+            "expiry_time": 1778275257,
+            "weight_pct": 85
+          },
+          "signature": "0xf1f75fb118a00cb4221a96ed55044d294a04f8fe771c36729c6e165871edf0407903fd03ab71f7151fa49a2cdaa4632b77346f8d5e305afed318d8588c75d6851b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269962",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269962,
+          "payload": {
+            "token_pair": "POL/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.101534,
+            "take_profit": 0.09670854,
+            "stop_loss": 0.10394673,
+            "expiry_time": 1778273382,
+            "weight_pct": 100
+          },
+          "signature": "0xc4b423edb5c5392ed4be45e9f32c78cd765c96667c4effc62655ce660002a91e5bc077665780c7f34253a472bb7e0547510f8f0154c43b681913b9d84ba758651c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271273",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271273,
+          "payload": {
+            "token_pair": "ALGO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.131487,
+            "take_profit": 0.12388642,
+            "stop_loss": 0.13528729,
+            "expiry_time": 1778275293,
+            "weight_pct": 100
+          },
+          "signature": "0x0caabae1ea6573083900c2b5f2105b290fbb25b88b52e792963a3b83c45b67f50dd193cae1706947ac31179fcdbe6a4e5f923c9cb299b0a75f55523a482bd3391c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270750",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270750,
+          "payload": {
+            "token_pair": "WIF/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.225321,
+            "take_profit": 0.21324152,
+            "stop_loss": 0.23136074,
+            "expiry_time": 1778274530,
+            "weight_pct": 100
+          },
+          "signature": "0x5a413487f493ed3bfc4ba5a18a992f45e393a264995fad4dbcaf0c7ce40feb425a59f3d54e9f7663dcf197896d853bc088db16f7668d506a1be03060cfbd29091b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271282",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271282,
+          "payload": {
+            "token_pair": "XLM/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.164058,
+            "take_profit": 0.15584552,
+            "stop_loss": 0.16816424,
+            "expiry_time": 1778274882,
+            "weight_pct": 100
+          },
+          "signature": "0xbf5de4ceed9596da90881531470f8a558de788e7e54da51f15b4d95b5efae12f434653800019fdcf1da0963a95d8f48a6b4ca2fe057c2408d57a5d09ade377141c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269963",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269963,
+          "payload": {
+            "token_pair": "TRUMP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 2.46,
+            "take_profit": 2.32391489,
+            "stop_loss": 2.52804255,
+            "expiry_time": 1778273863,
+            "weight_pct": 100
+          },
+          "signature": "0x4c032483dab8dbed520c9a03a7f314440ced5a943d42d3ef504bdad1f378ce8b4843895fd641c53bb0adce679cf2bd445861b6bf2a6410f5c4ec111ba5c3dd6b1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269965",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269965,
+          "payload": {
+            "token_pair": "FET/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.231764,
+            "take_profit": 0.21334796,
+            "stop_loss": 0.24097202,
+            "expiry_time": 1778275305,
+            "weight_pct": 100
+          },
+          "signature": "0xb70c21218f431ec81ede0c53172a1605ca037b66ad9ca3b71ac77f4752c13a385214614fca902fc87171bafef0d067e95888ca22e61a0dbdec8eb0a5acc0e2ba1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275478,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270754",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270754,
+          "payload": {
+            "token_pair": "ADA/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.271616,
+            "take_profit": 0.25906619,
+            "stop_loss": 0.27789091,
+            "expiry_time": 1778274114,
+            "weight_pct": 85
+          },
+          "signature": "0x348df1e22bd4dfdd92f4653f888d5260e3e846a08ccfe0cb198671f7ee87dace530d4b61d2590574cbad619b02ada141b02f94aef704d8f9b534c191538c507c1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 0.272315
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270752",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270752,
+          "payload": {
+            "token_pair": "LINK/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 10.37,
+            "take_profit": 9.66030644,
+            "stop_loss": 10.72484678,
+            "expiry_time": 1778275432,
+            "weight_pct": 90
+          },
+          "signature": "0x7fa45a2bb75c21cda559fc5e3fe64428b07cacf2518bfdc38398732c21e65b821669d589476cc00ab5085225ff92ce3245e66e5c0f9ef6115f0f6486827e01841c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 10.33
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269410",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269410,
+          "payload": {
+            "token_pair": "SUI/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.023,
+            "take_profit": 0.94315004,
+            "stop_loss": 1.06292498,
+            "expiry_time": 1778274690,
+            "weight_pct": 65
+          },
+          "signature": "0xb954de48717f6e5b8fa8fb977660cf1329bc49c24d13053f629ce3258efd2a4c28ad0a8679b4fdfe5ec1d266309be946b453064ea17052a0b5f24659c599c4b01b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 1.02
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270753",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270753,
+          "payload": {
+            "token_pair": "LTC/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 58.4,
+            "take_profit": 55.60320456,
+            "stop_loss": 59.79839772,
+            "expiry_time": 1778274173,
+            "weight_pct": 85
+          },
+          "signature": "0x6f749b7030a6ab5ce27dab55a9d4ffad11ade6f8c53befc2dc95183293e953d805dd78ddcbb69a013bd50ce450fe7a24309b378290113612680373df3b7c10171c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 58.18
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269418",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269418,
+          "payload": {
+            "token_pair": "RENDER/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 2.03,
+            "take_profit": 1.89326425,
+            "stop_loss": 2.09836788,
+            "expiry_time": 1778274038,
+            "weight_pct": 100
+          },
+          "signature": "0x005f77e374814d6a9fbfa6dbe25f94d6f30b8ec23cb768a851bfdf59ffc135de6156ce6490e38f6bed25a0e821df62a36167269de596b1c20b984b87349e44e71c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 2.03
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271275",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271275,
+          "payload": {
+            "token_pair": "SOL/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 92.4,
+            "take_profit": 87.09982894,
+            "stop_loss": 95.05008553,
+            "expiry_time": 1778275295,
+            "weight_pct": 65
+          },
+          "signature": "0xb8d2a238da82e4986920f1aad646a0802cd74fc7e9ecbdb9cd8af8abeaae9a1e6f97c37858372c14c9906e1184da2263b97866d475bc33e764d9946dba2f404c1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 92.05
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778272328",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778272328,
+          "payload": {
+            "token_pair": "AAVE/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 95.34,
+            "take_profit": 91.31257267,
+            "stop_loss": 97.35371366,
+            "expiry_time": 1778275448,
+            "weight_pct": 85
+          },
+          "signature": "0xaeca241d0cb79338f6ad2d64f31dbc4dff270bd6318a9a8e36c9220f78de6fe674b01b3ec5c04ba2705c42292abba77270e2882869b8a3279ad6e5e0bfb70d611c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778275480,
+        "closed_price": 95.66
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270748",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270748,
+          "payload": {
+            "token_pair": "WLD/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.273291,
+            "take_profit": 0.24205527,
+            "stop_loss": 0.28890886,
+            "expiry_time": 1778277948,
+            "weight_pct": 85
+          },
+          "signature": "0xa3f32a29a1534314a0bf3887893e6ff6bfb06b63fa94768c3054716055d9145c173e60907a4cdc0589fe8dbc62fb00c851712c846faef5a4f5cf89a959cb604f1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269971",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269971,
+          "payload": {
+            "token_pair": "DYDX/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.18136,
+            "take_profit": 0.22486965,
+            "stop_loss": 0.15960517,
+            "expiry_time": 1778277171,
+            "weight_pct": 100
+          },
+          "signature": "0x4d2d9189e7720b56d0427a756b27b7fb13ef29e7955f2a34e3cdaca7140ecd256cecf53bab4bbad018622a4b580b68cc6eb0791a92d965380ae6edd3ab5a8f8c1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269972",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269972,
+          "payload": {
+            "token_pair": "DASH/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 48.3,
+            "take_profit": 52.29751707,
+            "stop_loss": 46.30124146,
+            "expiry_time": 1778275492,
+            "weight_pct": 95
+          },
+          "signature": "0xdbe106c7d1c404b18d6e5819e7eda3f65c15e821e47b5ad78334d2239394c3aa5799eb8b3658645b9e39343c69031248d23a658e505fd3d6b9a27d35c9a4ca551b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269968",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269968,
+          "payload": {
+            "token_pair": "JTO/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 0.597868,
+            "take_profit": 0.71768309,
+            "stop_loss": 0.53796045,
+            "expiry_time": 1778277168,
+            "weight_pct": 100
+          },
+          "signature": "0xe2ccc706f71db35cf1ece310c61d95a6e89e5ce9eab4e85aa46a240e7af964a658fe5ab7001a418a6a6271bafbf2ecd3af24813925a10ba1ebd67a11b5acd8b71b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269967",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269967,
+          "payload": {
+            "token_pair": "EIGEN/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.215977,
+            "take_profit": 0.1804232,
+            "stop_loss": 0.2337539,
+            "expiry_time": 1778277167,
+            "weight_pct": 100
+          },
+          "signature": "0x9d76f12f13f4c6a3bf90e75f29286a2c386a1dadf721d4e1a833d74f7ed58b29386250a6e729ce42033c7858ac7faff77c750152859a2bc32dca4fbf25e75ae11b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269970",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269970,
+          "payload": {
+            "token_pair": "PENDLE/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 2.05,
+            "take_profit": 1.73804348,
+            "stop_loss": 2.20597826,
+            "expiry_time": 1778277170,
+            "weight_pct": 100
+          },
+          "signature": "0xf732080eb0899a72153f784ae13d162e3407c6afe02f08490c2e3a0e782d5c64483a341ec9d8f55252d1ae1b43acacb0f11763b97b6b04d1cd272eecb63455671c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271810",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271810,
+          "payload": {
+            "token_pair": "COMP/USDT",
+            "exchange": "coingecko",
+            "direction": "long",
+            "entry_price": 22.68,
+            "take_profit": 24.48979705,
+            "stop_loss": 21.77510148,
+            "expiry_time": 1778277150,
+            "weight_pct": 80
+          },
+          "signature": "0xdbd9eb4af25b8d319fe4c7b6e3fcf7189226c2ae95b1afacf1b16713772974ae3d4e91c5afc151eddb9989944b3bf43d58774435a3488f3f5dd9f02691073c4f1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271279",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271279,
+          "payload": {
+            "token_pair": "TON/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 2.49,
+            "take_profit": 2.24297619,
+            "stop_loss": 2.6135119,
+            "expiry_time": 1778277819,
+            "weight_pct": 100
+          },
+          "signature": "0x7840bca07b0b713fd9ca63a365c164bdab6fffdb6e414c4bdcc34d3a37b579285fe37971856ca538917d558fcb0eb5e0aa2efe314b8109fc7a0aff78d9f224df1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269408",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269408,
+          "payload": {
+            "token_pair": "TIA/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.442249,
+            "take_profit": 0.36044647,
+            "stop_loss": 0.48315026,
+            "expiry_time": 1778276608,
+            "weight_pct": 100
+          },
+          "signature": "0x934cd3db1dff7bfa92be67647a602897a87bd1b1671dc55277b89f300dbf66b719f1e18b21ddf85085d78c1127e476c904afbaabe7179f7181160a6e1c00726e1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271281",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271281,
+          "payload": {
+            "token_pair": "ZRO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.45,
+            "take_profit": 1.35874126,
+            "stop_loss": 1.49562937,
+            "expiry_time": 1778275601,
+            "weight_pct": 65
+          },
+          "signature": "0x4439c502c7112819910004841be45b5dfa3ad204f6e7cd436f63861ae4c378987fb0f3c9592f7ea4ad4dc4e646b9300c1d310a97d18c113a3016907e73f43b311b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271277",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271277,
+          "payload": {
+            "token_pair": "ETC/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 9.79,
+            "take_profit": 9.0754793,
+            "stop_loss": 10.14726035,
+            "expiry_time": 1778276197,
+            "weight_pct": 65
+          },
+          "signature": "0x3818908e605f2fb72c7219637a389628cbb8162d295fd6389d0a4417e6f1ff62382056bdf68b92fcef6b6ad7da412e1104d4e32f4df1a10b711bc3666656860b1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269419",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269419,
+          "payload": {
+            "token_pair": "JUP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.238951,
+            "take_profit": 0.19186681,
+            "stop_loss": 0.26249309,
+            "expiry_time": 1778276619,
+            "weight_pct": 100
+          },
+          "signature": "0xfda95a917844d2b55bbfa425127fecc1d037544ba4bf164da954ea7aad4be4110109df82ded681c02e9e58735b57a424ed68ab699d2969b0de872caf2014892d1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270749",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270749,
+          "payload": {
+            "token_pair": "LDO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.409018,
+            "take_profit": 0.37358152,
+            "stop_loss": 0.42673624,
+            "expiry_time": 1778276509,
+            "weight_pct": 100
+          },
+          "signature": "0xc248e611c99dbcafbdfd776292907d66c544389ce6675003d099051f7aef0acf0625bba184e924547517cea68fdc84b2711f55809f51793df398b41a84910d7b1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269417",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269417,
+          "payload": {
+            "token_pair": "ONDO/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.438962,
+            "take_profit": 0.29188128,
+            "stop_loss": 0.51250236,
+            "expiry_time": 1778276617,
+            "weight_pct": 100
+          },
+          "signature": "0x9cdc24d410a5d0397699c3526f609db3d98defc92ad92abed329dc59de1da6d4580bd6d31b8708211552d3f79e2c2b543c5dc0fe161003ab7acd75cc25f5a6571b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271807",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271807,
+          "payload": {
+            "token_pair": "KAS/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.03656333,
+            "take_profit": 0.03447997,
+            "stop_loss": 0.03760501,
+            "expiry_time": 1778275767,
+            "weight_pct": 85
+          },
+          "signature": "0x98cb311a29764bff75e64f3ba131b9957b85c879ef9c6f9f16c202a7fc2bc18559514b48744346336f9a9f031c5378dc9597cd2f275f3d4865e88d1c490b69311b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271283",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271283,
+          "payload": {
+            "token_pair": "SEI/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.064675,
+            "take_profit": 0.05962561,
+            "stop_loss": 0.0671997,
+            "expiry_time": 1778276563,
+            "weight_pct": 100
+          },
+          "signature": "0x4e891cab28a640cd92dad821244fff9e7dd6af62a53bc18ad17222881e3a574c2b0cdf9f1a32695ae4b31f66453ef20896c1aa1937bac0ed468a635a36e67b891c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271799",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271799,
+          "payload": {
+            "token_pair": "DOT/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.37,
+            "take_profit": 1.28569231,
+            "stop_loss": 1.41215385,
+            "expiry_time": 1778276059,
+            "weight_pct": 65
+          },
+          "signature": "0x885c2eb27b547b0183ac60eb58db7d879bb90876b08c282914f7cc613563f1ef04601f9fb2825043305214e59440ec172dc1f7963db44281bae57cce3f5df4bd1b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270751",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270751,
+          "payload": {
+            "token_pair": "THETA/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.234537,
+            "take_profit": 0.20422704,
+            "stop_loss": 0.24969198,
+            "expiry_time": 1778277951,
+            "weight_pct": 100
+          },
+          "signature": "0xe2657afb7afa5f87fd31d315e60373eb39461b6e84536d2612cefdff143187f62bbf404f9a7ac8ea8fb47b6c9b5765e95f139132e914052e4db1f4d1e270efc71b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269414",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269414,
+          "payload": {
+            "token_pair": "ARB/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.14661,
+            "take_profit": 0.12111383,
+            "stop_loss": 0.15935808,
+            "expiry_time": 1778276614,
+            "weight_pct": 80
+          },
+          "signature": "0xbd6481a2d7762909e324e458d21799aa9920a26ba1d5680a1e15562f7d03bc3b6a81a1198c521336241580d9893cb0b313cf3688bf4329bd50ecf2370abaf30a1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271270",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271270,
+          "payload": {
+            "token_pair": "APT/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.11,
+            "take_profit": 0.99637795,
+            "stop_loss": 1.16681102,
+            "expiry_time": 1778277990,
+            "weight_pct": 80
+          },
+          "signature": "0xe3906566bd5d49bbf104399430eda990322cd76cd1591cfdbe0dfe6cef0dce6e1201241b457039a9f242ea36823691cd9d2daa9d7e8690cec6ac8ffd33da4c3b1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778272323",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778272323,
+          "payload": {
+            "token_pair": "HBAR/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.092628,
+            "take_profit": 0.0886314,
+            "stop_loss": 0.0946263,
+            "expiry_time": 1778275503,
+            "weight_pct": 100
+          },
+          "signature": "0x3b2dda4872b2541fd46cd4aaf923de2f47a99d4720a7514b817a432e6a569bba4a1b33485b5dc0de40527564a1c8b7c72d1adef3132d628fc9e78a344bcb4b061c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270758",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778270758,
+          "payload": {
+            "token_pair": "UNI/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 3.69,
+            "take_profit": 3.36441176,
+            "stop_loss": 3.85279412,
+            "expiry_time": 1778276638,
+            "weight_pct": 80
+          },
+          "signature": "0x4c17eed2e102c431bc004adac78e66f4a86ac865c8f886b79402eb69d84d65df5cd78f90f126271235841bf0c9b237f1532d75d077beb3806293d04a9cb29e131c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269406",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269406,
+          "payload": {
+            "token_pair": "INJ/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 4.23,
+            "take_profit": 3.74149606,
+            "stop_loss": 4.47425197,
+            "expiry_time": 1778276606,
+            "weight_pct": 80
+          },
+          "signature": "0xe7a0e88a77c54c0c5bdb90dd90e2f3ff39cffd09ce72c3ae366a22b6e33a191f1c08c39a4643e1132a7d6dca6338675979f003b2dce024707a50e9757877addb1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271268",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778271268,
+          "payload": {
+            "token_pair": "NEAR/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.57,
+            "take_profit": 1.42924138,
+            "stop_loss": 1.64037931,
+            "expiry_time": 1778277208,
+            "weight_pct": 80
+          },
+          "signature": "0x41db8ad7c648e4e7d6384e199cc44be5836433dccef4595572efddc2cf8cc12c48b64d04f435126b462b7c49881c9256fdb643536fe286dd821813b1df18228b1c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269412",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269412,
+          "payload": {
+            "token_pair": "ICP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 3.3,
+            "take_profit": 2.87201365,
+            "stop_loss": 3.51399317,
+            "expiry_time": 1778276612,
+            "weight_pct": 65
+          },
+          "signature": "0xd4b9684c71f2061b53191ee3333522444be3c499e3d33863975e4f1e78adfab94ba89f0731f546dfa0ee4d60aee66fcec00978a70f7d698f194846a85accba311c"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269969",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269969,
+          "payload": {
+            "token_pair": "OP/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 0.160828,
+            "take_profit": 0.14050045,
+            "stop_loss": 0.17099177,
+            "expiry_time": 1778277169,
+            "weight_pct": 100
+          },
+          "signature": "0xd27e605bd327e39d1f9a7e761af7e4224f733d186c0d45ecf6dcffffe8b18a863d79ff0afd37cdd0b1c73a9dec6f26d321b8b5b7f83bacf884addc3674da0a341b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
+      },
+      {
+        "id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269416",
+        "envelope": {
+          "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+          "timestamp": 1778269416,
+          "payload": {
+            "token_pair": "FIL/USDT",
+            "exchange": "coingecko",
+            "direction": "short",
+            "entry_price": 1.2,
+            "take_profit": 1.0119403,
+            "stop_loss": 1.29402985,
+            "expiry_time": 1778276616,
+            "weight_pct": 100
+          },
+          "signature": "0x2421e61fbc7eda3b27e209af251a624c3df6e02bfd25a03613e8abaf6f95e230020a03832a2466a1e03a0e3dc86f9292daf6b5bd67a8c01b86074c1505bbd0e11b"
+        },
+        "state": "EXPIRED",
+        "entry_hit_at": 0,
+        "closed_at": 1778309516,
+        "closed_price": 0
       }
     ],
     "0x82d441e43BCD5D9309E7227d888291210a6bD77D": [
@@ -409,6 +1839,981 @@
       "outcome": "WIN",
       "pnl_percent": -0.08293032107128913,
       "final_tier": "SILVER"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778249786",
+      "timestamp": 1778251954,
+      "algorithmic_score": 36.665854718905905,
+      "ai_adjusted_score": 36.7,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "The signal's outcome is within expected parameters given the risk/reward ratio and the recent strong performance does not indicate artificial consistency.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": -0.5347593582887586,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778249789",
+      "timestamp": 1778251954,
+      "algorithmic_score": 30.509493091723293,
+      "ai_adjusted_score": 75,
+      "adjustment": -5,
+      "manipulation_flag": true,
+      "manipulation_type": "WASH_TRADING",
+      "ai_reasoning": "The strong performance with no losses and the recent history showing a pattern of wins that seem too consistent suggest potential wash trading. The low algorithmic score also indicates that the signal may not be of high quality.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.5347593582887586,
+      "final_tier": "GOLD"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778249788",
+      "timestamp": 1778252376,
+      "algorithmic_score": 26.991648628346447,
+      "ai_adjusted_score": 27,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "The signal's outcome is not favorable, and the risk/reward ratio is reasonable. There are no signs of manipulation in the recent signal history provided.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": -0.5451117292362847,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250189",
+      "timestamp": 1778253674,
+      "algorithmic_score": 25.920463361648057,
+      "ai_adjusted_score": 25,
+      "adjustment": -0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "The signal's outcome is legitimate as it expired without any trades being executed. There are no signs of manipulation based on the recent history provided.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250196",
+      "timestamp": 1778254344,
+      "algorithmic_score": 25.673317723453536,
+      "ai_adjusted_score": 20,
+      "adjustment": -30,
+      "manipulation_flag": true,
+      "manipulation_type": "DUPLICATE_ABUSE",
+      "ai_reasoning": "The signal has an expired outcome with a low PnL, and there is a high frequency of duplicate signals (1 out of 14) for the same token and direction within 2 hours, which suggests potential manipulation.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.28462998102467874,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250188",
+      "timestamp": 1778254786,
+      "algorithmic_score": 25.129157542589226,
+      "ai_adjusted_score": 25,
+      "adjustment": -0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "The signal's outcome is legitimate as it expired without a profit or loss. There are no clear signs of manipulation based on the recent signal history provided.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250192",
+      "timestamp": 1778254786,
+      "algorithmic_score": 25.119711385089854,
+      "ai_adjusted_score": 20,
+      "adjustment": -30,
+      "manipulation_flag": true,
+      "manipulation_type": "WASH_TRADING",
+      "ai_reasoning": "The signal has an unusually high number of wins and a consistent pattern, which suggests artificial manipulation. Additionally, the low algorithmic score indicates poor quality.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.14895828505979863,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778251178",
+      "timestamp": 1778254786,
+      "algorithmic_score": 22.175926123664205,
+      "ai_adjusted_score": 20,
+      "adjustment": -30,
+      "manipulation_flag": true,
+      "manipulation_type": "DUPLICATE_ABUSE",
+      "ai_reasoning": "The signal shows a loss with a low risk/reward ratio and an entry price that is far from the current market price, indicating potential manipulation. Additionally, there is one duplicate signal in the last two hours, which is a clear sign of abuse.",
+      "tee_verified": false,
+      "outcome": "LOSS",
+      "pnl_percent": -2.702702702702685,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250191",
+      "timestamp": 1778254813,
+      "algorithmic_score": 22.01058888836637,
+      "ai_adjusted_score": 22,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "The signal's risk/reward ratio and entry point are reasonable, and there is no evidence of spamming or abuse in the recent signal history.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250197",
+      "timestamp": 1778255117,
+      "algorithmic_score": 21.865212855124156,
+      "ai_adjusted_score": 1.865212855124156,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "10 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778253231",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.73604851283266,
+      "ai_adjusted_score": 21.73604851283266,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250378",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.515691563631687,
+      "ai_adjusted_score": 21.515691563631687,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250377",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.620267851626153,
+      "ai_adjusted_score": 21.620267851626153,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778251180",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.420608995217137,
+      "ai_adjusted_score": 21.420608995217137,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250669",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.253728127342566,
+      "ai_adjusted_score": 1.2537281273425656,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "6 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250379",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.333655721455443,
+      "ai_adjusted_score": 21.333655721455443,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778254256",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.11149041173651,
+      "ai_adjusted_score": 1.1114904117365114,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "8 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778252198",
+      "timestamp": 1778268943,
+      "algorithmic_score": 20.988342397658283,
+      "ai_adjusted_score": 0.9883423976582826,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "10 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250194",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.179922451159143,
+      "ai_adjusted_score": 1.1799224511591433,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "7 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250376",
+      "timestamp": 1778268943,
+      "algorithmic_score": 21.04780633274119,
+      "ai_adjusted_score": 1.0478063327411888,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "9 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778253741",
+      "timestamp": 1778268943,
+      "algorithmic_score": 20.932649758319627,
+      "ai_adjusted_score": 0.9326497583196272,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "11 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778250190",
+      "timestamp": 1778268943,
+      "algorithmic_score": 20.88034392591477,
+      "ai_adjusted_score": 0.8803439259147687,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "12 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778254253",
+      "timestamp": 1778268943,
+      "algorithmic_score": 20.78461033558171,
+      "ai_adjusted_score": 0.7846103355817107,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "14 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778252199",
+      "timestamp": 1778268943,
+      "algorithmic_score": 20.83109334109242,
+      "ai_adjusted_score": 0.8310933410924193,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "13 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270752",
+      "timestamp": 1778275485,
+      "algorithmic_score": 19.771929127885286,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "9 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.38572806171648166,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269418",
+      "timestamp": 1778275485,
+      "algorithmic_score": 20.46476890510761,
+      "ai_adjusted_score": 0.4647689051076114,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "12 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270753",
+      "timestamp": 1778275485,
+      "algorithmic_score": 20.491352401324196,
+      "ai_adjusted_score": 0.4913524013241961,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "11 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.37671232876712135,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271275",
+      "timestamp": 1778275485,
+      "algorithmic_score": 20.768979886749843,
+      "ai_adjusted_score": 0.7689798867498432,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "13 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.378787878787888,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270750",
+      "timestamp": 1778275487,
+      "algorithmic_score": 20.621769603311304,
+      "ai_adjusted_score": 20.621769603311304,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270757",
+      "timestamp": 1778275487,
+      "algorithmic_score": 20.740643914835385,
+      "ai_adjusted_score": 20.740643914835385,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269965",
+      "timestamp": 1778275487,
+      "algorithmic_score": 20.51899677794215,
+      "ai_adjusted_score": 0.5189967779421494,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "7 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270754",
+      "timestamp": 1778275487,
+      "algorithmic_score": 19.341055894337117,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "8 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": -0.25734860980205493,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269410",
+      "timestamp": 1778275487,
+      "algorithmic_score": 20.152352095533587,
+      "ai_adjusted_score": 0.15235209553358686,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "10 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0.2932551319647988,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269962",
+      "timestamp": 1778275489,
+      "algorithmic_score": 20.69897394282029,
+      "ai_adjusted_score": 15,
+      "adjustment": -35,
+      "manipulation_flag": true,
+      "manipulation_type": "DUPLICATE_ABUSE",
+      "ai_reasoning": "The signal has an expired outcome with zero profit, indicating it might not be a genuine trade opportunity. Additionally, there is a pattern of duplicate signals within 2 hours, which suggests potential manipulation.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271273",
+      "timestamp": 1778275489,
+      "algorithmic_score": 20.659406417564938,
+      "ai_adjusted_score": 20,
+      "adjustment": -30,
+      "manipulation_flag": true,
+      "manipulation_type": "DUPLICATE_ABUSE",
+      "ai_reasoning": "The signal has an expired outcome with zero profit, and there is one duplicate signal in the recent history, indicating potential manipulation.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778272328",
+      "timestamp": 1778275489,
+      "algorithmic_score": 19.850501135029806,
+      "ai_adjusted_score": 19,
+      "adjustment": -0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "The signal's risk/reward ratio and token pair are reasonable. The recent history shows weak overall performance but no clear signs of manipulation.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": -0.33564086427521833,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269963",
+      "timestamp": 1778275489,
+      "algorithmic_score": 20.55169390277173,
+      "ai_adjusted_score": 15,
+      "adjustment": -35,
+      "manipulation_flag": true,
+      "manipulation_type": "DUPLICATE_ABUSE",
+      "ai_reasoning": "The signal shows a weak overall performance with only 23% wins. Additionally, there is a pattern of duplicate signals within 2 hours, which is indicative of potential manipulation.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271282",
+      "timestamp": 1778275489,
+      "algorithmic_score": 20.585910841322082,
+      "ai_adjusted_score": 15,
+      "adjustment": -35,
+      "manipulation_flag": true,
+      "manipulation_type": "DUPLICATE_ABUSE",
+      "ai_reasoning": "The signal has an overall weak performance with only 24% wins, and there is a recent pattern of duplicate signals (1 out of last 38). This suggests potential manipulation through duplicate signal abuse.",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270749",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.595223754438763,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "13 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270748",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.82674533513022,
+      "ai_adjusted_score": 19.82674533513022,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269971",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.80382151950024,
+      "ai_adjusted_score": 19.80382151950024,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269972",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.781682116606987,
+      "ai_adjusted_score": 19.781682116606987,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269968",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.76028328545078,
+      "ai_adjusted_score": 19.76028328545078,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269967",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.73958454705266,
+      "ai_adjusted_score": 19.73958454705266,
+      "adjustment": 0,
+      "manipulation_flag": false,
+      "manipulation_type": "NONE",
+      "ai_reasoning": "Heuristic evaluation",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269970",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.71954845953981,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "6 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271810",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.700140330854403,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "7 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271279",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.681327964037592,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "8 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271277",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.628176306244523,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "11 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271281",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.645372869781376,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "10 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269419",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.61146749077239,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "12 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269408",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.663081430806752,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "9 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271799",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.534494597505113,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "17 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269417",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.57942387861724,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "14 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271807",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.56404797767159,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "15 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271283",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.549077393051526,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "16 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269416",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.40679555380195,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "27 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270758",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.466852899673693,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "22 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778270751",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.520283108283916,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "18 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269414",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.506427408359094,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "19 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271270",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.492912874788136,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "20 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778272323",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.47972571347711,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "21 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778271268",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.442001740741667,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "24 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269406",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.454282123604916,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "23 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269412",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.43000072623127,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "25 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
+    },
+    {
+      "node_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4",
+      "signal_id": "0x2aBA37C1d1F4dE2b829d3621eD552a881AF960E4_1778269969",
+      "timestamp": 1778309516,
+      "algorithmic_score": 19.41826863309116,
+      "ai_adjusted_score": 0,
+      "adjustment": -20,
+      "manipulation_flag": true,
+      "manipulation_type": "SIGNAL_SPAM",
+      "ai_reasoning": "26 signals in last hour (spam detected)",
+      "tee_verified": false,
+      "outcome": "EXPIRED",
+      "pnl_percent": 0,
+      "final_tier": "BRONZE"
     }
   ]
 }

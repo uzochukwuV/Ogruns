@@ -24,8 +24,8 @@ export function loadConfig(): AgentConfig {
     signalApiUrl: optionalEnv("SIGNAL_API_URL", "http://localhost:8080"),
     signalWsUrl: optionalEnv("SIGNAL_WS_URL", "ws://localhost:8080/api/v1/stream"),
 
-    // GMX
-    arbitrumRpcUrl: optionalEnv("ARBITRUM_RPC_URL", "https://arb1.arbitrum.io/rpc"),
+    // GMX - Default to Arbitrum Sepolia testnet
+    arbitrumRpcUrl: optionalEnv("ARBITRUM_RPC_URL", "https://sepolia-rollup.arbitrum.io/rpc"),
     chainId: parseInt(optionalEnv("CHAIN_ID", "421614")),
 
     // Trading Filters

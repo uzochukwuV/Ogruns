@@ -40,7 +40,7 @@ export class SignalConsumer {
         throw new Error(`HTTP ${response.status}`);
       }
 
-      const data: DashboardResponse = await response.json();
+      const data = await response.json() as DashboardResponse;
 
       // Cache node stats
       this.nodeStatsCache.clear();
@@ -69,8 +69,8 @@ export class SignalConsumer {
         throw new Error(`HTTP ${response.status}`);
       }
 
-      const data = await response.json();
-      const signals = data.signals as ActiveSignal[];
+      const data = await response.json() as { signals: ActiveSignal[] };
+      const signals = data.signals;
 
       if (signals.length > 0) {
         console.log(`📥 Fetched ${signals.length} active signal(s) from platform`);

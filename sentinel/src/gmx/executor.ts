@@ -1,19 +1,10 @@
-import type { AgentConfig, ActiveSignal, TradeExecution, TOKEN_TO_GMX_SYMBOL } from "../core/types.js";
-
-// GMX SDK types (will be properly typed when SDK is installed)
-interface GMXSdk {
-  executeExpressOrder(params: any, signer: any): Promise<any>;
-  fetchPositionsInfo(params: { address: string }): Promise<any[]>;
-  fetchMarketsTickers(params: { symbols: string[] }): Promise<any[]>;
-}
-
-interface PrivateKeySigner {
-  address: string;
-}
+import type { AgentConfig, ActiveSignal, TradeExecution } from "../core/types.js";
+import { GmxApiSdk, PrivateKeySigner } from "@gmx-io/sdk/v2";
+import type { PrepareOrderRequest, SubmitOrderResponse } from "@gmx-io/sdk/v2";
 
 export class GMXExecutor {
   private config: AgentConfig;
-  private sdk: GMXSdk | null = null;
+  private sdk: GmxApiSdk | null = null;
   private signer: PrivateKeySigner | null = null;
   private walletAddress: string = "";
   private activePositions: Map<string, TradeExecution> = new Map();
@@ -35,12 +26,17 @@ export class GMXExecutor {
 
   async initialize(): Promise<void> {
     try {
-      // Dynamic import of GMX SDK
-      const { GmxApiSdk, PrivateKeySigner } = await import("@gmx-io/sdk/v2");
+      // Initialize GMX API SDK with chain ID
+      this.sdk = new GmxApiSdk({
+        chainId: this.config.chainId as 42161 | 421614
+      });
 
-      this.sdk = new GmxApiSdk({ chainId: this.config.chainId });
-      this.signer = new PrivateKeySigner(this.config.privateKey);
-      this.walletAddress = this.signer?.address!;
+      // Initialize signer with private key and RPC URL
+      this.signer = new PrivateKeySigner(
+        this.config.privateKey as `0x${string}`,
+        { rpcUrl: this.config.arbitrumRpcUrl }
+      );
+      this.walletAddress = this.signer.address;
 
       const isTestnet = this.config.chainId === 421614;
       const networkName = isTestnet ? "Arbitrum Sepolia (TESTNET)" : "Arbitrum One (MAINNET)";
@@ -146,41 +142,52 @@ export class GMXExecutor {
       console.log(`   Stop Loss: $${execution.stopLoss}`);
       console.log(`   Take Profit: $${execution.takeProfit}`);
 
-      // Get current mark price for TP/SL calculation
-      const tickers = await this.sdk.fetchMarketsTickers({ symbols: [gmxSymbol] });
-      const markPrice = BigInt(tickers[0]?.maxPrice || 0);
-
-      // Calculate TP/SL prices
+      // Calculate TP/SL prices (GMX uses 30 decimals for USD prices)
       const slPrice = BigInt(Math.floor(execution.stopLoss * 10 ** 30));
       const tpPrice = BigInt(Math.floor(execution.takeProfit * 10 ** 30));
 
-      // Execute the order
-      const result = await this.sdk.executeExpressOrder({
+      // Build the order request
+      const orderRequest: PrepareOrderRequest = {
         kind: "increase",
         symbol: gmxSymbol,
         direction: execution.direction,
         orderType: "market",
         size: execution.sizeUsd,
-        collateralToken: this.config.collateralToken,
+        collateralToken: this.config.collateralToken, // "USDC"
         collateralToPay: {
           amount: execution.collateralUsd,
           token: this.config.collateralToken
         },
-        mode: "express",
-        from: this.walletAddress,
         tpsl: [
           { type: "take-profit", triggerPrice: tpPrice, size: execution.sizeUsd },
           { type: "stop-loss", triggerPrice: slPrice, size: execution.sizeUsd },
         ],
-      }, this.signer);
+        mode: "express",
+        from: this.walletAddress,
+      };
 
-      execution.txHash = result?.hash;
-      execution.status = "executed";
+      // Execute the express order
+      const result: SubmitOrderResponse = await this.sdk.executeExpressOrder(orderRequest, this.signer);
 
-      console.log(`   ✅ Trade executed! TX: ${execution.txHash || "pending"}`);
+      execution.txHash = result.txHash;
+      execution.status = result.status === "executed" ? "executed" : "pending";
 
-      // Track active position
-      this.activePositions.set(signal.id, execution);
+      if (result.error) {
+        execution.status = "failed";
+        execution.error = result.error.message;
+        console.error(`   ❌ Trade failed: ${execution.error}`);
+      } else {
+        console.log(`   ✅ Trade submitted! Status: ${result.status}`);
+        if (result.txHash) {
+          console.log(`   📝 TX: ${result.txHash}`);
+        }
+        if (result.requestId) {
+          console.log(`   🔑 Request ID: ${result.requestId}`);
+        }
+
+        // Track active position
+        this.activePositions.set(signal.id, execution);
+      }
 
     } catch (error: any) {
       execution.status = "failed";
