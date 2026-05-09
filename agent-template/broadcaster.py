@@ -37,6 +37,10 @@ from scanner import (
 )
 from generator import generate_signal, compute_reversal_score, SignalPayload
 from signer import create_envelope
+from ai_analyzer import SignalAnalyzer
+
+# Global AI analyzer instance
+ai_analyzer: Optional[SignalAnalyzer] = None
 
 
 @dataclass
@@ -365,11 +369,35 @@ def process_delayed_analysis(min_score: int) -> None:
     save_queue()
 
 
-def submit_signal_with_logging(signal: SignalPayload) -> bool:
-    """Submit a signal with logging."""
+def submit_signal_with_logging(signal: SignalPayload, skip_ai: bool = False) -> bool:
+    """Submit a signal with logging. Optionally validates with AI first."""
+    global ai_analyzer
+
     if is_recent_duplicate(signal):
         log(f"Skipping duplicate {signal.direction.upper()} {signal.token_pair} within cooldown", "warn")
         return False
+
+    # AI validation (if enabled)
+    if not skip_ai and ai_analyzer and ai_analyzer.is_enabled():
+        log(f"  -> AI analyzing {signal.token_pair} {signal.direction.upper()}...", "info")
+        try:
+            analysis = ai_analyzer.analyze_signal(
+                token_pair=signal.token_pair,
+                direction=signal.direction,
+                entry_price=signal.entry_price,
+                take_profit=signal.take_profit,
+                stop_loss=signal.stop_loss,
+                weight_pct=signal.weight_pct,
+                min_confidence=Config.AI_MIN_CONFIDENCE
+            )
+
+            if not analysis.approved:
+                log(f"  -> AI REJECTED: {analysis.reasoning} (confidence: {analysis.confidence:.0f}%)", "warn")
+                return False
+
+            log(f"  -> AI APPROVED: confidence {analysis.confidence:.0f}%", "success")
+        except Exception as e:
+            log(f"  -> AI analysis error (proceeding anyway): {e}", "warn")
 
     try:
         envelope = create_envelope(Config.AGENT_PRIVATE_KEY, signal)
@@ -404,12 +432,15 @@ def submit_signal_with_logging(signal: SignalPayload) -> bool:
 
 
 def main():
+    global ai_analyzer
+
     parser = argparse.ArgumentParser(description="AI Trading Signal Agent")
     parser.add_argument("--min", type=float, default=Config.MIN_PRICE_CHANGE_PCT)
     parser.add_argument("--max", type=float, default=Config.MAX_PRICE_CHANGE_PCT)
     parser.add_argument("--interval", type=int, default=Config.SCAN_INTERVAL_SEC)
     parser.add_argument("--min-score", type=int, default=55)
     parser.add_argument("--once", action="store_true")
+    parser.add_argument("--no-ai", action="store_true", help="Disable AI signal validation")
     args = parser.parse_args()
 
     if not Config.validate():
@@ -417,6 +448,14 @@ def main():
 
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+    # Initialize AI analyzer
+    if Config.ai_enabled() and not args.no_ai:
+        ai_analyzer = SignalAnalyzer()
+        ai_status = f"{C.GREEN}ENABLED{C.RESET} (min confidence: {Config.AI_MIN_CONFIDENCE}%)"
+    else:
+        ai_analyzer = None
+        ai_status = f"{C.YELLOW}DISABLED{C.RESET}"
 
     from eth_account import Account
     account = Account.from_key(
@@ -431,6 +470,7 @@ def main():
     print()
     print(f"  {C.WHITE}Agent ID :{C.RESET} {account.address}")
     print(f"  {C.WHITE}API      :{C.RESET} {Config.VERIFIER_API_URL}")
+    print(f"  {C.WHITE}AI Filter:{C.RESET} {ai_status}")
     print(f"  {C.WHITE}Filter   :{C.RESET} {args.min}% - {args.max}% price change (24h)")
     print(f"  {C.WHITE}Min Score:{C.RESET} {args.min_score}")
     print(f"  {C.WHITE}Interval :{C.RESET} {args.interval}s")

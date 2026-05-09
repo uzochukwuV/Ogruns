@@ -49,6 +49,13 @@ class Config:
     SENT_SIGNALS_FILE: str = os.getenv("SENT_SIGNALS_FILE", "sent_signals.json")
     SIGNAL_COOLDOWN_SEC: int = int(os.getenv("SIGNAL_COOLDOWN_SEC", "7200"))
 
+    # 0G AI Compute
+    ZG_AI_API_KEY: str = os.getenv("ZG_AI_API_KEY", "")
+    ZG_AI_API_URL: str = os.getenv("ZG_AI_API_URL", "https://router-api-testnet.integratenetwork.work/v1/chat/completions")
+    ZG_AI_MODEL: str = os.getenv("ZG_AI_MODEL", "qwen/qwen-2.5-7b-instruct")
+    AI_MIN_CONFIDENCE: float = float(os.getenv("AI_MIN_CONFIDENCE", "60"))
+    AI_ENABLED: bool = os.getenv("AI_ENABLED", "true").lower() == "true"
+
     @classmethod
     def validate(cls) -> bool:
         if not cls.AGENT_PRIVATE_KEY:
@@ -56,3 +63,7 @@ class Config:
             print("Generate one with: python -c \"from eth_account import Account; print(Account.create().key.hex())\"")
             return False
         return True
+
+    @classmethod
+    def ai_enabled(cls) -> bool:
+        return cls.AI_ENABLED and bool(cls.ZG_AI_API_KEY)

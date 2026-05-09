@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
     // 0G Mainnet (update when available)
     zg_mainnet: {
       url: process.env.ZG_MAINNET_RPC || "https://evmrpc.0g.ai",
-      chainId: 0, // update when mainnet chain ID is published
+      chainId: 16661, // update when mainnet chain ID is published
       accounts: [deployerKey],
     },
     // Local Hardhat node for unit tests
@@ -38,7 +38,7 @@ const config: HardhatUserConfig = {
 
   // Optional: configure Etherscan-compatible explorer for contract verification
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || "PLACEHOLDER",
+    apiKey: process.env.ETHERSCAN_API_KEY || "UD6XAYNRKSMX3ASYKG9FTH87XKEY4DBVCY",
     customChains: [
       {
         network: "zg_testnet",

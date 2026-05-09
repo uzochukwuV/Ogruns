@@ -77,9 +77,9 @@ async function testTrade() {
     console.log(`   ⚠️ Could not fetch markets: ${err.message}`);
   }
 
-  // Use USDC.SG as collateral (we have ~1.14 from swap)
+  // Use USDC.SG as collateral (we have ~24 from swap)
   const collateralToken = "USDC.SG";
-  const collateralAmount = BigInt(1) * BigInt(10 ** 6); // 1 USDC.SG (6 decimals)
+  const collateralAmount = BigInt(10) * BigInt(10 ** 6); // 10 USDC.SG (6 decimals)
 
   // Check and set approval for USDC.SG
   console.log("\n5️⃣ Checking token approval...");
@@ -116,19 +116,19 @@ async function testTrade() {
     console.log(`   ⚠️ Approval check failed: ${err.message}`);
   }
 
-  // Execute test trade - minimum is ~$10 on GMX, use 10x leverage
+  // Execute test trade with proper collateral
   console.log("\n6️⃣ Executing test trade...");
   console.log(`   Symbol: ${marketSymbol}`);
   console.log("   Direction: LONG");
-  console.log("   Size: $10 USD (10x leverage)");
-  console.log(`   Collateral: 1 ${collateralToken}`);
+  console.log("   Size: $50 USD (5x leverage)");
+  console.log(`   Collateral: 10 ${collateralToken}`);
 
   const orderRequest: PrepareOrderRequest = {
     kind: "increase",
     symbol: marketSymbol,
     direction: "long",
     orderType: "market",
-    size: BigInt(10) * BigInt(10 ** 30), // $10 USD (30 decimals) - 10x leverage
+    size: BigInt(50) * BigInt(10 ** 30), // $50 USD (30 decimals) - 5x leverage
     collateralToken: collateralToken,
     collateralToPay: {
       amount: collateralAmount,

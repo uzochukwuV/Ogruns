@@ -70,9 +70,10 @@ export class SignalConsumer {
       }
 
       const data = await response.json() as { signals: ActiveSignal[] };
+      console.log(data);
       const signals = data.signals;
 
-      if (signals.length > 0) {
+      if (signals && signals.length > 0) {
         console.log(`📥 Fetched ${signals.length} active signal(s) from platform`);
       }
 
@@ -87,7 +88,7 @@ export class SignalConsumer {
   async processExistingSignals(): Promise<void> {
     const signals = await this.fetchActiveSignals();
 
-    for (const signal of signals) {
+    for (const signal of signals  || []) {
       if (signal.state === "ACTIVE") {
         console.log(`\n📡 Existing Signal: ${signal.envelope.payload.token_pair}`);
         console.log(`   Direction: ${signal.envelope.payload.direction.toUpperCase()}`);

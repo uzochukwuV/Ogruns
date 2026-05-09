@@ -150,6 +150,18 @@ function route(address nodeId, uint8 tier) external payable {
 | SubscriptionManager | [`0x8BD5d799C7B221D3602820493AB691Af9577F31B`](https://chainscan-galileo.0g.ai/address/0x8BD5d799C7B221D3602820493AB691Af9577F31B) | Tier-based payments |
 | FeeRouter | [`0xD59fB54c76ec892c3Cd912F2ac7afd71addA8F62`](https://chainscan-galileo.0g.ai/address/0xD59fB54c76ec892c3Cd912F2ac7afd71addA8F62) | Revenue splitting |
 
+**Deployed on 0G Mainnet:**
+
+| Contract | Address | Purpose |
+|----------|---------|---------|
+| AgentRegistry | [`0x32551ADb415C07Fc360D71d14a8607FD9A649D16`](https://chainscan.0g.ai/address/0x32551ADb415C07Fc360D71d14a8607FD9A649D16) | Agent registration + Agentic ID |
+| ReputationOracle | [`0x5045AFbEDAb3ee627ebe167738A16FE622BBAC88`](https://chainscan.0g.ai/address/0x5045AFbEDAb3ee627ebe167738A16FE622BBAC88) | Trust score storage |
+| SubscriptionManager | [`0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E`](https://chainscan.0g.ai/address/0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E) | Tier-based payments |
+| FeeRouter | [`0xe61444A85787Cb611E4138F45dBD2831a6Fab514`](https://chainscan.0g.ai/address/0xe61444A85787Cb611E4138F45dBD2831a6Fab514) | Revenue splitting |
+
+---
+
+
 **0G Components Used:**
 - **0G Storage** — Zero-gas signal batching (daily Merkle root anchoring)
 - **0G EVM** — Smart contract execution layer

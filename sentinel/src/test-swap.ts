@@ -36,10 +36,10 @@ async function testSwap() {
   }
 
   // Swap ETH to USDC.SG
-  const swapAmount = BigInt(5) * BigInt(10 ** 14); // 0.0005 ETH
+  const swapAmount = BigInt(10) * BigInt(10 ** 15); // 0.01 ETH
 
   console.log("\n3️⃣ Executing swap...");
-  console.log(`   From: 0.0005 ETH`);
+  console.log(`   From: 0.01 ETH`);
   console.log(`   To: USDC.SG`);
 
   const swapRequest: PrepareOrderRequest = {

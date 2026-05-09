@@ -5,7 +5,7 @@ const sdk = new GmxApiSdk({ chainId: 421614 });
 
 // Request IDs from test runs
 const requestIds = [
-  "5f18598d9465d39d3b4ee5297822ba0e", // successful tx
+  "729ab48a4409357e4f1811a47d3e7bc7", // $50 trade
 ];
 
 async function check() {
