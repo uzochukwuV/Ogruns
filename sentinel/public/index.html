@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      background: linear-gradient(90deg, #00d4ff, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1::before {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+      border-radius: 10px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .status-badge.connected {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    .status-badge.disconnected {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-badge.connected .status-dot {
+      background: #22c55e;
+    }
+
+    .status-badge.disconnected .status-dot {
+      background: #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+    }
+
+    .card-icon {
+      font-size: 20px;
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .positive { color: #22c55e; }
+    .negative { color: #ef4444; }
+
+    /* Wide Cards */
+    .wide-card {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 600px) {
+      .wide-card { grid-column: span 1; }
+    }
+
+    /* Tables Section */
+    .tables-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1000px) {
+      .tables-grid { grid-template-columns: 1fr; }
+    }
+
+    .table-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-body {
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    .table-row {
+      display: grid;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .table-row:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .signals-row {
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    }
+
+    .trades-row {
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    }
+
+    .positions-row {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+
+    .table-cell {
+      font-size: 14px;
+    }
+
+    .table-cell.symbol {
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge.long {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    .badge.short {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .badge.executed {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    .badge.failed {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .badge.pending {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+
+    .badge.followed {
+      background: rgba(124, 58, 237, 0.2);
+      color: #a78bfa;
+    }
+
+    .badge.skipped {
+      background: rgba(100, 100, 100, 0.2);
+      color: #888;
+    }
+
+    .badge.tier {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+
+    .badge.tier.DIAMOND {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+    }
+
+    .badge.tier.GOLD {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+
+    .badge.tier.SILVER {
+      background: rgba(192, 192, 192, 0.2);
+      color: #c0c0c0;
+    }
+
+    .badge.tier.BRONZE {
+      background: rgba(205, 127, 50, 0.2);
+      color: #cd7f32;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #555;
+    }
+
+    /* Config Panel */
+    .config-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .config-item {
+      text-align: center;
+    }
+
+    .config-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .config-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Mode Badge */
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .mode-badge.paper {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+
+    .mode-badge.live {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: #555;
+      font-size: 13px;
+    }
+
+    .footer a {
+      color: #7c3aed;
+      text-decoration: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* Time ago */
+    .time-ago {
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>SENTINEL</h1>
+      <div id="wsStatus" class="status-badge disconnected">
+        <span class="status-dot"></span>
+        <span id="wsStatusText">Connecting...</span>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">ETH Balance</span>
+          <span class="card-icon">ETH</span>
+        </div>
+        <div class="card-value" id="ethBalance">0.000</div>
+        <div class="card-subtitle" id="walletAddress">-</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Collateral</span>
+          <span class="card-icon" id="collateralIcon">USDC</span>
+        </div>
+        <div class="card-value">$<span id="collateralBalance">0.00</span></div>
+        <div class="card-subtitle">Available for trading</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Total P&L</span>
+          <span class="card-icon">$</span>
+        </div>
+        <div class="card-value" id="totalPnL">$0.00</div>
+        <div class="card-subtitle" id="pnlSubtitle">All time</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Positions</span>
+          <span class="card-icon">#</span>
+        </div>
+        <div class="card-value"><span id="activePositions">0</span>/<span id="maxPositions">3</span></div>
+        <div class="card-subtitle">Active / Max</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Signals Received</span>
+          <span class="card-icon">#</span>
+        </div>
+        <div class="card-value" id="signalsReceived">0</div>
+        <div class="card-subtitle">From verification layer</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Signals Followed</span>
+          <span class="card-icon">#</span>
+        </div>
+        <div class="card-value" id="signalsFollowed">0</div>
+        <div class="card-subtitle">Passed filters</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Trades Executed</span>
+          <span class="card-icon">#</span>
+        </div>
+        <div class="card-value positive" id="tradesExecuted">0</div>
+        <div class="card-subtitle">Successful executions</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Trades Failed</span>
+          <span class="card-icon">#</span>
+        </div>
+        <div class="card-value negative" id="tradesFailed">0</div>
+        <div class="card-subtitle">Execution errors</div>
+      </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="tables-grid">
+      <!-- Signals Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <span>Recent Signals</span>
+          <span id="signalCount" class="badge">0</span>
+        </div>
+        <div class="table-body" id="signalsTable">
+          <div class="empty-state">Waiting for signals...</div>
+        </div>
+      </div>
+
+      <!-- Trades Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <span>Recent Trades</span>
+          <span id="tradeCount" class="badge">0</span>
+        </div>
+        <div class="table-body" id="tradesTable">
+          <div class="empty-state">No trades yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Positions Table -->
+    <div class="table-card" style="margin-bottom: 24px;">
+      <div class="table-header">
+        <span>Open Positions</span>
+        <span id="positionCount" class="badge">0</span>
+      </div>
+      <div class="table-body" id="positionsTable">
+        <div class="empty-state">No open positions</div>
+      </div>
+    </div>
+
+    <!-- Config Panel -->
+    <div class="config-panel">
+      <div class="config-grid">
+        <div class="config-item">
+          <div class="config-label">Mode</div>
+          <div class="config-value">
+            <span id="tradingMode" class="mode-badge paper">PAPER</span>
+          </div>
+        </div>
+        <div class="config-item">
+          <div class="config-label">Network</div>
+          <div class="config-value" id="networkName">Arbitrum Sepolia</div>
+        </div>
+        <div class="config-item">
+          <div class="config-label">Min Trust Score</div>
+          <div class="config-value" id="minTrustScore">50</div>
+        </div>
+        <div class="config-item">
+          <div class="config-label">Min Tier</div>
+          <div class="config-value" id="minTier">SILVER</div>
+        </div>
+        <div class="config-item">
+          <div class="config-label">Max Position</div>
+          <div class="config-value">$<span id="maxPositionUsd">10</span></div>
+        </div>
+        <div class="config-item">
+          <div class="config-label">Platform Win Rate</div>
+          <div class="config-value"><span id="platformWinRate">0</span>%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Powered by <a href="#">0G Compute</a> | Executing on <a href="#">GMX/Arbitrum</a>
+      <br>Last update: <span id="lastUpdate">-</span>
+    </div>
+  </div>
+
+  <script>
+    // WebSocket connection
+    let ws = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 10;
+
+    function connect() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${protocol}//${window.location.host}`);
+
+      ws.onopen = () => {
+        console.log('Connected to Sentinel');
+        updateWsStatus(true);
+        reconnectAttempts = 0;
+      };
+
+      ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        handleMessage(msg);
+      };
+
+      ws.onclose = () => {
+        updateWsStatus(false);
+        scheduleReconnect();
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+    }
+
+    function scheduleReconnect() {
+      if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++;
+        const delay = Math.min(1000 * reconnectAttempts, 10000);
+        setTimeout(connect, delay);
+      }
+    }
+
+    function updateWsStatus(connected) {
+      const badge = document.getElementById('wsStatus');
+      const text = document.getElementById('wsStatusText');
+      if (connected) {
+        badge.className = 'status-badge connected';
+        text.textContent = 'Connected';
+      } else {
+        badge.className = 'status-badge disconnected';
+        text.textContent = 'Disconnected';
+      }
+    }
+
+    function handleMessage(msg) {
+      switch (msg.type) {
+        case 'state':
+          updateFullState(msg.data);
+          break;
+        case 'balance':
+          updateBalance(msg.data);
+          break;
+        case 'stats':
+          updateStats(msg.data);
+          break;
+        case 'signal':
+          addSignal(msg.data);
+          break;
+        case 'trade':
+          addTrade(msg.data);
+          break;
+        case 'positions':
+          updatePositions(msg.data);
+          break;
+        case 'config':
+          updateConfig(msg.data);
+          break;
+        case 'platform':
+          updatePlatform(msg.data);
+          break;
+      }
+      updateLastUpdate();
+    }
+
+    function updateFullState(state) {
+      // Balance
+      document.getElementById('ethBalance').textContent = parseFloat(state.ethBalance).toFixed(4);
+      document.getElementById('collateralBalance').textContent = parseFloat(state.collateralBalance).toFixed(2);
+      document.getElementById('collateralIcon').textContent = state.collateralSymbol;
+      document.getElementById('walletAddress').textContent = state.walletAddress ?
+        state.walletAddress.slice(0, 6) + '...' + state.walletAddress.slice(-4) : '-';
+
+      // Stats
+      document.getElementById('signalsReceived').textContent = state.signalsReceived;
+      document.getElementById('signalsFollowed').textContent = state.signalsFollowed;
+      document.getElementById('tradesExecuted').textContent = state.tradesExecuted;
+      document.getElementById('tradesFailed').textContent = state.tradesFailed;
+      document.getElementById('activePositions').textContent = state.activePositions;
+      document.getElementById('maxPositions').textContent = state.maxPositions;
+
+      // PnL
+      const pnl = state.totalPnL || 0;
+      const pnlEl = document.getElementById('totalPnL');
+      pnlEl.textContent = (pnl >= 0 ? '+' : '') + '$' + pnl.toFixed(2);
+      pnlEl.className = 'card-value ' + (pnl >= 0 ? 'positive' : 'negative');
+
+      // Config
+      updateConfig(state);
+
+      // Tables
+      if (state.recentSignals) renderSignals(state.recentSignals);
+      if (state.recentTrades) renderTrades(state.recentTrades);
+      if (state.positions) renderPositions(state.positions);
+
+      // Platform
+      document.getElementById('platformWinRate').textContent = ((state.platformWinRate || 0) * 100).toFixed(1);
+    }
+
+    function updateBalance(data) {
+      document.getElementById('ethBalance').textContent = parseFloat(data.eth).toFixed(4);
+      document.getElementById('collateralBalance').textContent = parseFloat(data.collateral).toFixed(2);
+      document.getElementById('collateralIcon').textContent = data.symbol;
+    }
+
+    function updateStats(data) {
+      document.getElementById('signalsReceived').textContent = data.signalsReceived;
+      document.getElementById('signalsFollowed').textContent = data.signalsFollowed;
+      document.getElementById('tradesExecuted').textContent = data.tradesExecuted;
+      document.getElementById('tradesFailed').textContent = data.tradesFailed;
+    }
+
+    function updateConfig(data) {
+      if (data.paperMode !== undefined) {
+        const modeEl = document.getElementById('tradingMode');
+        modeEl.textContent = data.paperMode ? 'PAPER' : 'LIVE';
+        modeEl.className = 'mode-badge ' + (data.paperMode ? 'paper' : 'live');
+      }
+      if (data.chainId !== undefined) {
+        document.getElementById('networkName').textContent =
+          data.chainId === 421614 ? 'Arbitrum Sepolia' : 'Arbitrum One';
+      }
+      if (data.minTrustScore !== undefined) {
+        document.getElementById('minTrustScore').textContent = data.minTrustScore;
+      }
+      if (data.minTier !== undefined) {
+        document.getElementById('minTier').textContent = data.minTier;
+      }
+      if (data.maxPositionUsd !== undefined) {
+        document.getElementById('maxPositionUsd').textContent = data.maxPositionUsd;
+      }
+      if (data.maxPositions !== undefined) {
+        document.getElementById('maxPositions').textContent = data.maxPositions;
+      }
+    }
+
+    function updatePlatform(data) {
+      document.getElementById('platformWinRate').textContent = ((data.winRate || 0) * 100).toFixed(1);
+    }
+
+    function updatePositions(data) {
+      renderPositions(data.positions);
+      const pnl = data.pnl || 0;
+      const pnlEl = document.getElementById('totalPnL');
+      pnlEl.textContent = (pnl >= 0 ? '+' : '') + '$' + pnl.toFixed(2);
+      pnlEl.className = 'card-value ' + (pnl >= 0 ? 'positive' : 'negative');
+      document.getElementById('activePositions').textContent = data.positions.length;
+    }
+
+    function addSignal(signal) {
+      const table = document.getElementById('signalsTable');
+      if (table.querySelector('.empty-state')) {
+        table.innerHTML = '';
+      }
+
+      const row = createSignalRow(signal);
+      table.insertBefore(row, table.firstChild);
+
+      // Limit to 20 rows
+      while (table.children.length > 20) {
+        table.removeChild(table.lastChild);
+      }
+
+      document.getElementById('signalCount').textContent = table.children.length;
+      document.getElementById('signalsReceived').textContent =
+        parseInt(document.getElementById('signalsReceived').textContent) + 1;
+      if (signal.followed) {
+        document.getElementById('signalsFollowed').textContent =
+          parseInt(document.getElementById('signalsFollowed').textContent) + 1;
+      }
+    }
+
+    function addTrade(trade) {
+      const table = document.getElementById('tradesTable');
+      if (table.querySelector('.empty-state')) {
+        table.innerHTML = '';
+      }
+
+      const row = createTradeRow(trade);
+      table.insertBefore(row, table.firstChild);
+
+      while (table.children.length > 20) {
+        table.removeChild(table.lastChild);
+      }
+
+      document.getElementById('tradeCount').textContent = table.children.length;
+    }
+
+    function renderSignals(signals) {
+      const table = document.getElementById('signalsTable');
+      if (signals.length === 0) {
+        table.innerHTML = '<div class="empty-state">Waiting for signals...</div>';
+        document.getElementById('signalCount').textContent = '0';
+        return;
+      }
+
+      table.innerHTML = '';
+      signals.slice(0, 20).forEach(signal => {
+        table.appendChild(createSignalRow(signal));
+      });
+      document.getElementById('signalCount').textContent = signals.length;
+    }
+
+    function renderTrades(trades) {
+      const table = document.getElementById('tradesTable');
+      if (trades.length === 0) {
+        table.innerHTML = '<div class="empty-state">No trades yet</div>';
+        document.getElementById('tradeCount').textContent = '0';
+        return;
+      }
+
+      table.innerHTML = '';
+      trades.slice(0, 20).forEach(trade => {
+        table.appendChild(createTradeRow(trade));
+      });
+      document.getElementById('tradeCount').textContent = trades.length;
+    }
+
+    function renderPositions(positions) {
+      const table = document.getElementById('positionsTable');
+      if (positions.length === 0) {
+        table.innerHTML = '<div class="empty-state">No open positions</div>';
+        document.getElementById('positionCount').textContent = '0';
+        return;
+      }
+
+      table.innerHTML = '';
+      positions.forEach(pos => {
+        table.appendChild(createPositionRow(pos));
+      });
+      document.getElementById('positionCount').textContent = positions.length;
+    }
+
+    function createSignalRow(signal) {
+      const row = document.createElement('div');
+      row.className = 'table-row signals-row';
+      row.innerHTML = `
+        <div class="table-cell symbol">${signal.tokenPair}</div>
+        <div class="table-cell"><span class="badge ${signal.direction.toLowerCase()}">${signal.direction}</span></div>
+        <div class="table-cell">$${signal.entryPrice.toFixed(2)}</div>
+        <div class="table-cell"><span class="badge tier ${signal.nodeTier}">${signal.nodeTier}</span></div>
+        <div class="table-cell"><span class="badge ${signal.followed ? 'followed' : 'skipped'}">${signal.followed ? 'FOLLOWED' : 'SKIPPED'}</span></div>
+      `;
+      return row;
+    }
+
+    function createTradeRow(trade) {
+      const row = document.createElement('div');
+      row.className = 'table-row trades-row';
+      row.innerHTML = `
+        <div class="table-cell symbol">${trade.symbol}</div>
+        <div class="table-cell"><span class="badge ${trade.direction.toLowerCase()}">${trade.direction}</span></div>
+        <div class="table-cell">$${trade.sizeUsd.toFixed(2)}</div>
+        <div class="table-cell"><span class="badge ${trade.status}">${trade.status.toUpperCase()}</span></div>
+      `;
+      return row;
+    }
+
+    function createPositionRow(pos) {
+      const row = document.createElement('div');
+      row.className = 'table-row positions-row';
+      const pnlClass = pos.pnl >= 0 ? 'positive' : 'negative';
+      row.innerHTML = `
+        <div class="table-cell symbol">${pos.symbol}</div>
+        <div class="table-cell"><span class="badge ${pos.direction.toLowerCase()}">${pos.direction.toUpperCase()}</span></div>
+        <div class="table-cell">$${pos.sizeUsd.toFixed(2)}</div>
+        <div class="table-cell ${pnlClass}">${pos.pnl >= 0 ? '+' : ''}$${pos.pnl.toFixed(2)}</div>
+      `;
+      return row;
+    }
+
+    function updateLastUpdate() {
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    }
+
+    // Start connection
+    connect();
+  </script>
+</body>
+</html>

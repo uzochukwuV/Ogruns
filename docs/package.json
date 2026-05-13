@@ -1,0 +1,26 @@
+{
+  "name": "0g-signals-docs",
+  "version": "1.0.0",
+  "description": "Documentation for 0G Signal Intelligence Network",
+  "scripts": {
+    "dev": "docsify serve .",
+    "build": "gitbook build",
+    "serve": "gitbook serve",
+    "install-gitbook": "npm install -g gitbook-cli",
+    "install-docsify": "npm install -g docsify-cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ogruns/0g-signals"
+  },
+  "keywords": [
+    "0g",
+    "trading",
+    "signals",
+    "ai",
+    "defi",
+    "arbitrum"
+  ],
+  "author": "Ogruns Team",
+  "license": "MIT"
+}

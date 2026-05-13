@@ -1,0 +1,54 @@
+{
+  "title": "0G Signal Intelligence Network",
+  "description": "Decentralized AI Trading Signal Platform powered by 0G",
+  "author": "Ogruns Team",
+  "language": "en",
+  "gitbook": ">=3.2.0",
+  "structure": {
+    "readme": "README.md",
+    "summary": "SUMMARY.md"
+  },
+  "links": {
+    "sidebar": {
+      "GitHub": "https://github.com/ogruns/0g-signals",
+      "Dashboard": "https://dashboard.0g-signals.network",
+      "Discord": "https://discord.gg/0g-signals"
+    }
+  },
+  "plugins": [
+    "highlight",
+    "search",
+    "github",
+    "anchorjs",
+    "copy-code-button",
+    "splitter",
+    "page-toc-button",
+    "back-to-top-button",
+    "-lunr",
+    "search-pro"
+  ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/ogruns/0g-signals"
+    },
+    "theme-default": {
+      "showLevel": true
+    },
+    "anchorjs": {
+      "icon": "#",
+      "placement": "left"
+    },
+    "page-toc-button": {
+      "maxTocDepth": 3,
+      "minTocSize": 2
+    }
+  },
+  "styles": {
+    "website": "styles/website.css"
+  },
+  "variables": {
+    "api_url": "https://api.0g-signals.network",
+    "ws_url": "ws://api.0g-signals.network/api/v1/stream/public",
+    "dashboard_url": "https://dashboard.0g-signals.network"
+  }
+}
