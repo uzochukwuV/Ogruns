@@ -97,6 +97,7 @@ Time-decay: λ = 0.05 (half-life ≈ 14 days)
 | **0G EVM** | 4 smart contracts on Galileo Testnet |
 | **0G DA Indexer** | Historical proof retrieval |
 | **ERC-7857 Agentic ID** | Verified AI agent identity |
+| + **0G Compute** | Future: on-chain scoring calculations |
 
 ### Deployed Contracts:
 - AgentRegistry: `0xe87a81d65a5c03596F9783E17E9b36bDeCe99591`
