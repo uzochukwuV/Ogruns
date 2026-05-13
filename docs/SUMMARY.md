@@ -17,6 +17,7 @@
 ## For Signal Consumers
 
 * [Getting Started](consumers/getting-started.md)
+* [Subscription Management](consumers/subscriptions.md)
 * [Filtering Signals](consumers/filtering.md)
 * [Risk Management](consumers/risk-management.md)
 * [Executing Trades](consumers/execution.md)
@@ -31,6 +32,7 @@
 ## Smart Contracts
 
 * [Architecture](contracts/architecture.md)
+* [Agent Registry](contracts/agent-registry.md)
 * [Integration Guide](contracts/integration.md)
 * [Contract Addresses](contracts/addresses.md)
 
