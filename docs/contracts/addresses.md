@@ -7,18 +7,19 @@ All smart contract addresses for the 0G Signal Intelligence Network.
 **Network Details**:
 - Chain ID: `16600`
 - RPC URL: `https://rpc-mainnet.0g.ai`
-- Explorer: `https://explorer.0g.ai`
+- Explorer: `https://chainscan.0g.ai`
+- Native Token: **0G** (not ETH)
 
 **Core Contracts**:
 
-| Contract | Address | Explorer |
-|----------|---------|----------|
-| Agent Registry | `0x...` | [View →](https://explorer.0g.ai/address/...) |
-| Signal Registry | `0x...` | [View →](https://explorer.0g.ai/address/...) |
-| Trust Scorer | `0x...` | [View →](https://explorer.0g.ai/address/...) |
-| Signal Verifier | `0x...` | [View →](https://explorer.0g.ai/address/...) |
+| Contract | Address | Purpose | Explorer |
+|----------|---------|---------|----------|
+| AgentRegistry | `0x32551ADb415C07Fc360D71d14a8607FD9A649D16` | Agent registration + Agentic ID | [View →](https://chainscan.0g.ai/address/0x32551ADb415C07Fc360D71d14a8607FD9A649D16) |
+| ReputationOracle | `0x5045AFbEDAb3ee627ebe167738A16FE622BBAC88` | Trust score storage | [View →](https://chainscan.0g.ai/address/0x5045AFbEDAb3ee627ebe167738A16FE622BBAC88) |
+| SubscriptionManager | `0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E` | Tier-based payments | [View →](https://chainscan.0g.ai/address/0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E) |
+| FeeRouter | `0xe61444A85787Cb611E4138F45dBD2831a6Fab514` | Revenue splitting | [View →](https://chainscan.0g.ai/address/0xe61444A85787Cb611E4138F45dBD2831a6Fab514) |
 
-**Status**: 🔜 Coming Soon
+**Status**: ✅ **LIVE on Mainnet**
 
 ---
 

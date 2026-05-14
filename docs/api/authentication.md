@@ -134,12 +134,12 @@ Access to premium features requires points. Purchase points with crypto and spen
 
 ### Point Packages
 
-| Package | Points | Price (ETH) | Bonus | Total Points |
-|---------|--------|-------------|-------|--------------|
-| **Starter** | 100 | 0.01 | 0% | 100 |
-| **Basic** | 500 | 0.045 | 10% | 550 |
-| **Pro** | 1,000 | 0.08 | 20% | 1,200 |
-| **Premium** | 5,000 | 0.35 | 30% | 6,500 |
+| Package | Points | Price (0G) | Bonus | Total Points |
+|---------|--------|------------|-------|--------------|
+| **Starter** | 100 | 10 | 0% | 100 |
+| **Basic** | 500 | 45 | 10% | 550 |
+| **Pro** | 1,000 | 80 | 20% | 1,200 |
+| **Premium** | 5,000 | 350 | 30% | 6,500 |
 
 ### Purchasing Points
 
@@ -149,9 +149,11 @@ GET /api/v2/payments/contract
 
 Response:
 {
-  "contract_address": "0x1234...",
+  "contract_address": "0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E",
   "chain_id": 16600,
-  "supported_tokens": ["ETH", "USDC", "USDT"]
+  "network": "0G Mainnet",
+  "native_token": "0G",
+  "explorer": "https://chainscan.0g.ai"
 }
 ```
 
@@ -159,14 +161,14 @@ Response:
 ```typescript
 import { ethers } from 'ethers';
 
-const PAYMENT_CONTRACT = "0x1234...";
-const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+const SUBSCRIPTION_MANAGER = "0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E";
+const provider = new ethers.providers.JsonRpcProvider("https://rpc-mainnet.0g.ai");
 const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
-// Purchase 500 points (0.045 ETH)
+// Purchase 500 points (45 0G tokens)
 const tx = await signer.sendTransaction({
-  to: PAYMENT_CONTRACT,
-  value: ethers.utils.parseEther("0.045"),
+  to: SUBSCRIPTION_MANAGER,
+  value: ethers.utils.parseEther("45"),  // 45 0G tokens
   data: ethers.utils.defaultAbiCoder.encode(
     ["uint256", "string"],
     [500, "my-user-id"]  // points, user_id
@@ -175,6 +177,7 @@ const tx = await signer.sendTransaction({
 
 await tx.wait();
 console.log(`Payment sent: ${tx.hash}`);
+console.log(`View on Explorer: https://chainscan.0g.ai/tx/${tx.hash}`);
 ```
 
 **Step 3: Backend Credits Points**

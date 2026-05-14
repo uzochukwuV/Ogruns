@@ -35,15 +35,15 @@ Before submitting signals, you must register your agent on-chain to receive an A
 from web3 import Web3
 from eth_account import Account
 
-# Connect to 0G Network
-w3 = Web3(Web3.HTTPProvider('https://rpc-testnet.0g.ai'))
+# Connect to 0G Mainnet
+w3 = Web3(Web3.HTTPProvider('https://rpc-mainnet.0g.ai'))
 
 # Your agent wallet
 private_key = "0x..."
 account = Account.from_key(private_key)
 
-# Agent Registry contract
-AGENT_REGISTRY_ADDRESS = "0x..."  # Get from docs
+# Agent Registry contract (0G Mainnet)
+AGENT_REGISTRY_ADDRESS = "0x32551ADb415C07Fc360D71d14a8607FD9A649D16"
 AGENT_REGISTRY_ABI = [...]  # Get from docs
 
 registry = w3.eth.contract(

@@ -37,10 +37,10 @@ v2 introduces **point-based subscriptions** with API key authentication.
 
 **Purchase Points**:
 ```
-100 points   = 0.01 ETH    (no bonus)
-500 points   = 0.045 ETH   (+10% bonus = 550 points)
-1,000 points = 0.08 ETH    (+20% bonus = 1,200 points)
-5,000 points = 0.35 ETH    (+30% bonus = 6,500 points)
+100 points   = 10 0G      (no bonus)
+500 points   = 45 0G      (+10% bonus = 550 points)
+1,000 points = 80 0G      (+20% bonus = 1,200 points)
+5,000 points = 350 0G     (+30% bonus = 6,500 points)
 ```
 
 **Spend Points On**:
@@ -78,18 +78,19 @@ const ws = new WebSocket(
 
 ### Purchasing Points
 
-**Step 1**: Send ETH to payment contract
+**Step 1**: Send 0G tokens to payment contract
 
 ```typescript
 import { ethers } from 'ethers';
 
-const PAYMENT_CONTRACT = "0x..."; // Will be announced
+const SUBSCRIPTION_MANAGER = "0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E";
+const provider = new ethers.providers.JsonRpcProvider("https://rpc-mainnet.0g.ai");
 const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
-// Purchase 500 points (0.045 ETH)
+// Purchase 500 points (45 0G tokens)
 const tx = await signer.sendTransaction({
-  to: PAYMENT_CONTRACT,
-  value: ethers.utils.parseEther("0.045"),
+  to: SUBSCRIPTION_MANAGER,
+  value: ethers.utils.parseEther("45"),  // 45 0G tokens
   data: ethers.utils.defaultAbiCoder.encode(
     ["uint256", "string"],
     [500, "my-user-id"]  // points, userId
@@ -97,6 +98,7 @@ const tx = await signer.sendTransaction({
 });
 
 await tx.wait();
+console.log(`View transaction: https://chainscan.0g.ai/tx/${tx.hash}`);
 ```
 
 **Step 2**: Backend auto-credits points
@@ -228,10 +230,12 @@ contract PointPayment {
 }
 ```
 
-**Contract Address**: Will be announced before v2 launch
+**Contract Address**: `0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E` (0G Mainnet)
+
+[View on Explorer →](https://chainscan.0g.ai/address/0x69Be7768f21060d21a6f142b43ac28b7aaDc2a6E)
 
 **Backend Flow**:
-1. User sends ETH to contract → Emits `PointsPurchased` event
+1. User sends 0G tokens to contract → Emits `PointsPurchased` event
 2. Backend listens for events → Extracts `userId` and `points`
 3. Credits user's off-chain account → Updates database
 4. User can now spend points via API
@@ -347,8 +351,8 @@ Authorization: Bearer admin_key
 **Q: Will v1 still be free after v2 launches?**
 A: Yes! Basic public signals will remain free with limited rate (10 req/min).
 
-**Q: Can I use USDC instead of ETH?**
-A: Not initially. v2 launch supports ETH only. USDC/USDT coming in Phase 2.
+**Q: Can I use USDC instead of 0G?**
+A: Not initially. v2 launch supports 0G native token only. USDC/USDT coming in Phase 2.
 
 **Q: What happens if I run out of points mid-request?**
 A: The request will fail with `402 Insufficient Points`. Top up and retry.
@@ -360,7 +364,7 @@ A: No expiry! Points are valid forever.
 A: Not in v2. This may be added in future versions.
 
 **Q: What if the payment transaction fails?**
-A: Your ETH stays in your wallet. No points are credited. Safe to retry.
+A: Your 0G tokens stay in your wallet. No points are credited. Safe to retry.
 
 ---
 
