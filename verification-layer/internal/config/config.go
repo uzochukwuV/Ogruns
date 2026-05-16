@@ -25,13 +25,20 @@ type Config struct {
 	// Smart contract addresses on 0G Network (set after deployment).
 	RegistryContractAddr     string // AgentRegistry.sol
 	ReputationContractAddr   string // ReputationOracle.sol
-	SubscriptionContractAddr string // SubscriptionManager.sol
+	SubscriptionContractAddr string // SubscriptionManager.sol (V1 on-chain)
+	PointVaultAddr           string // PointVault.sol (V2 off-chain hybrid)
 
 	// REST/WebSocket API bind address.
 	APIAddr string
 
 	// How often the broadcaster syncs scores on-chain (seconds).
 	BroadcastIntervalSec int
+
+	// V2 Off-Chain Subscription System Configuration
+	DatabaseURL             string // Neon PostgreSQL connection string
+	PointConversionRate     int64  // Points per 1 0G (default: 1000)
+	SolvencyIntervalHours   int    // Hours between solvency proofs (default: 6)
+	DepositConfirmations    uint64 // Block confirmations before crediting deposits (default: 6)
 }
 
 func LoadConfig() (*Config, error) {
@@ -51,8 +58,13 @@ func LoadConfig() (*Config, error) {
 		RegistryContractAddr:     getEnvWithMode("REGISTRY_CONTRACT_ADDR", "", isMainnet),
 		ReputationContractAddr:   getEnvWithMode("REPUTATION_CONTRACT_ADDR", "", isMainnet),
 		SubscriptionContractAddr: getEnvWithMode("SUBSCRIPTION_CONTRACT_ADDR", "", isMainnet),
+		PointVaultAddr:           getEnvWithMode("POINT_VAULT_ADDR", "", isMainnet),
 		APIAddr:                  getEnv("API_ADDR", ":8080"),
 		BroadcastIntervalSec:     getEnvInt("BROADCAST_INTERVAL_SEC", 300),
+		DatabaseURL:              getEnv("DATABASE_URL", ""),
+		PointConversionRate:      int64(getEnvInt("POINT_CONVERSION_RATE", 1000)),
+		SolvencyIntervalHours:    getEnvInt("SOLVENCY_INTERVAL_HOURS", 6),
+		DepositConfirmations:     uint64(getEnvInt("DEPOSIT_CONFIRMATIONS", 6)),
 	}
 
 	if cfg.PrivateKey == "" {

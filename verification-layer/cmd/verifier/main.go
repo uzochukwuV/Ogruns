@@ -15,9 +15,13 @@ import (
 	"github.com/0xprotocol/verification-layer/internal/config"
 	"github.com/0xprotocol/verification-layer/internal/contracts"
 	"github.com/0xprotocol/verification-layer/internal/crypto"
+	"github.com/0xprotocol/verification-layer/internal/database"
 	"github.com/0xprotocol/verification-layer/internal/dispatcher"
 	"github.com/0xprotocol/verification-layer/internal/ingester"
+	"github.com/0xprotocol/verification-layer/internal/points"
 	"github.com/0xprotocol/verification-layer/internal/scorer"
+	"github.com/0xprotocol/verification-layer/internal/solvency"
+	"github.com/0xprotocol/verification-layer/internal/vault"
 	"github.com/0xprotocol/verification-layer/pkg/types"
 )
 
@@ -64,6 +68,91 @@ func main() {
 	}
 	fmt.Println("✅ 0G Storage Client Initialized")
 
+	// 3.5. Initialize V2 Off-Chain Subscription System (if configured)
+	var db *database.DB
+	var vaultContract *vault.VaultContract
+	var depositListener *vault.DepositListener
+	var pointAllocator *points.Allocator
+	var solvencyProver *solvency.Prover
+
+	if cfg.DatabaseURL != "" && cfg.PointVaultAddr != "" {
+		fmt.Println("")
+		fmt.Println("==================================================")
+		fmt.Println("🔷 Initializing V2 Off-Chain Subscription System")
+		fmt.Println("==================================================")
+
+		// Initialize database connection
+		dbCfg := &database.Config{
+			URL:             cfg.DatabaseURL,
+			MaxConns:        20,
+			MinConns:        5,
+			MaxConnIdleTime: 5 * time.Minute,
+		}
+		db, err = database.New(context.Background(), dbCfg)
+		if err != nil {
+			log.Fatalf("Failed to connect to database: %v", err)
+		}
+		fmt.Println("✅ Database Connected")
+
+		// Run migrations
+		if err := db.RunMigrations(context.Background()); err != nil {
+			log.Fatalf("Failed to run migrations: %v", err)
+		}
+		fmt.Println("✅ Database Migrations Complete")
+
+		// Initialize PointVault contract
+		vaultCfg := &vault.Config{
+			RPCEndpoint:     cfg.RPCURL,
+			ContractAddress: cfg.PointVaultAddr,
+			PrivateKey:      cfg.PrivateKey,
+		}
+		vaultContract, err = vault.New(context.Background(), vaultCfg)
+		if err != nil {
+			log.Fatalf("Failed to init PointVault contract: %v", err)
+		}
+		fmt.Printf("✅ PointVault Contract Initialized (%s)\n", cfg.PointVaultAddr)
+
+		// Initialize deposit listener
+		listenerCfg := &vault.DepositListenerConfig{
+			RPCEndpoint:         cfg.RPCURL,
+			ContractAddress:     cfg.PointVaultAddr,
+			PollInterval:        15 * time.Second,
+			Confirmations:       cfg.DepositConfirmations,
+			PointConversionRate: cfg.PointConversionRate,
+		}
+		depositListener, err = vault.NewDepositListener(context.Background(), listenerCfg, db)
+		if err != nil {
+			log.Fatalf("Failed to init deposit listener: %v", err)
+		}
+		depositListener.Start(context.Background())
+		fmt.Printf("✅ Deposit Listener Started (confirmations: %d, rate: %d points/0G)\n",
+			cfg.DepositConfirmations, cfg.PointConversionRate)
+
+		// Initialize point allocator
+		pointAllocator = points.NewAllocator(db)
+		fmt.Println("✅ Point Allocator Initialized")
+
+		// Initialize solvency prover
+		solvencyCfg := &solvency.Config{
+			IntervalHours: cfg.SolvencyIntervalHours,
+		}
+		solvencyProver = solvency.NewProver(db, vaultContract, nil, solvencyCfg) // nil storageClient for now
+		solvencyProver.Start(context.Background())
+		fmt.Printf("✅ Solvency Prover Started (interval: %d hours)\n", cfg.SolvencyIntervalHours)
+
+		fmt.Println("==================================================")
+		fmt.Println("")
+	} else {
+		fmt.Println("⚠️  V2 Off-Chain Subscription System DISABLED")
+		if cfg.DatabaseURL == "" {
+			fmt.Println("   - DATABASE_URL not configured")
+		}
+		if cfg.PointVaultAddr == "" {
+			fmt.Println("   - POINT_VAULT_ADDR not configured")
+		}
+		fmt.Println("")
+	}
+
 	// 4. Initialize Price Fetcher (CoinGecko - on-demand fetching)
 	priceFetcher := aggregator.NewOnDemandPriceFetcher()
 	fmt.Println("✅ CoinGecko Price Fetcher Initialized (on-demand)")
@@ -94,8 +183,14 @@ func main() {
 	// Get the event stream for WebSocket clients
 	eventStream := batcher.GetEventStream()
 
-	// 9. Start the REST API & WebSocket Stream (with Subscription Gating)
-	server := api.NewServer(sc, eventStream, dispatch, cm)
+	// 9. Start the REST API & WebSocket Stream (with Subscription Gating + V2 Off-Chain)
+	server := api.NewServer(sc, eventStream, dispatch, cm, db, vaultContract)
+
+	// Wire point allocator into scheduler handler (if V2 is enabled)
+	if pointAllocator != nil {
+		batcher.GetHandler().SetPointAllocator(pointAllocator)
+		fmt.Println("✅ Point Allocator Wired into Signal Handler")
+	}
 
 	// Wire up active signals fetcher for AI agents
 	server.SetActiveSignalsFetcher(func() []*types.ActiveSignal {
@@ -123,11 +218,21 @@ func main() {
 	fmt.Println("==================================================")
 	fmt.Println("")
 	fmt.Println("API Endpoints:")
-	fmt.Printf("  POST %s/api/v1/signals - Submit trading signals\n", cfg.APIAddr)
-	fmt.Printf("  GET  %s/api/v1/nodes   - List all nodes with scores\n", cfg.APIAddr)
-	fmt.Printf("  WS   %s/api/v1/stream  - Real-time signal events\n", cfg.APIAddr)
-	fmt.Printf("  GET  %s/api/v1/analytics/dashboard - Platform stats\n", cfg.APIAddr)
-	fmt.Printf("  GET  %s/api/v1/analytics/nodes/{id} - Node analytics\n", cfg.APIAddr)
+	fmt.Println("  V1 (On-Chain Subscriptions):")
+	fmt.Printf("    POST %s/api/v1/signals - Submit trading signals\n", cfg.APIAddr)
+	fmt.Printf("    GET  %s/api/v1/nodes   - List all nodes with scores\n", cfg.APIAddr)
+	fmt.Printf("    WS   %s/api/v1/stream  - Real-time signal events\n", cfg.APIAddr)
+	fmt.Printf("    GET  %s/api/v1/analytics/dashboard - Platform stats\n", cfg.APIAddr)
+	fmt.Printf("    GET  %s/api/v1/analytics/nodes/{id} - Node analytics\n", cfg.APIAddr)
+	if db != nil {
+		fmt.Println("  V2 (Off-Chain Subscriptions):")
+		fmt.Printf("    POST %s/api/v2/subscribe - Subscribe to provider\n", cfg.APIAddr)
+		fmt.Printf("    GET  %s/api/v2/subscriptions - List subscriptions\n", cfg.APIAddr)
+		fmt.Printf("    GET  %s/api/v2/balance - User point balance\n", cfg.APIAddr)
+		fmt.Printf("    GET  %s/api/v2/deposit-info - Vault deposit info\n", cfg.APIAddr)
+		fmt.Printf("    POST %s/api/v2/providers/withdraw - Provider withdrawal\n", cfg.APIAddr)
+		fmt.Printf("    WS   %s/api/v2/stream - Subscription-filtered stream\n", cfg.APIAddr)
+	}
 	fmt.Println("")
 	fmt.Println("Scoring Formula:")
 	fmt.Println("  - EV Score:      max 60 pts (time-decay weighted expected value)")
@@ -156,6 +261,24 @@ func main() {
 
 	server.Stop()
 	cancel()
+
+	// Stop V2 system components
+	if depositListener != nil {
+		depositListener.Stop()
+		fmt.Println("✅ Deposit Listener Stopped")
+	}
+	if solvencyProver != nil {
+		solvencyProver.Stop()
+		fmt.Println("✅ Solvency Prover Stopped")
+	}
+	if vaultContract != nil {
+		vaultContract.Close()
+		fmt.Println("✅ Vault Contract Connection Closed")
+	}
+	if db != nil {
+		db.Close()
+		fmt.Println("✅ Database Connection Closed")
+	}
 
 	fmt.Println("✅ Shutdown complete")
 }

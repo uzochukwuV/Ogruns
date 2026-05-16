@@ -26,9 +26,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FeeRouter__factory>;
     getContractFactory(
-      name: "NodeRegistry",
+      name: "PointVault",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.NodeRegistry__factory>;
+    ): Promise<Contracts.PointVault__factory>;
     getContractFactory(
       name: "ReputationOracle",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -54,10 +54,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.FeeRouter>;
     getContractAt(
-      name: "NodeRegistry",
+      name: "PointVault",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.NodeRegistry>;
+    ): Promise<Contracts.PointVault>;
     getContractAt(
       name: "ReputationOracle",
       address: string | ethers.Addressable,
@@ -82,9 +82,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FeeRouter>;
     deployContract(
-      name: "NodeRegistry",
+      name: "PointVault",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.NodeRegistry>;
+    ): Promise<Contracts.PointVault>;
     deployContract(
       name: "ReputationOracle",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -110,10 +110,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FeeRouter>;
     deployContract(
-      name: "NodeRegistry",
+      name: "PointVault",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.NodeRegistry>;
+    ): Promise<Contracts.PointVault>;
     deployContract(
       name: "ReputationOracle",
       args: any[],

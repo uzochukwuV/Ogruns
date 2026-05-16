@@ -13,11 +13,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/big"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/0xprotocol/verification-layer/internal/contracts"
 	"github.com/0xprotocol/verification-layer/internal/dispatcher"
 	"github.com/0xprotocol/verification-layer/internal/ratelimit"
@@ -114,7 +116,10 @@ type Server struct {
 	hub                 *streamHub
 	dispatcher          *dispatcher.WebhookDispatcher
 	rateLimiter         *ratelimit.RateLimiter
-	subGate             *SubscriptionGate // Subscription verification for premium endpoints
+	subGate             *SubscriptionGate // Subscription verification for premium endpoints (V1)
+	db                  interface{ GetUserIDByAPIKey(context.Context, string) (string, error); GetUserPointBalance(context.Context, string) (int64, error); CreateSubscription(context.Context, string, string, string, int64) error; GetUserSubscriptions(context.Context, string) ([]interface{}, error); DeleteSubscription(context.Context, string, string) error; GetProviderPointBalance(context.Context, string) (int64, error); DebitProviderPoints(context.Context, string, int64) error; CreditProviderPoints(context.Context, string, int64, string) error; RecordWithdrawalRequest(context.Context, string, int64, *big.Float, string, uint64, string) error; GetAllActiveProviderAddresses(context.Context, string) ([]string, error) } // Database for V2 off-chain subscriptions
+	vaultContract       interface{ GetAutoThreshold(context.Context) (*big.Int, error); Withdraw(context.Context, common.Address, *big.Int, *big.Int) (string, error); QueueWithdrawal(context.Context, common.Address, *big.Int, *big.Int) (uint64, string, error) } // PointVault contract for V2 withdrawals
+	subCacheV2          *SubscriptionCacheV2 // Subscription cache for V2 WebSocket filtering
 	ctx                 context.Context
 	cancel              context.CancelFunc
 	signalQueue         chan types.SubmitRawSignalRequest // L2 Ingestion Queue
@@ -124,7 +129,8 @@ type Server struct {
 // NewServer creates a Server but does not start listening.
 // eventStream is the *types.ActiveSignal channel emitted by the ResolutionEngine.
 // cm is optional - if nil, subscription gating is disabled (dev mode).
-func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal, dispatch *dispatcher.WebhookDispatcher, cm *contracts.ContractManager) *Server {
+// db and vaultContract are optional - if provided, V2 off-chain subscription endpoints are enabled.
+func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal, dispatch *dispatcher.WebhookDispatcher, cm *contracts.ContractManager, db interface{ GetUserIDByAPIKey(context.Context, string) (string, error); GetUserPointBalance(context.Context, string) (int64, error); CreateSubscription(context.Context, string, string, string, int64) error; GetUserSubscriptions(context.Context, string) ([]interface{}, error); DeleteSubscription(context.Context, string, string) error; GetProviderPointBalance(context.Context, string) (int64, error); DebitProviderPoints(context.Context, string, int64) error; CreditProviderPoints(context.Context, string, int64, string) error; RecordWithdrawalRequest(context.Context, string, int64, *big.Float, string, uint64, string) error; GetAllActiveProviderAddresses(context.Context, string) ([]string, error) }, vaultContract interface{ GetAutoThreshold(context.Context) (*big.Int, error); Withdraw(context.Context, common.Address, *big.Int, *big.Int) (string, error); QueueWithdrawal(context.Context, common.Address, *big.Int, *big.Int) (uint64, string, error) }) *Server {
 	ctx, cancel := context.WithCancel(context.Background())
 	hub := newStreamHub(eventStream)
 	go hub.run(ctx)
@@ -135,36 +141,51 @@ func NewServer(sc *scorer.Scorer, eventStream <-chan *types.ActiveSignal, dispat
 		ratelimit.DefaultConfig().NodeMaxSignals,
 		ratelimit.DefaultConfig().GlobalMaxSignals)
 
-	// Initialize subscription gate
+	// Initialize subscription gate (V1 on-chain)
 	subGate := NewSubscriptionGate(cm)
 	if cm != nil && cm.HasSubscriptionContract() {
-		log.Println("✅ Subscription gating ENABLED - premium endpoints require on-chain subscription")
+		log.Println("✅ V1 Subscription gating ENABLED - premium endpoints require on-chain subscription")
 	} else {
-		log.Println("⚠️  Subscription gating DISABLED - all endpoints are publicly accessible")
+		log.Println("⚠️  V1 Subscription gating DISABLED - all V1 endpoints are publicly accessible")
 	}
 
 	// Start subscription cache cleanup
 	subGate.StartCacheCleanup(ctx)
 
+	// Initialize V2 subscription cache if database is provided
+	var subCacheV2 *SubscriptionCacheV2
+	if db != nil {
+		subCacheV2 = NewSubscriptionCacheV2(db)
+		subCacheV2.Start(ctx)
+		log.Println("✅ V2 Off-chain subscription system ENABLED - database-backed subscriptions")
+	} else {
+		log.Println("⚠️  V2 Off-chain subscription system DISABLED - no database provided")
+	}
+
 	// Initialize AI scorer for 0G AI evaluation
 	aiScorer := scorer.NewAIScorer()
 
 	return &Server{
-		scorer:      sc,
-		aiScorer:    aiScorer,
-		hub:         hub,
-		dispatcher:  dispatch,
-		rateLimiter: rl,
-		subGate:     subGate,
-		ctx:         ctx,
-		cancel:      cancel,
-		signalQueue: make(chan types.SubmitRawSignalRequest, 10000), // High capacity for MVP
+		scorer:        sc,
+		aiScorer:      aiScorer,
+		hub:           hub,
+		dispatcher:    dispatch,
+		rateLimiter:   rl,
+		subGate:       subGate,
+		db:            db,
+		vaultContract: vaultContract,
+		subCacheV2:    subCacheV2,
+		ctx:           ctx,
+		cancel:        cancel,
+		signalQueue:   make(chan types.SubmitRawSignalRequest, 10000), // High capacity for MVP
 	}
 }
 
 // Start binds to addr and serves until the context is cancelled.
 func (s *Server) Start(addr string) error {
 	mux := http.NewServeMux()
+
+	// ─── V1 API Routes ────────────────────────────────────────────────────────
 	mux.HandleFunc("/api/v1/nodes", s.handleNodes)
 	mux.HandleFunc("/api/v1/nodes/", s.handleNode) // trailing slash catches /{nodeId}
 	mux.HandleFunc("/api/v1/stream", s.handleStream)
@@ -180,6 +201,30 @@ func (s *Server) Start(addr string) error {
 
 	// 0G AI evaluation endpoint
 	mux.HandleFunc("/api/v1/ai/evaluate", s.handleAIEvaluate)
+
+	// ─── V2 API Routes (Off-Chain Subscriptions) ──────────────────────────────
+	if s.db != nil {
+		// User endpoints
+		mux.HandleFunc("/api/v2/subscribe", s.handleV2Subscribe)
+		mux.HandleFunc("/api/v2/subscriptions", s.handleV2Subscriptions)
+		mux.HandleFunc("/api/v2/subscriptions/", s.handleV2Unsubscribe) // DELETE with provider in path
+		mux.HandleFunc("/api/v2/balance", s.handleV2Balance)
+		mux.HandleFunc("/api/v2/deposit-info", s.handleV2DepositInfo)
+
+		// Provider endpoints
+		mux.HandleFunc("/api/v2/providers/balance", s.handleV2ProviderBalance)
+		mux.HandleFunc("/api/v2/providers/withdraw", s.handleV2ProviderWithdraw)
+
+		// WebSocket stream (subscription-filtered)
+		mux.HandleFunc("/api/v2/stream", s.handleV2Stream)
+
+		// Solvency verification
+		mux.HandleFunc("/api/v2/solvency/verify", s.handleV2SolvencyVerify)
+
+		log.Println("✅ V2 API endpoints registered")
+	} else {
+		log.Println("⚠️  V2 API endpoints disabled - database not configured")
+	}
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -692,10 +737,124 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	}
 }
 
+// handleV2Stream is the V2 WebSocket endpoint that streams signals filtered by user subscriptions.
+// WS /api/v2/stream
+// Requires API key authentication via Authorization header.
+func (s *Server) handleV2Stream(w http.ResponseWriter, r *http.Request) {
+	// Extract API key from Authorization header (query param for WebSocket)
+	apiKey := r.URL.Query().Get("api_key")
+	if apiKey == "" {
+		http.Error(w, "api_key query param required", http.StatusUnauthorized)
+		return
+	}
+
+	// Validate API key and get userID
+	userID, err := s.db.GetUserIDByAPIKey(r.Context(), apiKey)
+	if err != nil {
+		http.Error(w, "invalid API key", http.StatusUnauthorized)
+		return
+	}
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("WS V2 upgrade error: %v", err)
+		return
+	}
+	defer conn.Close()
+
+	clientID := r.RemoteAddr
+	// Subscribe to wildcard "*" to receive all signals, then filter in write pump
+	ch, unsub := s.hub.subscribe("*", clientID)
+	defer unsub()
+
+	log.Printf("WS V2: User %s connected from %s", userID, clientID)
+
+	// Ping loop keeps the connection alive
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+					return
+				}
+			case <-s.ctx.Done():
+				return
+			}
+		}
+	}()
+
+	// Subscription refresh loop (every 5 minutes)
+	subscribedProviders := make(map[string]bool)
+	refreshProviders := func() {
+		providers, err := s.subCacheV2.GetSubscribedProviders(r.Context(), userID)
+		if err != nil {
+			log.Printf("WS V2: Failed to get subscribed providers for user %s: %v", userID, err)
+			return
+		}
+		// Rebuild map
+		subscribedProviders = make(map[string]bool)
+		for _, p := range providers {
+			subscribedProviders[p] = true
+		}
+		log.Printf("WS V2: Refreshed subscriptions for user %s (%d providers)", userID, len(subscribedProviders))
+	}
+
+	// Initial load
+	refreshProviders()
+
+	// Refresh every 5 minutes
+	go func() {
+		ticker := time.NewTicker(5 * time.Minute)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				refreshProviders()
+			case <-s.ctx.Done():
+				return
+			}
+		}
+	}()
+
+	// Write pump: filter and send signals
+	for {
+		select {
+		case <-s.ctx.Done():
+			return
+		case ev, ok := <-ch:
+			if !ok {
+				return
+			}
+
+			// Filter: only send signals from subscribed providers
+			providerAddress := ev.Envelope.NodeID // Assuming NodeID is the provider address
+			if !subscribedProviders[providerAddress] {
+				continue // Skip this signal
+			}
+
+			// Wrap in event format
+			event := map[string]interface{}{
+				"type": "signal_update",
+				"data": ev,
+			}
+			payload, err := json.Marshal(event)
+			if err != nil {
+				continue
+			}
+			if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
+				log.Printf("WS V2 write error for %s: %v", clientID, err)
+				return
+			}
+		}
+	}
+}
+
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)

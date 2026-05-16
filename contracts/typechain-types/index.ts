@@ -4,7 +4,7 @@
 import type * as agentRegistrySol from "./AgentRegistry.sol";
 export type { agentRegistrySol };
 export type { FeeRouter } from "./FeeRouter";
-export type { NodeRegistry } from "./NodeRegistry";
+export type { PointVault } from "./PointVault";
 export type { ReputationOracle } from "./ReputationOracle";
 export type { SubscriptionManager } from "./SubscriptionManager";
 export * as factories from "./factories";
@@ -13,6 +13,6 @@ export { AgentRegistry__factory } from "./factories/AgentRegistry.sol/AgentRegis
 export type { IAgenticID } from "./AgentRegistry.sol/IAgenticID";
 export { IAgenticID__factory } from "./factories/AgentRegistry.sol/IAgenticID__factory";
 export { FeeRouter__factory } from "./factories/FeeRouter__factory";
-export { NodeRegistry__factory } from "./factories/NodeRegistry__factory";
+export { PointVault__factory } from "./factories/PointVault__factory";
 export { ReputationOracle__factory } from "./factories/ReputationOracle__factory";
 export { SubscriptionManager__factory } from "./factories/SubscriptionManager__factory";

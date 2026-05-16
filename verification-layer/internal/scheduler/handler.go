@@ -49,14 +49,20 @@ type OnChainBroadcaster interface {
 	UpdateNodeScore(ctx context.Context, nodeID string, score float64, tier uint8) error
 }
 
+// PointAllocator interface for crediting provider points
+type PointAllocator interface {
+	AllocatePoints(ctx context.Context, providerAddress, signalID string, pnlPercent float64) error
+}
+
 // AnalysisHandler processes analysis results using the sophisticated Scorer
 type AnalysisHandler struct {
-	mu          sync.RWMutex
-	scorer      *scorer.Scorer
-	aiScorer    *scorer.AIScorer    // 0G AI-powered signal evaluator
-	webhooks    map[string][]string // nodeID -> webhook URLs
-	httpClient  *http.Client
-	broadcaster OnChainBroadcaster // Optional on-chain broadcaster
+	mu             sync.RWMutex
+	scorer         *scorer.Scorer
+	aiScorer       *scorer.AIScorer    // 0G AI-powered signal evaluator
+	webhooks       map[string][]string // nodeID -> webhook URLs
+	httpClient     *http.Client
+	broadcaster    OnChainBroadcaster // Optional on-chain broadcaster
+	pointAllocator PointAllocator     // Optional point allocator for V2 off-chain points
 }
 
 func NewAnalysisHandler() *AnalysisHandler {
@@ -71,6 +77,11 @@ func NewAnalysisHandler() *AnalysisHandler {
 // SetBroadcaster sets the on-chain broadcaster for pushing scores
 func (h *AnalysisHandler) SetBroadcaster(b OnChainBroadcaster) {
 	h.broadcaster = b
+}
+
+// SetPointAllocator sets the point allocator for V2 off-chain points
+func (h *AnalysisHandler) SetPointAllocator(pa PointAllocator) {
+	h.pointAllocator = pa
 }
 
 // RegisterWebhook registers a webhook URL for a node
@@ -174,6 +185,20 @@ func (h *AnalysisHandler) HandleResult(result AnalysisResult) {
 				log.Printf("Handler: ❌ Failed to push score on-chain for %s: %v", nodeID[:16]+"...", err)
 			} else {
 				log.Printf("Handler: ✅ AI-adjusted score pushed on-chain for %s (%.1f, %s)", nodeID[:16]+"...", finalScore, finalStats.Tier)
+			}
+		}()
+	}
+
+	// Step 9: Allocate performance-based points to provider (V2 off-chain system)
+	if h.pointAllocator != nil {
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+
+			signalID := result.Signal.ID
+			err := h.pointAllocator.AllocatePoints(ctx, nodeID, signalID, result.PnLPercent)
+			if err != nil {
+				log.Printf("Handler: ❌ Failed to allocate points for %s: %v", nodeID[:16]+"...", err)
 			}
 		}()
 	}

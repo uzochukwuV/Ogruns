@@ -7,11 +7,13 @@
  *  3. FeeRouter           (needs AgentRegistry + platform treasury)
  *  4. SubscriptionManager (needs ReputationOracle + FeeRouter)
  *  5. Wire FeeRouter.setSubscriptionManager(SubscriptionManager)
+ *  6. PointVault          (v2 off-chain points system, needs verifier)
  *
  * After deployment, copy the printed addresses to your .env:
  *   REGISTRY_CONTRACT_ADDR=...
  *   REPUTATION_CONTRACT_ADDR=...
  *   SUBSCRIPTION_CONTRACT_ADDR=...
+ *   POINT_VAULT_ADDR=...
  */
 
 import { ethers } from "hardhat";
@@ -64,10 +66,17 @@ async function main() {
   console.log("SubscriptionManager deployed at:", await subManager.getAddress());
 
   // ── 5. Wire FeeRouter ─────────────────────────────────────────────────────
-  console.log("\n[5/5] Wiring FeeRouter → SubscriptionManager...");
+  console.log("\n[5/6] Wiring FeeRouter → SubscriptionManager...");
   const tx = await feeRouter.setSubscriptionManager(await subManager.getAddress());
   await tx.wait();
   console.log("FeeRouter.subscriptionManager set.");
+
+  // ── 6. PointVault (v2 Off-Chain Points System) ───────────────────────────
+  console.log("\n[6/6] Deploying PointVault (verifier:", verifierAddress, ")...");
+  const PointVault = await ethers.getContractFactory("PointVault");
+  const pointVault = await PointVault.deploy(verifierAddress);
+  await pointVault.waitForDeployment();
+  console.log("PointVault deployed at:", await pointVault.getAddress());
 
   // ── Summary ───────────────────────────────────────────────────────────────
   console.log("\n╔══════════════════════════════════════════════════════╗");
@@ -77,6 +86,7 @@ async function main() {
   console.log("REPUTATION_CONTRACT_ADDR  =", await oracle.getAddress());
   console.log("SUBSCRIPTION_CONTRACT_ADDR=", await subManager.getAddress());
   console.log("FEE_ROUTER_ADDR           =", await feeRouter.getAddress());
+  console.log("POINT_VAULT_ADDR          =", await pointVault.getAddress());
   console.log("╚══════════════════════════════════════════════════════╝");
 }
 

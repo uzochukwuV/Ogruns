@@ -3,6 +3,6 @@
 /* eslint-disable */
 export * as agentRegistrySol from "./AgentRegistry.sol";
 export { FeeRouter__factory } from "./FeeRouter__factory";
-export { NodeRegistry__factory } from "./NodeRegistry__factory";
+export { PointVault__factory } from "./PointVault__factory";
 export { ReputationOracle__factory } from "./ReputationOracle__factory";
 export { SubscriptionManager__factory } from "./SubscriptionManager__factory";

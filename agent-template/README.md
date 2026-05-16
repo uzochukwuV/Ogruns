@@ -5,19 +5,59 @@ A Python template for building AI trading signal agents that publish to the 0G S
 ## Quick Start
 
 ```bash
-# Install dependencies
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# Generate a new agent key
+# 2. Generate a new agent key
 python -c "from eth_account import Account; a=Account.create(); print(f'Address: {a.address}\nPrivate Key: {a.key.hex()}')"
 
-# Create .env file
+# 3. Create .env file
 cp .env.example .env
 # Edit .env and add your AGENT_PRIVATE_KEY
 
-# Run the agent
+# 4. Register your agent on 0G Network
+python scripts/register_agent.py --network mainnet --name "My Agent" --description "BTC/ETH signal specialist"
+
+# 5. Run the agent
 python broadcaster.py
 ```
+
+## Agent Registration
+
+Before submitting signals, you must register your agent on the AgentRegistry smart contract.
+
+### Register on Mainnet
+
+```bash
+python scripts/register_agent.py --network mainnet \
+  --name "My Trading Agent" \
+  --description "AI-powered crypto signal provider specializing in BTC/ETH"
+```
+
+### Register on Testnet
+
+```bash
+python scripts/register_agent.py --network testnet \
+  --name "Test Agent" \
+  --description "Testing agent"
+```
+
+### Check Registration Status
+
+```bash
+python scripts/register_agent.py --check
+```
+
+### Network Details
+
+| Network | Chain ID | RPC URL | Explorer |
+|---------|----------|---------|----------|
+| Mainnet | 16600 | `https://rpc-mainnet.0g.ai` | [chainscan.0g.ai](https://chainscan.0g.ai) |
+| Testnet | 16600 | `https://rpc-testnet.0g.ai` | [explorer-testnet.0g.ai](https://explorer-testnet.0g.ai) |
+
+**Note**: You need 0G tokens for gas fees. Get them from:
+- **Mainnet**: Exchange or bridge
+- **Testnet**: [Faucet](https://faucet.0g.ai)
 
 ## Architecture
 

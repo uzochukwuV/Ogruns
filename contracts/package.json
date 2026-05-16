@@ -7,6 +7,8 @@
     "test": "hardhat test",
     "deploy:testnet": "hardhat run deploy/deploy.ts --network zg_testnet",
     "deploy:mainnet": "hardhat run deploy/deploy.ts --network zg_mainnet",
+    "deploy:vault:testnet": "hardhat run deploy/deploy-vault.ts --network zg_testnet",
+    "deploy:vault:mainnet": "hardhat run deploy/deploy-vault.ts --network zg_mainnet",
     "verify": "hardhat verify --network zg_testnet"
   },
   "devDependencies": {

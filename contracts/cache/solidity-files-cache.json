@@ -150,6 +150,42 @@
       "artifacts": [
         "ReputationOracle"
       ]
+    },
+    "C:\\Users\\ASUS FX95G\\Documents\\Ogruns\\contracts\\src\\PointVault.sol": {
+      "lastModificationDate": 1778805900281,
+      "contentHash": "68db1ade692cde92ed4f71a978abb95f",
+      "sourceName": "src/PointVault.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "PointVault"
+      ]
     }
   }
 }

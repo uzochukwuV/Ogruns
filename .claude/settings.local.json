@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.gmx.io)",
-      "WebFetch(domain:app.gmxtest.io)"
+      "WebFetch(domain:app.gmxtest.io)",
+      "Bash(export PATH=\"/c/Program Files/Go/bin:$PATH\")",
+      "Bash(cd:*)",
+      "Bash(go build:*)"
     ]
   }
 }
